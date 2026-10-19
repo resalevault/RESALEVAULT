@@ -447,6 +447,19 @@ export interface AppInfo {
   isDev: boolean
 }
 
+export interface ThirdPartyNoticesInfo {
+  path: string
+  text: string
+  bytes: number
+}
+
+export interface AppHashInfo {
+  algorithm: 'sha256'
+  target: string
+  hash: string
+  bytes: number
+}
+
 export interface DatabaseHealth {
   ok: boolean
   schemaVersion: number

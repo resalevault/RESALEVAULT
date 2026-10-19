@@ -45,6 +45,7 @@ import { clearDemoData, seedDemoData } from '../services/demo-data'
 import { readDatabaseHealth } from '../services/bootstrap'
 import type { AppPaths } from '../services/paths'
 import type { LicenseService } from '../services/license'
+import { computeAppHash, readThirdPartyNotices } from '../services/about'
 
 export interface IpcContext extends IpcBaseContext {
   repos: Repositories
@@ -102,6 +103,10 @@ export function registerIpcHandlers(ctx: IpcContext): void {
     if (error) throw appError('storage_error', undefined, error)
     return null
   })
+
+  handle(CH.appThirdPartyNotices, null, () => readThirdPartyNotices())
+
+  handle(CH.appComputeHash, null, () => computeAppHash())
 
   // -------------------------------------------------------------------------
   // Ventana

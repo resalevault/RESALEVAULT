@@ -5,8 +5,10 @@ qué falta y qué costes implicará. No se marca nada como terminado sin pruebas
 
 Última actualización: **20/10/2026** — Bloque A (release gratuito): control de
 versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI,
-banco de pruebas con 50.000 artículos, **aplicación real de los límites de plan**
-y **registro de emisión de licencias auditable** (`npm run license:list`).
+banco de pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
+**registro de emisión de licencias auditable** (`npm run license:list`) y
+**pantalla «Acerca de» con avisos de terceros, enlace a Licencias y hash de la
+aplicación**.
 
 ---
 
@@ -32,8 +34,8 @@ y **registro de emisión de licencias auditable** (`npm run license:list`).
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **293 / 293** correctas (21 archivos) |
-| `npm run test:coverage` | **71,96 %** líneas · 68,89 % sentencias · 73,21 % funciones · 59,14 % ramas |
+| `npm test` | **295 / 295** correctas (22 archivos) |
+| `npm run test:coverage` | **72,06 %** líneas · 68,95 % sentencias · 73,29 % funciones · 59,12 % ramas |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
 | `npm run smoke:ui` | **54 / 54** comprobaciones de interfaz en Electron real |

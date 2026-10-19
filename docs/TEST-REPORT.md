@@ -13,8 +13,8 @@ Versión: `0.5.0`.
 | Comando | Resultado |
 |---|---|
 | `npm run typecheck` | ✅ 0 errores (2 proyectos: `tsconfig.node.json` y `tsconfig.web.json`) |
-| `npm test` | ✅ 21 archivos, **293 pruebas** en verde |
-| `npm run test:coverage` | ✅ 293 pruebas + cobertura medida (apartado 3) |
+| `npm test` | ✅ 22 archivos, **295 pruebas** en verde |
+| `npm run test:coverage` | ✅ 295 pruebas + cobertura medida (apartado 3) |
 | `npm run smoke` | ✅ **70 comprobaciones** correctas, 0 fallidas |
 | `npm run smoke:ui` | ✅ **54 comprobaciones** correctas, 0 fallidas |
 | `npm run build` | ✅ proceso principal, preload y renderer generados |
@@ -29,7 +29,7 @@ resultados.**
 
 ## 2. Qué comprueba cada suite
 
-### 2.1 `npm test` — pruebas unitarias y de integración (293)
+### 2.1 `npm test` — pruebas unitarias y de integración (295)
 
 Cubren la lógica de negocio sobre una base de datos real (no un doble):
 

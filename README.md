@@ -14,7 +14,7 @@ ubicaciones físicas, compras, pedidos y rentabilidad real.
   aplicados de verdad**, **copias de seguridad con restauración**,
   internacionalización (español / inglés) y **Shipping Tracker** con navegador
   integrado aislado.
-- **Calidad:** 293 pruebas unitarias · 70 de humo · 54 de interfaz · ESLint sin
+- **Calidad:** 295 pruebas unitarias · 70 de humo · 54 de interfaz · ESLint sin
   problemas · 72,0 % de cobertura · banco de pruebas con 50.000 artículos ·
   integración continua configurada.
 - **Coste real invertido: 0 €.** Instalador firmado con certificado
@@ -76,7 +76,7 @@ node node_modules/electron/install.js
 | `npm run build` | Compila proceso principal, preload e interfaz en `out/`. |
 | `npm run doctor` | Diagnóstico del entorno dentro de Electron (versiones, SQLite, escritura). |
 | `npm run typecheck` | Comprueba los tipos de todo el proyecto (Node y navegador). |
-| `npm test` | Ejecuta la batería de pruebas (**293 pruebas**, 21 archivos). |
+| `npm test` | Ejecuta la batería de pruebas (**295 pruebas**, 22 archivos). |
 | `npm run test:watch` | Pruebas en modo vigilancia. |
 | `npm run test:coverage` | Pruebas + cobertura (71,2 % de líneas). |
 | `npm run lint` | ESLint sobre todo el proyecto (0 problemas). |
@@ -165,7 +165,7 @@ src/
     ├── lib/                   api.ts, app-context.tsx, hooks.ts
     ├── components/            Icons, ui, TitleBar, Sidebar, CarrierBadge, PlanGate
     └── pages/                 Dashboard, Inventory, Orders, ShippingTracker, AiStudio…
-tests/                         293 pruebas automatizadas (21 archivos)
+tests/                         295 pruebas automatizadas (22 archivos)
 scripts/                       doctor, pruebas de humo, benchmark, empaquetado, licencias
 docs/                          Estado, manual, pruebas, firma, licencias, privacidad…
 ```

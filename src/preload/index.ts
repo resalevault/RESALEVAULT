@@ -36,6 +36,8 @@ const api: ResaleVaultApi = {
     seedDemoData: () => invoke(CH.appSeedDemo),
     clearDemoData: () => invoke(CH.appClearDemo),
     openDataFolder: () => invoke(CH.appOpenDataFolder),
+  getThirdPartyNotices: () => invoke(CH.appThirdPartyNotices),
+  computeAppHash: () => invoke(CH.appComputeHash),
     onDataChanged: (listener) => {
       const handler = (_event: unknown, entity: string): void => listener(String(entity))
       ipcRenderer.on(EV.dataChanged, handler)

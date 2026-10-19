@@ -11,6 +11,7 @@
  */
 
 import type {
+  AppHashInfo,
   AppInfo,
   AppSettings,
   AttributeDefinition,
@@ -30,7 +31,8 @@ import type {
   ProductSummary,
   ProductUpdateInput,
   Result,
-  Tag
+  Tag,
+  ThirdPartyNoticesInfo
 } from './types'
 import type { ResaleVaultModuleApi } from './api-modules'
 
@@ -43,6 +45,8 @@ export const CH = {
   appSeedDemo: 'app:seedDemoData',
   appClearDemo: 'app:clearDemoData',
   appOpenDataFolder: 'app:openDataFolder',
+  appThirdPartyNotices: 'app:thirdPartyNotices',
+  appComputeHash: 'app:computeHash',
 
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -113,6 +117,8 @@ export interface ResaleVaultAppApi {
   seedDemoData(): Promise<Result<{ created: number }>>
   clearDemoData(): Promise<Result<{ deleted: number }>>
   openDataFolder(): Promise<Result<null>>
+  getThirdPartyNotices(): Promise<Result<ThirdPartyNoticesInfo | null>>
+  computeAppHash(): Promise<Result<AppHashInfo | null>>
   /** Se dispara cuando el proceso principal modifica datos. */
   onDataChanged(listener: (entity: string) => void): () => void
 }

@@ -81,6 +81,8 @@ export const api = {
     seedDemoData: bind(() => bridge.app.seedDemoData()),
     clearDemoData: bind(() => bridge.app.clearDemoData()),
     openDataFolder: bind(() => bridge.app.openDataFolder()),
+    getThirdPartyNotices: bind(() => bridge.app.getThirdPartyNotices()),
+    computeAppHash: bind(() => bridge.app.computeAppHash()),
     onDataChanged: (listener: (entity: string) => void) => getBridge().app.onDataChanged(listener)
   },
 

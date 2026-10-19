@@ -17,6 +17,10 @@
   región, gestión de códigos de seguimiento y acción «Seguir ahora».
 - **`THIRD-PARTY-NOTICES.md`** generado automáticamente con `npm run notices`
   (447 paquetes analizados, 6 distribuidos con su texto de licencia).
+- **Pantalla «Acerca de» completa**: botón para leer los avisos de terceros sin
+  conexión (desde `THIRD-PARTY-NOTICES.md`), enlace directo a Licencias y
+  cálculo del hash SHA-256 del paquete `app.asar` en uso (en desarrollo no
+  existe y se indica, en lugar de inventarlo).
 - **Firma de código con certificado autofirmado** (`npm run sign:setup`,
   `npm run dist:signed`): instalador, ejecutable y desinstalador firmados, con
   verificación automática y SHA-256.
@@ -56,7 +60,7 @@
 
 ### Verificado
 
-- `typecheck` 0 errores · **293** pruebas · **70** de humo · **54** de interfaz ·
+- `typecheck` 0 errores · **295** pruebas · **70** de humo · **54** de interfaz ·
   ESLint 0 problemas · `doctor` correcto.
 - Instalador `RESALEVAULT-Setup-0.5.0.exe` (118,43 MB) firmado.
 - **La instalación real sigue bloqueada** por la política Device Guard de este

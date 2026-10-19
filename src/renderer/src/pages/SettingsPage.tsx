@@ -9,7 +9,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 import { DEFAULT_SKU_PATTERN, renderSkuPattern, validateSkuPattern } from '@shared/sku'
-import { ATTRIBUTE_TYPES, type AttributeType } from '@shared/types'
+import { ATTRIBUTE_TYPES, type AppHashInfo, type AttributeType, type ThirdPartyNoticesInfo } from '@shared/types'
 import { api, AppError } from '../lib/api'
 import { useApp } from '../lib/app-context'
 import { useAsyncData } from '../lib/hooks'
@@ -18,6 +18,7 @@ import {
   Card,
   Field,
   IconButton,
+  Modal,
   Select,
   Spinner,
   TextInput
@@ -26,7 +27,7 @@ import { IconExternal, IconPlus, IconTrash } from '../components/Icons'
 import { BackupsCard } from './BackupsCard'
 
 export function SettingsPage(): ReactNode {
-  const { t, notify, settings, updateSettings, health, reloadHealth, info, dataVersion, refreshData, number } =
+  const { t, notify, settings, updateSettings, health, reloadHealth, info, dataVersion, refreshData, number, navigate } =
     useApp()
 
   const [currency, setCurrency] = useState(settings.currency)
@@ -42,6 +43,9 @@ export function SettingsPage(): ReactNode {
 
   const [platformCode, setPlatformCode] = useState('')
   const [platformName, setPlatformName] = useState('')
+  const [notices, setNotices] = useState<ThirdPartyNoticesInfo | null | undefined>(undefined)
+  const [showNotices, setShowNotices] = useState(false)
+  const [appHash, setAppHash] = useState<AppHashInfo | null>(null)
 
   const attributes = useAsyncData(() => api.attributes.list(), [dataVersion])
   const platforms = useAsyncData(() => api.platforms.list(), [dataVersion])
@@ -71,6 +75,24 @@ export function SettingsPage(): ReactNode {
         : t('errors.internal_error', { id: '-' }),
       'error'
     )
+  }
+
+  const loadNotices = async (): Promise<void> => {
+    setShowNotices(true)
+    try {
+      setNotices(await api.app.getThirdPartyNotices())
+    } catch (error) {
+      reportError(error)
+      setNotices(null)
+    }
+  }
+
+  const loadHash = async (): Promise<void> => {
+    try {
+      setAppHash(await api.app.computeAppHash())
+    } catch (error) {
+      reportError(error)
+    }
   }
 
   const saveGeneral = async (): Promise<void> => {
@@ -480,7 +502,58 @@ export function SettingsPage(): ReactNode {
             <span className="stat-line__value mono">{info.arch}</span>
           </div>
         </div>
+
+        <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+          <Button size="sm" onClick={() => void loadNotices()}>
+            {t('settings.noticesView')}
+          </Button>
+          <Button size="sm" onClick={() => navigate({ name: 'license' })}>
+            {t('settings.aboutLicenses')}
+          </Button>
+          <Button size="sm" onClick={() => void loadHash()}>
+            {t('settings.aboutHashCompute')}
+          </Button>
+        </div>
+
+        {appHash ? (
+          <div className="stat-line" style={{ marginTop: 8 }}>
+            <span className="faint">{t('settings.aboutHash')}</span>
+            <span className="stat-line__value mono" style={{ wordBreak: 'break-all' }}>
+              {appHash.hash}
+            </span>
+          </div>
+        ) : null}
+        <p className="faint" style={{ fontSize: 12, marginTop: 8 }}>
+          {t('settings.aboutHashHint')}
+        </p>
       </Card>
+
+      {showNotices ? (
+        <Modal title={t('settings.noticesTitle')} onClose={() => setShowNotices(false)} wide>
+          {notices === undefined ? (
+            <Spinner />
+          ) : notices === null ? (
+            <p>{t('settings.noticesEmpty')}</p>
+          ) : (
+            <>
+              <p className="faint mono" style={{ fontSize: 12 }}>
+                {notices.path}
+              </p>
+              <pre
+                style={{
+                  whiteSpace: 'pre-wrap',
+                  maxHeight: '56vh',
+                  overflow: 'auto',
+                  fontSize: 12,
+                  margin: 0
+                }}
+              >
+                {notices.text}
+              </pre>
+            </>
+          )}
+        </Modal>
+      ) : null}
     </div>
   )
 }
