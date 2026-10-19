@@ -14,8 +14,8 @@ ubicaciones físicas, compras, pedidos y rentabilidad real.
   aplicados de verdad**, **copias de seguridad con restauración**,
   internacionalización (español / inglés) y **Shipping Tracker** con navegador
   integrado aislado.
-- **Calidad:** 355 pruebas unitarias · 70 de humo · 54 de interfaz · ESLint sin
-  problemas · 81,6 % de cobertura · banco de pruebas con 50.000 artículos ·
+- **Calidad:** 384 pruebas unitarias · 70 de humo · 54 de interfaz · ESLint sin
+  problemas · 86,5 % de cobertura · banco de pruebas con 50.000 artículos ·
   integración continua configurada.
 - **Coste real invertido: 0 €.** Instalador firmado con certificado
   **autofirmado** (no elimina los avisos de Windows: ver `docs/FIRMA.md`).
@@ -76,9 +76,9 @@ node node_modules/electron/install.js
 | `npm run build` | Compila proceso principal, preload e interfaz en `out/`. |
 | `npm run doctor` | Diagnóstico del entorno dentro de Electron (versiones, SQLite, escritura). |
 | `npm run typecheck` | Comprueba los tipos de todo el proyecto (Node y navegador). |
-| `npm test` | Ejecuta la batería de pruebas (**355 pruebas**, 27 archivos). |
+| `npm test` | Ejecuta la batería de pruebas (**384 pruebas**, 30 archivos). |
 | `npm run test:watch` | Pruebas en modo vigilancia. |
-| `npm run test:coverage` | Pruebas + cobertura (81,6 % de líneas). |
+| `npm run test:coverage` | Pruebas + cobertura (86,5 % de líneas). |
 | `npm run lint` | ESLint sobre todo el proyecto (0 problemas). |
 | `npm run verify` | `typecheck` + `test`. Comprobación rápida antes de publicar. |
 | `npm run smoke` | Prueba de humo de la capa de datos **dentro de Electron real** (70 comprobaciones). |
@@ -165,7 +165,7 @@ src/
     ├── lib/                   api.ts, app-context.tsx, hooks.ts
     ├── components/            Icons, ui, TitleBar, Sidebar, CarrierBadge, PlanGate
     └── pages/                 Dashboard, Inventory, Orders, ShippingTracker, AiStudio…
-tests/                         355 pruebas automatizadas (27 archivos)
+tests/                         384 pruebas automatizadas (30 archivos)
 scripts/                       doctor, pruebas de humo, benchmark, empaquetado, licencias
 docs/                          Estado, manual, pruebas, firma, licencias, privacidad…
 ```
