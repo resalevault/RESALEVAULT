@@ -1166,18 +1166,6 @@ export class ProductRepository {
     return this.db.scalar<string>('SELECT path FROM locations WHERE id = $id', { $id: id }) ?? ''
   }
 
-  /** Numero de articulos no archivados (para cuotas de plan). */
-  countActive(): number {
-    return toNumber(
-      this.db.scalar<number>('SELECT COUNT(*) AS v FROM products WHERE archived_at IS NULL')
-    )
-  }
-
-  /** Numero de articulos en total, incluidos los archivados. */
-  countAll(): number {
-    return toNumber(this.db.scalar<number>('SELECT COUNT(*) AS v FROM products'))
-  }
-
   // -------------------------------------------------------------------------
   // Auxiliares
   // -------------------------------------------------------------------------

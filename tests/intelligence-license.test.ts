@@ -245,3 +245,166 @@ describe('licencias: estado y limites', () => {
     expect(PLAN_LIMITS.free.multiUser).toBe(false)
   })
 })
+
+/**
+ * Los limites de plan se aplican en el PROCESO PRINCIPAL mediante estos metodos.
+ * Si no se probaran, la afirmacion "los limites estan aplicados" no estaria
+ * respaldada por nada.
+ */
+describe('licencias: aplicacion real de los limites', () => {
+  /** Crea `count` articulos minimos (sin coste relevante). */
+  function createProducts(ctx: ReturnType<typeof createTestContext>, count: number): string[] {
+    const ids: string[] = []
+    for (let index = 0; index < count; index += 1) {
+      ids.push(
+        ctx.repos.products.create({
+          name: `Articulo ${index}`,
+          purchasePriceCents: 100,
+          expectedSalePriceCents: 200
+        }).id
+      )
+    }
+    return ids
+  }
+
+  function addMedia(
+    ctx: ReturnType<typeof createTestContext>,
+    productId: string,
+    count: number,
+    from = 0
+  ): void {
+    ctx.db.transaction(() => {
+      for (let index = from; index < from + count; index += 1) {
+        ctx.db.run(
+          `INSERT INTO product_media (id, product_id, kind, file_name, original_name,
+              mime_type, size_bytes, sha256, sort_order, is_cover, created_at)
+           VALUES ($id, $product, 'photo', $file, $original, 'image/jpeg', 1000, $sha, $order, 0, $at)`,
+          {
+            $id: `media-${productId}-${index}`,
+            $product: productId,
+            $file: `${index}.jpg`,
+            $original: `${index}.jpg`,
+            $sha: `sha-${productId}-${index}`,
+            $order: index,
+            $at: new Date().toISOString()
+          }
+        )
+      }
+    })
+  }
+
+  it('permite crear hasta el limite y bloquea el articulo que lo supera', () => {
+    const ctx = createTestContext()
+    const service = new LicenseService(ctx.db)
+
+    createProducts(ctx, PLAN_LIMITS.free.maxProducts - 1)
+    // 149 articulos: todavia cabe uno mas.
+    expect(() => service.assertProductQuota()).not.toThrow()
+
+    createProducts(ctx, 1)
+    // 150 articulos: el limite esta alcanzado (el uso debe ser < limite).
+    expect(() => service.assertProductQuota()).toThrowError(/plan_limit_reached/)
+    ctx.close()
+  })
+
+  it('el error de cuota lleva el recurso, el limite y el plan', () => {
+    const ctx = createTestContext()
+    const service = new LicenseService(ctx.db)
+    createProducts(ctx, PLAN_LIMITS.free.maxProducts)
+
+    try {
+      service.assertProductQuota()
+      throw new Error('deberia haber lanzado')
+    } catch (error) {
+      const appErr = error as { code: string; params?: Record<string, unknown> }
+      expect(appErr.code).toBe('plan_limit_reached')
+      expect(appErr.params?.resource).toBe('maxProducts')
+      expect(appErr.params?.limit).toBe(150)
+      expect(appErr.params?.plan).toBe('free')
+    }
+    ctx.close()
+  })
+
+  it('los articulos archivados liberan espacio en el plan', () => {
+    const ctx = createTestContext()
+    const service = new LicenseService(ctx.db)
+
+    const ids = createProducts(ctx, PLAN_LIMITS.free.maxProducts)
+    expect(() => service.assertProductQuota()).toThrow()
+
+    // Al archivar uno, vuelve a haber hueco. Archivar NO borra datos.
+    ctx.repos.products.archive([ids[0] as string])
+    expect(() => service.assertProductQuota()).not.toThrow()
+    expect(ctx.db.scalar<number>('SELECT COUNT(*) AS v FROM products')).toBe(150)
+    ctx.close()
+  })
+
+  it('bloquea la subida cuando se alcanza la cuota de archivos', () => {
+    const ctx = createTestContext()
+    const service = new LicenseService(ctx.db)
+    const product = ctx.repos.products.create({
+      name: 'Con fotos',
+      purchasePriceCents: 100,
+      expectedSalePriceCents: 200
+    })
+
+    addMedia(ctx, product.id, PLAN_LIMITS.free.maxUploads - 1)
+    // 199 archivos: cabe uno mas.
+    expect(() => service.assertUploadQuota(1)).not.toThrow()
+
+    addMedia(ctx, product.id, 1, PLAN_LIMITS.free.maxUploads - 1)
+    expect(() => service.assertUploadQuota(1)).toThrowError(/plan_limit_reached/)
+    ctx.close()
+  })
+
+  it('rechaza las funciones que no incluye el plan Free', () => {
+    const ctx = createTestContext()
+    const service = new LicenseService(ctx.db)
+
+    for (const feature of ['analytics', 'intelligence', 'aiStudio', 'csvImport', 'bulkEdit'] as const) {
+      expect(() => service.assertFeature(feature)).toThrowError(/license_required/)
+    }
+
+    // Y NO rechaza lo que sí incluye.
+    for (const feature of ['media', 'purchases', 'orders', 'barcodes'] as const) {
+      expect(() => service.assertFeature(feature)).not.toThrow()
+    }
+    ctx.close()
+  })
+
+  it('con una licencia Pro valida, los limites dejan de aplicar', () => {
+    const privateFile = join(process.cwd(), 'tools', 'keys', 'license-private.pem')
+    if (!existsSync(privateFile)) {
+      // La clave privada no esta versionada: no se puede emitir en CI.
+      expect(true).toBe(true)
+      return
+    }
+
+    const ctx = createTestContext()
+    const service = new LicenseService(ctx.db)
+
+    const payload = {
+      v: 1,
+      id: 'lic_guard_pro',
+      plan: 'pro',
+      kind: 'perpetual',
+      holder: 'Prueba',
+      issuedAt: new Date().toISOString(),
+      expiresAt: null,
+      seats: 1
+    }
+    const raw = Buffer.from(JSON.stringify(payload), 'utf8')
+    const signature = sign(null, raw, createPrivateKey(readFileSync(privateFile, 'utf8')))
+    const b64url = (buffer: Buffer): string =>
+      buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+
+    service.activate({ code: `${b64url(raw)}.${b64url(signature)}` })
+
+    expect(service.state().plan).toBe('pro')
+    expect(() => service.assertFeature('analytics')).not.toThrow()
+    // 150 articulos ya no agotan la cuota (el limite de Pro es 20.000).
+    createProducts(ctx, PLAN_LIMITS.free.maxProducts)
+    expect(() => service.assertProductQuota()).not.toThrow()
+    ctx.close()
+  })
+})

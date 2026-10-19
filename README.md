@@ -14,8 +14,8 @@ ubicaciones físicas, compras, pedidos y rentabilidad real.
   aplicados de verdad**, **copias de seguridad con restauración**,
   internacionalización (español / inglés) y **Shipping Tracker** con navegador
   integrado aislado.
-- **Calidad:** 287 pruebas unitarias · 70 de humo · 54 de interfaz · ESLint sin
-  problemas · 71,2 % de cobertura · banco de pruebas con 50.000 artículos ·
+- **Calidad:** 293 pruebas unitarias · 70 de humo · 54 de interfaz · ESLint sin
+  problemas · 72,0 % de cobertura · banco de pruebas con 50.000 artículos ·
   integración continua configurada.
 - **Coste real invertido: 0 €.** Instalador firmado con certificado
   **autofirmado** (no elimina los avisos de Windows: ver `docs/FIRMA.md`).
@@ -76,7 +76,7 @@ node node_modules/electron/install.js
 | `npm run build` | Compila proceso principal, preload e interfaz en `out/`. |
 | `npm run doctor` | Diagnóstico del entorno dentro de Electron (versiones, SQLite, escritura). |
 | `npm run typecheck` | Comprueba los tipos de todo el proyecto (Node y navegador). |
-| `npm test` | Ejecuta la batería de pruebas (**287 pruebas**, 21 archivos). |
+| `npm test` | Ejecuta la batería de pruebas (**293 pruebas**, 21 archivos). |
 | `npm run test:watch` | Pruebas en modo vigilancia. |
 | `npm run test:coverage` | Pruebas + cobertura (71,2 % de líneas). |
 | `npm run lint` | ESLint sobre todo el proyecto (0 problemas). |
@@ -164,7 +164,7 @@ src/
     ├── lib/                   api.ts, app-context.tsx, hooks.ts
     ├── components/            Icons, ui, TitleBar, Sidebar, CarrierBadge, PlanGate
     └── pages/                 Dashboard, Inventory, Orders, ShippingTracker, AiStudio…
-tests/                         287 pruebas automatizadas (21 archivos)
+tests/                         293 pruebas automatizadas (21 archivos)
 scripts/                       doctor, pruebas de humo, benchmark, empaquetado, licencias
 docs/                          Estado, manual, pruebas, firma, licencias, privacidad…
 ```
@@ -228,7 +228,7 @@ emisión y se emiten una a una cuando haya clientes reales. Detalle completo en
 
 ```
 release\RESALEVAULT-Setup-0.5.0.exe     118,44 MB
-SHA-256  91a65a6038516e66dd4d91993ddd3e0a6ebf61ef7a86f6d6fe1bacc09278327d
+SHA-256  9ebed6a11a227daba97beea702d22cf2cb2f3963a3e8f1c24dfd415e616c53b1
 Firma    presente (certificado AUTOFIRMADO: la raíz no es de confianza publica)
 ```
 

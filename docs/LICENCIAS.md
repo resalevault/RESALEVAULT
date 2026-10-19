@@ -9,7 +9,7 @@ cuáles son sus límites actuales.
 
 | Aspecto | Decisión |
 |---|---|
-| Formato | `RVLT1.<payload en base64url>.<firma Ed25519>` |
+| Formato | `<payload en base64url>.<firma en base64url>` |
 | Algoritmo | Ed25519 (vía `node:crypto`, sin dependencias) |
 | Clave privada | `tools/keys/license-private.pem` — **solo en el equipo del emisor** |
 | Clave pública | Incrustada en la aplicación (`LICENSE_PUBLIC_KEY_BASE64`) |
@@ -88,7 +88,7 @@ entrega al cliente.
 ### 4.3 Verificar antes de entregar
 
 ```powershell
-npm run license:verify -- --code RVLT1.xxxxx.yyyyy
+npm run license:verify -- --code <codigo>
 ```
 
 ### 4.4 Registro de emisión

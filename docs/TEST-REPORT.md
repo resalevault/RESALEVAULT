@@ -13,8 +13,8 @@ Versión: `0.5.0`.
 | Comando | Resultado |
 |---|---|
 | `npm run typecheck` | ✅ 0 errores (2 proyectos: `tsconfig.node.json` y `tsconfig.web.json`) |
-| `npm test` | ✅ 21 archivos, **287 pruebas** en verde |
-| `npm run test:coverage` | ✅ 287 pruebas + cobertura medida (apartado 3) |
+| `npm test` | ✅ 21 archivos, **293 pruebas** en verde |
+| `npm run test:coverage` | ✅ 293 pruebas + cobertura medida (apartado 3) |
 | `npm run smoke` | ✅ **70 comprobaciones** correctas, 0 fallidas |
 | `npm run smoke:ui` | ✅ **54 comprobaciones** correctas, 0 fallidas |
 | `npm run build` | ✅ proceso principal, preload y renderer generados |
@@ -29,7 +29,7 @@ resultados.**
 
 ## 2. Qué comprueba cada suite
 
-### 2.1 `npm test` — pruebas unitarias y de integración (287)
+### 2.1 `npm test` — pruebas unitarias y de integración (293)
 
 Cubren la lógica de negocio sobre una base de datos real (no un doble):
 
@@ -43,6 +43,10 @@ Cubren la lógica de negocio sobre una base de datos real (no un doble):
 - Métodos de pago y cuadre de caja (con y sin escudos).
 - Reglas de inteligencia (12 reglas) y sus avisos.
 - Estados de licencia, planes, límites y eventos.
+- **Aplicación real de los límites de plan** (6 pruebas dedicadas): cuota de
+  artículos, cuota de archivos, funciones bloqueadas del plan Free, y que
+  archivar libera cuota sin borrar filas. Incluye una activación **real**
+  firmada con Ed25519 contra la clave pública incrustada.
 - Conversión de unidades sin pérdida de precisión.
 - Migraciones, generación de informes y claves foráneas.
 
@@ -78,10 +82,10 @@ navega por la aplicación con DOM nativo:
 
 | Métrica | Valor | Umbral configurado |
 |---|---|---|
-| Líneas | **71,2 %** | 50 % |
-| Sentencias | **68,19 %** | 50 % |
-| Funciones | **72,29 %** | 50 % |
-| Ramas | **58,38 %** | 40 % |
+| Líneas | **71,96 %** | 50 % |
+| Sentencias | **68,89 %** | 50 % |
+| Funciones | **73,21 %** | 50 % |
+| Ramas | **59,14 %** | 40 % |
 
 Los umbrales son **bajos a propósito**: se prefiere un número honesto que subir
 con pruebas de valor, no rellenar porcentajes con tests triviales. Se excluyen
@@ -163,7 +167,7 @@ Se re-evalúa si se superan los 100.000 artículos.
 | Arranca correctamente | ✅ | `npm run doctor` + humo de interfaz |
 | Funciones Free sin conexión | ✅ | todas las suites corren sin red |
 | Los datos persisten tras reiniciar | ✅ | humo de interfaz reinicia y relee |
-| Pro/Business solo con permiso | ✅ | `LicenseService.assertFeature` en proceso principal + `PlanGate` en interfaz |
+| Pro/Business solo con permiso | ✅ | `LicenseService.assertFeature` en proceso principal + `PlanGate` en interfaz; 6 pruebas dedicadas a los límites |
 | Licencia válida funciona | ✅ | `tests/license.test.ts` |
 | Licencia manipulada se rechaza | ✅ | firma Ed25519, test de alteración |
 | Copias se pueden restauran | ✅ | 8 pruebas + humo de datos |

@@ -56,7 +56,7 @@
 
 ### Verificado
 
-- `typecheck` 0 errores · **287** pruebas · **70** de humo · **54** de interfaz ·
+- `typecheck` 0 errores · **293** pruebas · **70** de humo · **54** de interfaz ·
   ESLint 0 problemas · `doctor` correcto.
 - Instalador `RESALEVAULT-Setup-0.5.0.exe` (118,43 MB) firmado.
 - **La instalación real sigue bloqueada** por la política Device Guard de este

@@ -185,7 +185,12 @@ export class LicenseService {
     const row = this.active()
 
     const usage = {
-      products: toNumber(this.db.scalar<number>('SELECT COUNT(*) AS v FROM products')),
+      // Los articulos ARCHIVADOS no cuentan: archivar es la forma de liberar
+      // espacio en el plan. Si el usuario restaura alguno y supera la cuota, no
+      // se borra nada: solo se impide crear articulos NUEVOS.
+      products: toNumber(
+        this.db.scalar<number>('SELECT COUNT(*) AS v FROM products WHERE archived_at IS NULL')
+      ),
       uploads: toNumber(this.db.scalar<number>('SELECT COUNT(*) AS v FROM product_media')),
       aiCallsThisMonth: toNumber(
         this.db.scalar<number>(
