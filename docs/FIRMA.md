@@ -45,7 +45,8 @@ npm run dist:signed
 ```
 Artefacto: release\RESALEVAULT-Setup-0.5.0.exe
 Tamaño:    118,44 MB
-SHA-256:   228f4858433240cdc11c2dbd57161550b14fc525e6334ac37b864bd98db01e52
+SHA-256:   d75a7b23ae068af141eef41947fe55853b2b4403a6af2ab2cbcd655aefbe8141
+Commit:    a7fb7f2
 Firma:     UnknownError
 ```
 
@@ -71,7 +72,7 @@ También están firmados `win-unpacked\RESALEVAULT.exe` (el ejecutable interno) 
 >
 > Comprobado durante este trabajo: compilaciones consecutivas del mismo código
 > dieron, entre otros, `cc685320…`, `c28bcd4f…`, `91a65a60…`, `9ebed6a1…`,
-> `741c091a…` y `228f4858…`. El hash **no identifica la versión del código**,
+> `741c091a…`, `228f4858…` y `d75a7b23…`. El hash **no identifica la versión del código**,
 > solo el archivo concreto.
 
 ---
