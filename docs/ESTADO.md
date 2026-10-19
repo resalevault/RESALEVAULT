@@ -8,10 +8,11 @@ versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI,
 banco de pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 **registro de emisión de licencias auditable** (`npm run license:list`) y
 **pantalla «Acerca de» con avisos de terceros, enlace a Licencias y hash de la
-aplicación**. Además, **pruebas de la lógica de dinero y de archivos** (CSV,
-etiquetas, ajustes, errores, pedidos, almacenamiento multimedia y repositorios
-de proveedores/compras/gastos/plataformas/atributos/anuncios): la cobertura sube
-al 86,5 % de líneas.
+aplicación**. Además, **pruebas de la lógica de dinero, de archivos y de
+configuración** (CSV, etiquetas, ajustes, errores, pedidos, almacenamiento
+multimedia, repositorios de proveedores/compras/gastos/plataformas/atributos/
+anuncios, AI Studio, límites de plan y utilidades de datos): la cobertura sube
+al 88,1 % de líneas.
 
 ---
 
@@ -37,8 +38,8 @@ al 86,5 % de líneas.
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **384 / 384** correctas (30 archivos) |
-| `npm run test:coverage` | **86,51 %** líneas · 83,67 % sentencias · 88,92 % funciones · 75,06 % ramas |
+| `npm test` | **407 / 407** correctas (32 archivos) |
+| `npm run test:coverage` | **88,12 %** líneas · 85,47 % sentencias · 90,59 % funciones · 77,49 % ramas |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
 | `npm run smoke:ui` | **54 / 54** comprobaciones de interfaz en Electron real |
