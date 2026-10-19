@@ -28,7 +28,7 @@ npm run dev     # arranca en modo desarrollo con recarga
 
 ```powershell
 npm run typecheck     # 0 errores
-npm test              # 295 pruebas
+npm test              # 355 pruebas
 npm run lint          # ESLint, 0 problemas
 npm run smoke         # 70 comprobaciones de datos
 npm run smoke:ui      # 54 comprobaciones con Electron real

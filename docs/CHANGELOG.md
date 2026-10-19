@@ -25,8 +25,12 @@
   `npm run dist:signed`): instalador, ejecutable y desinstalador firmados, con
   verificación automática y SHA-256.
 - **ESLint 9** (configuración plana) integrado en el flujo: 0 errores y 0 avisos.
-- **Cobertura de pruebas** (`npm run test:coverage`): 71,2 % de líneas,
+- **Cobertura de pruebas** (`npm run test:coverage`): 81,6 % de líneas,
   umbrales configurados.
+- **Pruebas de la lógica de dinero**: nuevas suites para la importación y
+  exportación CSV (`csv-io`, antes sin ninguna prueba), etiquetas y códigos de
+  barras, ajustes, códigos de error y los repositorios de proveedores, compras y
+  gastos. La cobertura pasa del 72,0 % al 81,6 % de líneas.
 - **Banco de pruebas de rendimiento** (`npm run bench`): 50.000 artículos y
   1.000 pedidos, con medición de apertura, búsqueda, paginación, escritura,
   informes, exportación y copias.
@@ -60,7 +64,7 @@
 
 ### Verificado
 
-- `typecheck` 0 errores · **295** pruebas · **70** de humo · **54** de interfaz ·
+- `typecheck` 0 errores · **355** pruebas · **70** de humo · **54** de interfaz ·
   ESLint 0 problemas · `doctor` correcto.
 - Instalador `RESALEVAULT-Setup-0.5.0.exe` (118,43 MB) firmado.
 - **La instalación real sigue bloqueada** por la política Device Guard de este

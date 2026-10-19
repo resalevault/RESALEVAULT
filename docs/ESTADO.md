@@ -8,7 +8,9 @@ versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI,
 banco de pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 **registro de emisión de licencias auditable** (`npm run license:list`) y
 **pantalla «Acerca de» con avisos de terceros, enlace a Licencias y hash de la
-aplicación**.
+aplicación**. Además, **pruebas de la lógica de dinero** (CSV, etiquetas,
+ajustes, errores y repositorios de proveedores/compras/gastos): la cobertura
+sube al 81,6 % de líneas.
 
 ---
 
@@ -34,8 +36,8 @@ aplicación**.
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **295 / 295** correctas (22 archivos) |
-| `npm run test:coverage` | **72,06 %** líneas · 68,95 % sentencias · 73,29 % funciones · 59,12 % ramas |
+| `npm test` | **355 / 355** correctas (27 archivos) |
+| `npm run test:coverage` | **81,63 %** líneas · 78,32 % sentencias · 82,54 % funciones · 68,56 % ramas |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
 | `npm run smoke:ui` | **54 / 54** comprobaciones de interfaz en Electron real |
