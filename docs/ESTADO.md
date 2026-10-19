@@ -5,7 +5,8 @@ qué falta y qué costes implicará. No se marca nada como terminado sin pruebas
 
 Última actualización: **20/10/2026** — Bloque A (release gratuito): control de
 versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI,
-benchmark con 50.000 artículos y **aplicación real de los límites de plan**.
+banco de pruebas con 50.000 artículos, **aplicación real de los límites de plan**
+y **registro de emisión de licencias auditable** (`npm run license:list`).
 
 ---
 
