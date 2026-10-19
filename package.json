@@ -1,0 +1,53 @@
+{
+  "name": "resalevault",
+  "productName": "RESALEVAULT",
+  "version": "0.5.0",
+  "description": "RESALEVAULT - Every item. Every profit. Gestion profesional de compraventa e inventario para resellers.",
+  "author": "RESALEVAULT",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "./out/main/index.js",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck:node": "tsc -p tsconfig.node.json --noEmit",
+    "typecheck:web": "tsc -p tsconfig.web.json --noEmit",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify": "npm run typecheck && npm run test",
+    "doctor": "electron scripts/doctor.cjs",
+    "icon": "electron scripts/make-icon.cjs",
+    "license:keygen": "node scripts/generate-license.mjs keygen",
+    "license:new": "node scripts/generate-license.mjs new",
+    "license:verify": "node scripts/generate-license.mjs verify",
+    "smoke:build": "node scripts/build-smoke.mjs",
+    "smoke": "npm run smoke:build && electron out/smoke.cjs",
+    "smoke:ui": "npm run smoke:build && npm run build && electron out/ui-smoke.cjs",
+    "dist": "npm run build && electron-builder --win --config electron-builder.yml",
+    "dist:dir": "npm run build && electron-builder --win --dir --config electron-builder.yml"
+  },
+  "dependencies": {
+    "bwip-js": "^4.11.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^44.9.0",
+    "electron-builder": "^26.17.0",
+    "electron-vite": "^6.0.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.7",
+    "vitest": "^4.1.12"
+  }
+}

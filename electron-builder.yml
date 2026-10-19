@@ -1,0 +1,42 @@
+# RESALEVAULT - Configuracion del instalador de Windows (Fase 8)
+#
+# NOTA DE HONESTIDAD: este archivo esta preparado, pero el instalador NO se ha
+# generado ni probado todavia. Tampoco hay certificado de firma configurado, por
+# lo que Windows mostrara un aviso SmartScreen al ejecutarlo. Ver docs/ESTADO.md.
+
+appId: com.resalevault.desktop
+productName: RESALEVAULT
+copyright: Copyright (c) RESALEVAULT
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - out/**/*
+  - package.json
+  # Todo lo que no sea imprescindible para ejecutar se queda fuera del paquete.
+  - '!**/*.map'
+  - '!**/*.ts'
+
+# Los datos del usuario NO viven aqui: estan en %APPDATA%\RESALEVAULT, de modo
+# que desinstalar o actualizar nunca borra el inventario.
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.png
+  # La firma se activara cuando exista un certificado valido:
+  # certificateFile / certificatePassword (via variables de entorno).
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: RESALEVAULT
+  # La desinstalacion conserva la carpeta de datos del usuario a proposito.
+  deleteAppDataOnUninstall: false
+  artifactName: RESALEVAULT-Setup-${version}.${ext}

@@ -1,0 +1,55 @@
+# Dependencias
+node_modules/
+
+# Artefactos de compilacion
+out/
+dist/
+release/
+.vite/
+coverage/
+.tmp/
+
+# Registros
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------------------------------------------
+# SECRETOS Y CLAVES (nunca deben entrar en el repositorio)
+# ---------------------------------------------------------------------------
+# Clave PRIVADA de firma de licencias. La aplicacion solo lleva la publica.
+tools/keys/*.pem
+tools/keys/*.key
+tools/keys/private/
+
+# Certificados de firma de codigo
+*.pfx
+*.p12
+*.cer
+*.crt
+*.key
+build/*.pfx
+
+# Variables de entorno y credenciales locales
+.env
+.env.*
+*.local
+secrets.json
+
+# ---------------------------------------------------------------------------
+# DATOS DE USUARIO (no son parte del codigo)
+# ---------------------------------------------------------------------------
+# Copias locales de bases de datos o exportaciones de prueba
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+!src/**/*.sqlite
+
+# Copias de seguridad y adjuntos generados durante las pruebas
+backups/
+media/
+thumbs/
