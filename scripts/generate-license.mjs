@@ -13,18 +13,41 @@
  *   npm run license:keygen                              (genera un par nuevo)
  *   npm run license:new -- --plan pro --kind founder --holder "Nombre"
  *   npm run license:verify -- --code <codigo>
+ *   npm run license:list                                (registro de emision)
+ *
+ * Cada licencia emitida se anota en `tools/keys/issued-licenses.jsonl` (fichero
+ * PRIVADO, excluido de Git): permite auditar quien tiene que y recuperar un
+ * codigo si el cliente lo pierde.
  *
  * NO se generan las 400 licencias fundadoras de golpe: se emiten una a una
- * cuando el sistema de licencias este probado y haya clientes reales.
+ * cuando haya clientes reales. Ejecuta `license:list` para ver el progreso.
  */
 
 import { createPrivateKey, createPublicKey, generateKeyPairSync, sign, verify as verifyRaw } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const KEY_DIR = join(process.cwd(), 'tools', 'keys')
 const PRIVATE_KEY_FILE = join(KEY_DIR, 'license-private.pem')
 const PUBLIC_KEY_FILE = join(KEY_DIR, 'license-public.txt')
+
+/**
+ * Registro de emision (auditoria). Una linea JSON por licencia emitida.
+ *
+ * Es un fichero PRIVADO: contiene los codigos completos entregados a clientes.
+ * Vive junto a la clave privada, esta excluido de Git y no se empaqueta.
+ *
+ * Existe porque emitir codigos sin poder auditar quien tiene que es un riesgo
+ * real: si un cliente dice "he perdido mi licencia" o hay que revocar una, este
+ * registro es lo unico que lo permite.
+ */
+const REGISTRY_FILE = join(KEY_DIR, 'issued-licenses.jsonl')
+
+/**
+ * Cuotas fundadoras. DEBE coincidir con FOUNDER_QUOTA de src/shared/plans.ts.
+ * Se duplica aqui porque este script es Node puro (sin compilar TypeScript).
+ */
+const FOUNDER_QUOTA = { pro: 200, business: 200 }
 
 const FORMAT_VERSION = 1
 const ALLOWED_PLANS = ['free', 'pro', 'business']
@@ -111,6 +134,8 @@ function issue(args) {
   const signature = sign(null, raw, loadPrivateKey())
   const code = `${toBase64Url(raw)}.${toBase64Url(signature)}`
 
+  const registered = registerIssued(payload, code)
+
   process.stdout.write('\nLicencia emitida\n================\n')
   process.stdout.write(`Identificador : ${payload.id}\n`)
   process.stdout.write(`Plan          : ${plan} (${kind})\n`)
@@ -119,6 +144,160 @@ function issue(args) {
   process.stdout.write(`Puestos       : ${payload.seats}\n\n`)
   process.stdout.write('Codigo de activacion (entregar al cliente):\n\n')
   process.stdout.write(code + '\n\n')
+  process.stdout.write(
+    registered
+      ? `Registrada en ${REGISTRY_FILE}\n`
+      : 'AVISO: no se ha podido escribir el registro de emision. Guarda el codigo a mano.\n'
+  )
+  process.stdout.write('Puedes recuperarla despues con: npm run license:list\n')
+}
+
+/** Anota la emision en el registro. Devuelve false si no se pudo escribir. */
+function registerIssued(payload, code) {
+  try {
+    mkdirSync(KEY_DIR, { recursive: true })
+    const entry = {
+      at: new Date().toISOString(),
+      id: payload.id,
+      plan: payload.plan,
+      kind: payload.kind,
+      holder: payload.holder || '',
+      seats: payload.seats,
+      expiresAt: payload.expiresAt,
+      code
+    }
+    appendFileSync(REGISTRY_FILE, JSON.stringify(entry) + '\n', 'utf8')
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Carga la clave publica con la que se verifican las licencias.
+ *
+ * Se prefiere `tools/keys/license-public.txt`, pero si no existe se lee la
+ * clave INCRUSTADA en la aplicacion (`src/shared/license-keys.ts`). Verificar
+ * contra esa clave es de hecho lo mas util: demuestra que el codigo del
+ * registro sera aceptado por la aplicacion que se distribuye.
+ */
+function loadVerificationKey() {
+  if (existsSync(PUBLIC_KEY_FILE)) {
+    return {
+      key: createPublicKey({
+        key: Buffer.from(readFileSync(PUBLIC_KEY_FILE, 'utf8').trim(), 'base64'),
+        format: 'der',
+        type: 'spki'
+      }),
+      source: PUBLIC_KEY_FILE,
+      matchesApp: null
+    }
+  }
+
+  const appKeysFile = join(process.cwd(), 'src', 'shared', 'license-keys.ts')
+  if (existsSync(appKeysFile)) {
+    const match = /LICENSE_PUBLIC_KEY_BASE64\s*=\s*'([^']+)'/.exec(readFileSync(appKeysFile, 'utf8'))
+    if (match) {
+      return {
+        key: createPublicKey({
+          key: Buffer.from(match[1], 'base64'),
+          format: 'der',
+          type: 'spki'
+        }),
+        source: `${appKeysFile} (clave incrustada en la aplicacion)`,
+        matchesApp: true
+      }
+    }
+  }
+
+  return null
+}
+
+/**
+ * Muestra el registro de emision y REVERIFICA la firma de cada licencia.
+ * Sirve para responder "quien tiene que", "cuantas quedan" y "¿sigue siendo
+ * valido lo que entregue?".
+ */
+function listIssued() {
+  if (!existsSync(REGISTRY_FILE)) {
+    process.stdout.write(`No hay registro de emision todavia (${REGISTRY_FILE}).\n`)
+    process.stdout.write('Se creara al emitir la primera licencia con "new".\n')
+    return
+  }
+
+  const lines = readFileSync(REGISTRY_FILE, 'utf8')
+    .split(/\r?\n/)
+    .filter((line) => line.trim().length > 0)
+
+  const verificationKey = loadVerificationKey()
+
+  const rows = []
+  let corrupted = 0
+  for (const line of lines) {
+    try {
+      rows.push(JSON.parse(line))
+    } catch {
+      corrupted += 1
+    }
+  }
+
+  process.stdout.write(`Registro: ${REGISTRY_FILE}\n`)
+  process.stdout.write(`Total emitidas: ${rows.length}\n`)
+  if (verificationKey) {
+    process.stdout.write(`Verificando con: ${verificationKey.source}\n`)
+  } else {
+    process.stdout.write('AVISO: no hay clave publica disponible; no se verifican las firmas.\n')
+  }
+  if (corrupted > 0) {
+    process.stdout.write(`AVISO: ${corrupted} linea(s) ilegible(s) en el registro.\n`)
+  }
+  process.stdout.write('\n')
+
+  const header = ['Fecha', 'Identificador', 'Plan', 'Tipo', 'Titular', 'Puestos', 'Firma']
+  process.stdout.write(header.join('\t') + '\n')
+
+  let badSignatures = 0
+  const counts = {}
+  for (const row of rows) {
+    counts[row.plan] = (counts[row.plan] ?? 0) + 1
+
+    let signatureText = 'no comprobada'
+    if (verificationKey && typeof row.code === 'string') {
+      const separator = row.code.indexOf('.')
+      const ok =
+        separator > 0 &&
+        verifyRawWrapper(
+          Buffer.from(row.code.slice(0, separator).replace(/-/g, '+').replace(/_/g, '/'), 'base64'),
+          Buffer.from(row.code.slice(separator + 1).replace(/-/g, '+').replace(/_/g, '/'), 'base64'),
+          verificationKey.key
+        )
+      signatureText = ok ? 'OK' : 'ALTERADA'
+      if (!ok) badSignatures += 1
+    }
+
+    process.stdout.write(
+      [
+        String(row.at ?? '').slice(0, 19).replace('T', ' '),
+        row.id ?? '-',
+        row.plan ?? '-',
+        row.kind ?? '-',
+        row.holder || '(sin titular)',
+        row.seats ?? 1,
+        signatureText
+      ].join('\t') + '\n'
+    )
+  }
+
+  process.stdout.write('\nResumen por plan:\n')
+  for (const plan of ['pro', 'business']) {
+    const issued = counts[plan] ?? 0
+    process.stdout.write(`  ${plan}: ${issued} emitidas / ${FOUNDER_QUOTA[plan]} de la cuota fundadora\n`)
+  }
+
+  if (badSignatures > 0) {
+    process.stdout.write(`\nATENCION: ${badSignatures} licencia(s) del registro NO validan.\n`)
+    process.exitCode = 1
+  }
 }
 
 function verify(args) {
@@ -170,11 +349,15 @@ switch (command) {
   case 'verify':
     verify(args)
     break
+  case 'list':
+    listIssued()
+    break
   default:
     process.stdout.write(
       'Uso:\n' +
         '  node scripts/generate-license.mjs keygen\n' +
         '  node scripts/generate-license.mjs new --plan pro --kind founder --holder "Nombre" [--expires 2027-01-01] [--seats 1]\n' +
-        '  node scripts/generate-license.mjs verify --code <codigo>\n'
+        '  node scripts/generate-license.mjs verify --code <codigo>\n' +
+        '  node scripts/generate-license.mjs list\n'
     )
 }

@@ -25,6 +25,8 @@ Thumbs.db
 tools/keys/*.pem
 tools/keys/*.key
 tools/keys/private/
+# Registro de emision: contiene los codigos entregados a clientes. PRIVADO.
+tools/keys/issued-licenses.jsonl
 
 # Certificados de firma de codigo
 *.pfx

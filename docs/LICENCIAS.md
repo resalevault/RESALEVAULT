@@ -91,16 +91,43 @@ entrega al cliente.
 npm run license:verify -- --code <codigo>
 ```
 
-### 4.4 Registro de emisión
+### 4.4 Registro de emisión ✅
 
-**Pendiente (no está implementado):** un registro de emisión (quién, cuándo,
-qué código, a qué cliente). Sin él, no se puede auditar ni revocar de forma
-fiable una licencia concreta. Antes de emitir **las 200 + 200 licencias
-fundadoras** hay que construirlo, porque ahora mismo la única copia del código
-sería el mensaje que se envíe al cliente.
+Cada emisión se anota automáticamente en
+`tools/keys/issued-licenses.jsonl` (una línea JSON por licencia):
 
-**Por eso no se han generado las 400 licencias.** Emitir códigos que no se
-pueden auditar ni recuperar sería un riesgo real.
+```
+{"at":"...","id":"lic_...","plan":"pro","kind":"founder","holder":"Nombre",
+ "seats":1,"expiresAt":null,"code":"<codigo completo>"}
+```
+
+Para consultarlo:
+
+```powershell
+npm run license:list
+```
+
+Muestra fecha, titular, plan, tipo, puestos y **reverifica la firma de cada
+licencia** contra la clave pública **incrustada en la aplicación**. Así se
+responde de una vez: quién tiene qué, cuántas quedan de cada cuota fundadora, y
+si algún código guardado ha sido manipulado (`ALTERADA`, y el comando devuelve
+error).
+
+> El fichero es **privado**: contiene los códigos entregados a clientes. Está
+> excluido de Git y **no** se empaqueta. Haz copia cifrada junto con la clave
+> privada.
+
+Comprobado en este equipo: con una licencia de prueba, `license:list` mostró
+`Firma: OK`; al modificar el payload a mano sin re-firmar, mostró
+`Firma: ALTERADA` y salió con código de error 1. La entrada de prueba se
+eliminó después: **el registro está vacío porque todavía no hay clientes
+reales.**
+
+### 4.5 Estado de las 400 licencias fundadoras
+
+**No se han generado.** Ahora ya existe el registro que lo hacía inviable, así
+que el bloqueo real que queda es comercial, no técnico: se emiten **una a una**
+cuando haya clientes reales, para no repartir códigos sin contrapartida.
 
 ---
 

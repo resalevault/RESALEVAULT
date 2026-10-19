@@ -219,7 +219,7 @@ el margen del usuario, y se etiquetan como estimación.
 | Activación, desactivación, historial de eventos | ✅ |
 | Identificador de dispositivo estable | ✅ |
 | Cuotas de fundadores 200 / 200 definidas | ✅ |
-| Registro de emisión de licencias | ⬜ **prerequisito antes de emitir en serie** |
+| Registro de emisión de licencias (auditoría + reverificación) | ✅ *nuevo* (`npm run license:list`) |
 | Backend online (revocación, control de dispositivos, pagos) | ⬜ no desplegado |
 
 ### Límites realmente aplicados (corrección importante)
@@ -247,11 +247,13 @@ Generación de licencias:
 npm run license:keygen                       # solo la primera vez
 npm run license:new -- --plan pro --kind founder --holder "Nombre"
 npm run license:verify -- --code <codigo>
+npm run license:list                         # registro de emision + reverificacion
 ```
 
-**No se han generado las 400 licencias fundadoras.** Se emiten una a una cuando
-haya clientes reales, exista registro de emisión y el proceso esté probado.
-Detalles en [`docs/LICENCIAS.md`](LICENCIAS.md).
+**No se han generado las 400 licencias fundadoras.** El registro de emisión que
+lo bloqueaba ya está implementado (`tools/keys/issued-licenses.jsonl`, privado y
+excluido de Git); ahora el bloqueo es comercial: se emiten una a una cuando haya
+clientes reales. Detalles en [`docs/LICENCIAS.md`](LICENCIAS.md).
 
 ---
 
@@ -335,7 +337,6 @@ certificado OV/IV de una CA (150–300 €/año). **No se ha comprado ninguno.**
 | Búsqueda por texto es un barrido lineal (~70 ms a 50.000) | Bajo, medido | Índice FTS5 si se superan 100.000 |
 | Informe financiero ~180 ms con 1.000 pedidos | Bajo | Cachear agregados si crece |
 | Sin firma de confianza pública | **Alto en distribución** | Certificado OV/IV |
-| Sin registro de emisión de licencias | **Alto antes de vender** | Implementarlo |
 | Sin actualización automática | Medio | Feed propio o proceso manual documentado |
 | `multiUser`/`sync` declarados pero sin implementar | Medio (puede confundir) | Implementar o quitar del plan |
 

@@ -89,6 +89,7 @@ node node_modules/electron/install.js
 | `npm run license:keygen` | **(administración)** genera el par de claves de licencias. |
 | `npm run license:new` | **(administración)** emite una licencia firmada. |
 | `npm run license:verify` | **(administración)** verifica un código de licencia. |
+| `npm run license:list` | **(administración)** registro de emisión + reverifica cada firma. |
 | `npm run dist:dir` | Empaqueta sin instalador en `release/win-unpacked/`. **Verificado.** |
 | `npm run dist` | Genera el instalador NSIS de Windows en `release/`. **Verificado.** |
 | `npm run sign:setup` | Crea un certificado autofirmado de desarrollo (gratuito). |
@@ -218,17 +219,23 @@ empaqueta y está excluida de Git.
 npm run license:keygen                                      # solo la primera vez
 npm run license:new -- --plan pro --kind founder --holder "Nombre"
 npm run license:verify -- --code <codigo>
+npm run license:list                                        # registro de emision
 ```
 
-No se generan las 400 licencias fundadoras de golpe: falta un registro de
-emisión y se emiten una a una cuando haya clientes reales. Detalle completo en
+Cada emisión queda anotada (con su código) en `tools/keys/issued-licenses.jsonl`,
+fichero **privado** excluido de Git. `license:list` muestra quién tiene qué,
+cuántas quedan de cada cuota fundadora y **reverifica la firma** de cada licencia
+contra la clave pública incrustada en la aplicación.
+
+No se generan las 400 licencias fundadoras de golpe: se emiten una a una cuando
+haya clientes reales. Detalle completo en
 [`docs/LICENCIAS.md`](docs/LICENCIAS.md).
 
 ## 10. Instalador
 
 ```
 release\RESALEVAULT-Setup-0.5.0.exe     118,44 MB
-SHA-256  9ebed6a11a227daba97beea702d22cf2cb2f3963a3e8f1c24dfd415e616c53b1
+SHA-256  741c091a8f9ea888eb7a00729e3ec1fa3e3fcb40437f7cb63c64c50ed0c8e138
 Firma    presente (certificado AUTOFIRMADO: la raíz no es de confianza publica)
 ```
 
