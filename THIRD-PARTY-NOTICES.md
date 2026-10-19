@@ -2,7 +2,7 @@
 
 Este archivo se genera automáticamente con `npm run notices` a partir de `package-lock.json`. No editar a mano: los cambios se perderán.
 
-Generado: 2026-10-19T22:16:15.417Z
+Contenido derivado de package-lock.json: 6 componentes distribuidos, 546 paquetes analizados.
 
 ## 1. Componentes distribuidos con el programa
 

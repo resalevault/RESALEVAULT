@@ -178,7 +178,8 @@ Se re-evalúa si se superan los 100.000 artículos.
 | Navegador integrado aislado | ✅ | WebContentsView sin preload, solo https, sin Node |
 | Errores de red no bloquean inventario | ✅ | el módulo funciona sin backend |
 | Instalador contiene lo necesario | ⚠️ | generado y verificado internamente; **la instalación real está bloqueada por Device Guard** |
-| `THIRD-PARTY-NOTICES.md` incluido | ✅ | generado por `npm run notices`, en la raíz |
+| `THIRD-PARTY-NOTICES.md` incluido | ✅ | generado por `npm run notices`; se empaqueta en `resources/` y se comprueba que la copia del paquete es **idéntica** a la del repositorio |
+| Generador de avisos determinista | ✅ | dos ejecuciones separadas producen el mismo archivo (se eliminó la marca de tiempo que rompía la comprobación de CI) |
 | Firma verificada | ⚠️ | firmado con autofirmado; `Status: UnknownError` (raíz no confiable) — ver `docs/FIRMA.md` |
 | Advertencias de Windows documentadas | ✅ | `docs/FIRMA.md` |
 | No se ha gastado dinero | ✅ | **0 €** |

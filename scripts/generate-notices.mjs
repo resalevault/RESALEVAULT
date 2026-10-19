@@ -118,7 +118,13 @@ lines.push(
     'No editar a mano: los cambios se perderán.'
 )
 lines.push('')
-lines.push(`Generado: ${new Date().toISOString()}`)
+// Sin marca de tiempo: este archivo esta versionado y la CI comprueba que sigue
+// actualizado con `git diff --exit-code`. Una fecha cambiaria en cada ejecucion
+// y haria fallar la comprobacion siempre.
+lines.push(
+  `Contenido derivado de package-lock.json: ${distributed.length} componentes distribuidos, ` +
+    `${packages.length} paquetes analizados.`
+)
 lines.push('')
 lines.push('## 1. Componentes distribuidos con el programa')
 lines.push('')

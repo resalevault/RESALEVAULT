@@ -235,7 +235,7 @@ haya clientes reales. Detalle completo en
 
 ```
 release\RESALEVAULT-Setup-0.5.0.exe     118,44 MB
-SHA-256  741c091a8f9ea888eb7a00729e3ec1fa3e3fcb40437f7cb63c64c50ed0c8e138
+SHA-256  228f4858433240cdc11c2dbd57161550b14fc525e6334ac37b864bd98db01e52
 Firma    presente (certificado AUTOFIRMADO: la raíz no es de confianza publica)
 ```
 
