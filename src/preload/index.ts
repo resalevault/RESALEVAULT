@@ -19,8 +19,8 @@ function invoke<T>(channel: string, payload?: unknown): Promise<T> {
 }
 
 /** Suscripcion a un evento del proceso principal, con funcion de baja. */
-function subscribe(channel: string, listener: (value: unknown) => void): () => void {
-  const handler = (_event: unknown, value: unknown): void => listener(value)
+function subscribe<T>(channel: string, listener: (value: T) => void): () => void {
+  const handler = (_event: unknown, value: T): void => listener(value)
   ipcRenderer.on(channel, handler)
   return () => {
     ipcRenderer.removeListener(channel, handler)
@@ -283,12 +283,9 @@ const api: ResaleVaultApi = {
     forward: () => invoke(CH_MODULES.browserForward),
     reload: () => invoke(CH_MODULES.browserReload),
     stop: () => invoke(CH_MODULES.browserStop),
-    onStateChanged: (listener) =>
-      subscribe(EV_TRACKING.browserStateChanged, (value) => listener(value as never)),
-    onPopupBlocked: (listener) =>
-      subscribe(EV_TRACKING.browserPopupBlocked, (value) => listener(value as never)),
-    onDownloadBlocked: (listener) =>
-      subscribe(EV_TRACKING.browserDownloadBlocked, (value) => listener(value as string))
+    onStateChanged: (listener) => subscribe(EV_TRACKING.browserStateChanged, listener),
+    onPopupBlocked: (listener) => subscribe(EV_TRACKING.browserPopupBlocked, listener),
+    onDownloadBlocked: (listener) => subscribe(EV_TRACKING.browserDownloadBlocked, listener)
   }
 }
 

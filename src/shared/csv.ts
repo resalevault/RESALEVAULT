@@ -14,6 +14,8 @@
  * escribe; aqui solo se transforma texto.
  */
 
+import type { ProductCondition, ProductStatus } from './types'
+
 export type CsvDelimiter = ',' | ';' | '\t' | '|'
 
 export const CSV_DELIMITERS: CsvDelimiter[] = [',', ';', '\t', '|']
@@ -351,10 +353,10 @@ export function parseLooseDate(value: string): string | null {
 }
 
 /** Resultado de interpretar la columna de estado del articulo. */
-export function parseStatus(value: string): string | null {
+export function parseStatus(value: string): ProductStatus | null {
   const key = normalizeHeader(value)
   if (!key) return null
-  const table: Record<string, string> = {
+  const table: Record<string, ProductStatus> = {
     'pendiente de preparar': 'to_prepare',
     pendiente: 'to_prepare',
     'to prepare': 'to_prepare',
@@ -376,10 +378,10 @@ export function parseStatus(value: string): string | null {
   return table[key] ?? null
 }
 
-export function parseCondition(value: string): string | null {
+export function parseCondition(value: string): ProductCondition | null {
   const key = normalizeHeader(value)
   if (!key) return null
-  const table: Record<string, string> = {
+  const table: Record<string, ProductCondition> = {
     nuevo: 'new',
     new: 'new',
     'como nuevo': 'like_new',

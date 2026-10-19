@@ -580,11 +580,13 @@ export class PurchaseRepository {
     const where = clauses.length > 0 ? `WHERE ${clauses.join(' AND ')}` : ''
 
     const row = this.db.get<{ n: number; items: number; extra: number }>(
+      // Sin ALIAS ni reescritura de SQL: cada subconsulta usa su propio
+      // `FROM purchases`, de modo que `purchased_at` no es ambiguo.
       `SELECT COUNT(*) AS n,
               (SELECT COALESCE(SUM(pi.unit_cost_cents * pi.quantity), 0) FROM purchase_items pi
                 WHERE pi.purchase_id IN (SELECT id FROM purchases ${where})) AS items,
-              (SELECT COALESCE(SUM(p2.shipping_cents + p2.other_cents - p2.discount_cents), 0)
-                FROM purchases p2 ${where.replace(/\b(purchased_at)\b/g, 'p2.$1')}) AS extra
+              (SELECT COALESCE(SUM(shipping_cents + other_cents - discount_cents), 0)
+                FROM purchases ${where}) AS extra
        FROM purchases ${where}`,
       params
     )

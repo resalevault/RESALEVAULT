@@ -356,11 +356,14 @@ export class FinanceService {
     const purchaseWhere = purchaseClauses.length > 0 ? `WHERE ${purchaseClauses.join(' AND ')}` : ''
 
     const purchaseTotals = this.db.get<Record<string, number>>(
+      // Cada subconsulta tiene su PROPIO `FROM purchases`, asi que
+      // `purchased_at` se resuelve sin ambiguedad y no hay que reescribir el SQL
+      // con expresiones regulares (que era fragil y dificil de leer).
       `SELECT COUNT(*) AS n,
               (SELECT COALESCE(SUM(pi.unit_cost_cents * pi.quantity), 0) FROM purchase_items pi
                 WHERE pi.purchase_id IN (SELECT id FROM purchases ${purchaseWhere})) AS items,
-              (SELECT COALESCE(SUM(p2.shipping_cents + p2.other_cents - p2.discount_cents), 0)
-                FROM purchases p2 ${purchaseWhere.replace(/\bpurchased_at\b/g, 'p2.purchased_at')}) AS extra
+              (SELECT COALESCE(SUM(shipping_cents + other_cents - discount_cents), 0)
+                FROM purchases ${purchaseWhere}) AS extra
        FROM purchases ${purchaseWhere}`,
       purchasesParams
     )

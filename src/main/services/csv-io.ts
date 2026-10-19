@@ -25,7 +25,7 @@ import type {
   CsvPreview,
   CsvValidationIssue
 } from '@shared/types-modules'
-import type { ISODate } from '@shared/types'
+import type { ISODate, ProductCondition, ProductStatus } from '@shared/types'
 import {
   CSV_PRODUCT_FIELDS,
   detectDelimiter,
@@ -57,8 +57,8 @@ export interface ImportRowValues {
   model: string
   size: string
   color: string
-  condition: string | null
-  status: string | null
+  condition: ProductCondition | null
+  status: ProductStatus | null
   purchaseDate: string | null
   purchasePriceCents: number
   acquisitionFeesCents: number
@@ -442,8 +442,8 @@ export class CsvService {
           model: values.model,
           size: values.size,
           color: values.color,
-          condition: (values.condition ?? 'unknown') as never,
-          status: (values.status ?? 'to_prepare') as never,
+          condition: values.condition ?? 'unknown',
+          status: values.status ?? 'to_prepare',
           purchaseDate: values.purchaseDate,
           purchasePriceCents: values.purchasePriceCents,
           acquisitionFeesCents: values.acquisitionFeesCents,

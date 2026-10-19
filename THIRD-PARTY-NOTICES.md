@@ -1,0 +1,525 @@
+# RESALEVAULT — Avisos de terceros
+
+Este archivo se genera automáticamente con `npm run notices` a partir de `package-lock.json`. No editar a mano: los cambios se perderán.
+
+Generado: 2026-10-19T21:47:55.651Z
+
+## 1. Componentes distribuidos con el programa
+
+Estos paquetes forman parte del instalador y su licencia **debe** acompañar a la distribución.
+
+| Paquete | Versión | Licencia |
+| --- | --- | --- |
+| bwip-js | 4.11.4 | MIT |
+| electron | 44.9.0 | MIT |
+| react | 19.3.1 | MIT |
+| react-dom | 19.3.1 | MIT |
+| scheduler | 0.28.0 | MIT |
+| zod | 4.6.7 | MIT |
+
+### Componentes del runtime
+
+| Componente | Función | Nota |
+| --- | --- | --- |
+| Electron | Runtime de la aplicacion de escritorio. | El instalador incluye Electron, que a su vez empaqueta Chromium y Node.js. electron-builder incluye automaticamente `LICENSE` y `LICENSES.chromium.html` dentro de la carpeta de instalacion. |
+| Chromium | Motor de renderizado. | Distribuido como parte de Electron bajo licencias BSD y otras. El texto completo viaja en `LICENSES.chromium.html` dentro de la instalacion. |
+| Node.js | Runtime de JavaScript del proceso principal. | Distribuido como parte de Electron bajo licencia MIT. |
+
+## 2. Textos de licencia de los componentes distribuidos
+
+### bwip-js 4.11.4 — MIT
+
+Autor: Mark Warren <mwarren@metafloor.com>
+Origen: https://github.com/metafloor/bwip-js
+
+_El paquete no incluye un archivo de licencia; consulte su repositorio oficial._
+
+### electron 44.9.0 — MIT
+
+Autor: Electron Community
+Origen: https://github.com/electron/electron
+
+_El paquete no incluye un archivo de licencia; consulte su repositorio oficial._
+
+### react 19.3.1 — MIT
+
+Origen: https://react.dev/
+
+_El paquete no incluye un archivo de licencia; consulte su repositorio oficial._
+
+### react-dom 19.3.1 — MIT
+
+Origen: https://react.dev/
+
+_El paquete no incluye un archivo de licencia; consulte su repositorio oficial._
+
+### scheduler 0.28.0 — MIT
+
+Origen: https://react.dev/
+
+_El paquete no incluye un archivo de licencia; consulte su repositorio oficial._
+
+### zod 4.6.7 — MIT
+
+Autor: Colin McDonnell <zod@colinhacks.com>
+Origen: https://zod.dev
+
+_El paquete no incluye un archivo de licencia; consulte su repositorio oficial._
+
+## 3. Dependencias de desarrollo (no se distribuyen)
+
+Se listan por transparencia. No forman parte del instalador, por lo que no se redistribuyen sus binarios.
+
+| Paquete | Versión | Licencia |
+| --- | --- | --- |
+| @babel/code-frame | 7.29.7 | MIT |
+| @babel/compat-data | 7.29.7 | MIT |
+| @babel/core | 7.29.7 | MIT |
+| @babel/core/node_modules/semver | 6.3.1 | ISC |
+| @babel/generator | 7.29.8 | MIT |
+| @babel/helper-compilation-targets | 7.29.7 | MIT |
+| @babel/helper-compilation-targets/node_modules/semver | 6.3.1 | ISC |
+| @babel/helper-globals | 7.29.7 | MIT |
+| @babel/helper-module-imports | 7.29.7 | MIT |
+| @babel/helper-module-transforms | 7.29.7 | MIT |
+| @babel/helper-plugin-utils | 7.29.7 | MIT |
+| @babel/helper-string-parser | 7.29.7 | MIT |
+| @babel/helper-validator-identifier | 7.29.7 | MIT |
+| @babel/helper-validator-option | 7.29.7 | MIT |
+| @babel/helpers | 7.29.10 | MIT |
+| @babel/parser | 7.29.9 | MIT |
+| @babel/plugin-transform-arrow-functions | 7.29.7 | MIT |
+| @babel/plugin-transform-react-jsx-self | 7.29.7 | MIT |
+| @babel/plugin-transform-react-jsx-source | 7.29.7 | MIT |
+| @babel/template | 7.29.7 | MIT |
+| @babel/traverse | 7.29.10 | MIT |
+| @babel/types | 7.29.8 | MIT |
+| @electron-internal/extract-zip | 1.0.5 | BSD-2-Clause |
+| @electron/asar | 3.4.1 | MIT |
+| @electron/asar/node_modules/balanced-match | 1.0.2 | MIT |
+| @electron/asar/node_modules/brace-expansion | 1.1.21 | MIT |
+| @electron/asar/node_modules/minimatch | 3.1.5 | ISC |
+| @electron/fuses | 1.8.0 | MIT |
+| @electron/fuses/node_modules/fs-extra | 9.1.0 | MIT |
+| @electron/get | 5.1.0 | MIT |
+| @electron/notarize | 2.5.0 | MIT |
+| @electron/notarize/node_modules/fs-extra | 9.1.0 | MIT |
+| @electron/osx-sign | 1.3.3 | BSD-2-Clause |
+| @electron/osx-sign/node_modules/isbinaryfile | 4.0.10 | MIT |
+| @electron/rebuild | 4.2.1 | MIT |
+| @electron/universal | 2.0.3 | MIT |
+| @electron/universal/node_modules/balanced-match | 1.0.2 | MIT |
+| @electron/universal/node_modules/brace-expansion | 2.1.7 | MIT |
+| @electron/universal/node_modules/fs-extra | 11.4.1 | MIT |
+| @electron/universal/node_modules/minimatch | 9.0.9 | ISC |
+| @electron/windows-sign | 1.2.2 | BSD-2-Clause |
+| @electron/windows-sign/node_modules/fs-extra | 11.4.1 | MIT |
+| @esbuild/aix-ppc64 | 0.28.2 | MIT |
+| @esbuild/android-arm | 0.28.2 | MIT |
+| @esbuild/android-arm64 | 0.28.2 | MIT |
+| @esbuild/android-x64 | 0.28.2 | MIT |
+| @esbuild/darwin-arm64 | 0.28.2 | MIT |
+| @esbuild/darwin-x64 | 0.28.2 | MIT |
+| @esbuild/freebsd-arm64 | 0.28.2 | MIT |
+| @esbuild/freebsd-x64 | 0.28.2 | MIT |
+| @esbuild/linux-arm | 0.28.2 | MIT |
+| @esbuild/linux-arm64 | 0.28.2 | MIT |
+| @esbuild/linux-ia32 | 0.28.2 | MIT |
+| @esbuild/linux-loong64 | 0.28.2 | MIT |
+| @esbuild/linux-mips64el | 0.28.2 | MIT |
+| @esbuild/linux-ppc64 | 0.28.2 | MIT |
+| @esbuild/linux-riscv64 | 0.28.2 | MIT |
+| @esbuild/linux-s390x | 0.28.2 | MIT |
+| @esbuild/linux-x64 | 0.28.2 | MIT |
+| @esbuild/netbsd-arm64 | 0.28.2 | MIT |
+| @esbuild/netbsd-x64 | 0.28.2 | MIT |
+| @esbuild/openbsd-arm64 | 0.28.2 | MIT |
+| @esbuild/openbsd-x64 | 0.28.2 | MIT |
+| @esbuild/openharmony-arm64 | 0.28.2 | MIT |
+| @esbuild/sunos-x64 | 0.28.2 | MIT |
+| @esbuild/win32-arm64 | 0.28.2 | MIT |
+| @esbuild/win32-ia32 | 0.28.2 | MIT |
+| @esbuild/win32-x64 | 0.28.2 | MIT |
+| @isaacs/fs-minipass | 4.0.1 | ISC |
+| @jridgewell/gen-mapping | 0.3.13 | MIT |
+| @jridgewell/remapping | 2.3.5 | MIT |
+| @jridgewell/resolve-uri | 3.1.2 | MIT |
+| @jridgewell/sourcemap-codec | 1.6.0 | MIT |
+| @jridgewell/trace-mapping | 0.3.31 | MIT |
+| @malept/cross-spawn-promise | 2.0.0 | Apache-2.0 |
+| @malept/flatpak-bundler | 0.4.0 | MIT |
+| @malept/flatpak-bundler/node_modules/fs-extra | 9.1.0 | MIT |
+| @napi-rs/lzma-linux-x64-gnu | 1.5.1 | MIT |
+| @noble/hashes | 1.8.0 | MIT |
+| @oxc-project/types | 0.154.0 | MIT |
+| @peculiar/asn1-schema | 2.11.0 | MIT |
+| @peculiar/json-schema | 1.1.12 | MIT |
+| @peculiar/utils | 2.0.3 | MIT |
+| @peculiar/webcrypto | 1.7.1 | MIT |
+| @rolldown/binding-android-arm-eabi | 1.2.14 | MIT |
+| @rolldown/binding-android-arm64 | 1.2.14 | MIT |
+| @rolldown/binding-darwin-arm64 | 1.2.14 | MIT |
+| @rolldown/binding-darwin-x64 | 1.2.14 | MIT |
+| @rolldown/binding-freebsd-x64 | 1.2.14 | MIT |
+| @rolldown/binding-linux-arm-gnueabihf | 1.2.14 | MIT |
+| @rolldown/binding-linux-arm64-gnu | 1.2.14 | MIT |
+| @rolldown/binding-linux-arm64-musl | 1.2.14 | MIT |
+| @rolldown/binding-linux-ppc64-gnu | 1.2.14 | MIT |
+| @rolldown/binding-linux-s390x-gnu | 1.2.14 | MIT |
+| @rolldown/binding-linux-x64-gnu | 1.2.14 | MIT |
+| @rolldown/binding-linux-x64-musl | 1.2.14 | MIT |
+| @rolldown/binding-openharmony-arm64 | 1.2.14 | MIT |
+| @rolldown/binding-win32-arm64-msvc | 1.2.14 | MIT |
+| @rolldown/binding-win32-x64-msvc | 1.2.14 | MIT |
+| @rolldown/pluginutils | 1.0.1 | MIT |
+| @rollup/rollup-android-arm-eabi | 4.64.10 | MIT |
+| @rollup/rollup-android-arm64 | 4.64.10 | MIT |
+| @rollup/rollup-darwin-arm64 | 4.64.10 | MIT |
+| @rollup/rollup-darwin-x64 | 4.64.10 | MIT |
+| @rollup/rollup-freebsd-arm64 | 4.64.10 | MIT |
+| @rollup/rollup-freebsd-x64 | 4.64.10 | MIT |
+| @rollup/rollup-linux-arm-gnueabihf | 4.64.10 | MIT |
+| @rollup/rollup-linux-arm-musleabihf | 4.64.10 | MIT |
+| @rollup/rollup-linux-arm64-gnu | 4.64.10 | MIT |
+| @rollup/rollup-linux-arm64-musl | 4.64.10 | MIT |
+| @rollup/rollup-linux-loong64-gnu | 4.64.10 | MIT |
+| @rollup/rollup-linux-loong64-musl | 4.64.10 | MIT |
+| @rollup/rollup-linux-ppc64-gnu | 4.64.10 | MIT |
+| @rollup/rollup-linux-ppc64-musl | 4.64.10 | MIT |
+| @rollup/rollup-linux-riscv64-gnu | 4.64.10 | MIT |
+| @rollup/rollup-linux-riscv64-musl | 4.64.10 | MIT |
+| @rollup/rollup-linux-s390x-gnu | 4.64.10 | MIT |
+| @rollup/rollup-linux-x64-gnu | 4.64.10 | MIT |
+| @rollup/rollup-linux-x64-musl | 4.64.10 | MIT |
+| @rollup/rollup-openbsd-x64 | 4.64.10 | MIT |
+| @rollup/rollup-openharmony-arm64 | 4.64.10 | MIT |
+| @rollup/rollup-win32-arm64-msvc | 4.64.10 | MIT |
+| @rollup/rollup-win32-ia32-msvc | 4.64.10 | MIT |
+| @rollup/rollup-win32-x64-gnu | 4.64.10 | MIT |
+| @rollup/rollup-win32-x64-msvc | 4.64.10 | MIT |
+| @sindresorhus/is | 4.6.0 | MIT |
+| @standard-schema/spec | 1.1.0 | MIT |
+| @szmarczak/http-timer | 4.0.6 | MIT |
+| @types/babel__core | 7.20.5 | MIT |
+| @types/babel__generator | 7.27.0 | MIT |
+| @types/babel__template | 7.4.4 | MIT |
+| @types/babel__traverse | 7.28.0 | MIT |
+| @types/cacheable-request | 6.0.3 | MIT |
+| @types/chai | 5.2.3 | MIT |
+| @types/debug | 4.1.13 | MIT |
+| @types/deep-eql | 4.0.2 | MIT |
+| @types/estree | 1.0.9 | MIT |
+| @types/fs-extra | 9.0.13 | MIT |
+| @types/http-cache-semantics | 4.2.0 | MIT |
+| @types/keyv | 3.1.4 | MIT |
+| @types/ms | 2.1.0 | MIT |
+| @types/node | 24.19.2 | MIT |
+| @types/react | 19.3.0 | MIT |
+| @types/react-dom | 19.3.0 | MIT |
+| @types/responselike | 1.0.3 | MIT |
+| @vitejs/plugin-react | 5.2.0 | MIT |
+| @vitejs/plugin-react/node_modules/@rolldown/pluginutils | 1.0.0-rc.3 | MIT |
+| @vitest/expect | 4.1.12 | MIT |
+| @vitest/mocker | 4.1.12 | MIT |
+| @vitest/mocker/node_modules/magic-string | 0.30.21 | MIT |
+| @vitest/pretty-format | 4.1.12 | MIT |
+| @vitest/runner | 4.1.12 | MIT |
+| @vitest/snapshot | 4.1.12 | MIT |
+| @vitest/snapshot/node_modules/magic-string | 0.30.21 | MIT |
+| @vitest/spy | 4.1.12 | MIT |
+| @vitest/utils | 4.1.12 | MIT |
+| @xmldom/xmldom | 0.8.15 | MIT |
+| abbrev | 4.0.0 | ISC |
+| agent-base | 7.1.4 | MIT |
+| ajv | 8.20.0 | MIT |
+| ansi-regex | 5.0.1 | MIT |
+| ansi-styles | 4.3.0 | MIT |
+| app-builder-lib | 26.17.0 | MIT |
+| app-builder-lib/node_modules/@electron/get | 3.1.0 | MIT |
+| app-builder-lib/node_modules/@electron/get/node_modules/fs-extra | 8.1.0 | MIT |
+| app-builder-lib/node_modules/@electron/get/node_modules/semver | 6.3.1 | ISC |
+| app-builder-lib/node_modules/ci-info | 4.3.1 | MIT |
+| app-builder-lib/node_modules/env-paths | 2.2.1 | MIT |
+| app-builder-lib/node_modules/jsonfile | 4.0.0 | MIT |
+| app-builder-lib/node_modules/semver | 7.7.4 | ISC |
+| app-builder-lib/node_modules/universalify | 0.1.2 | MIT |
+| argparse | 2.0.1 | Python-2.0 |
+| asn1js | 3.1.0 | BSD-3-Clause |
+| assertion-error | 2.0.1 | MIT |
+| async | 3.2.6 | MIT |
+| async-exit-hook | 2.0.1 | MIT |
+| asynckit | 0.4.0 | MIT |
+| at-least-node | 1.0.0 | ISC |
+| aws4 | 1.13.2 | MIT |
+| balanced-match | 4.0.4 | MIT |
+| base64-js | 1.5.1 | MIT |
+| baseline-browser-mapping | 2.11.29 | Apache-2.0 |
+| bluebird | 3.7.2 | MIT |
+| boolean | 3.2.0 | MIT |
+| brace-expansion | 5.0.12 | MIT |
+| browserslist | 4.29.4 | MIT |
+| buffer-from | 1.1.2 | MIT |
+| builder-util | 26.16.0 | MIT |
+| builder-util-runtime | 9.7.0 | MIT |
+| bytestreamjs | 2.0.1 | BSD-3-Clause |
+| cac | 7.1.0 | MIT |
+| cacheable-lookup | 5.0.4 | MIT |
+| cacheable-request | 7.0.4 | MIT |
+| call-bind-apply-helpers | 1.0.2 | MIT |
+| caniuse-lite | 1.0.30001816 | CC-BY-4.0 |
+| chai | 6.3.0 | MIT |
+| chalk | 4.1.2 | MIT |
+| chownr | 3.0.0 | BlueOak-1.0.0 |
+| chromium-pickle-js | 0.2.0 | MIT |
+| ci-info | 4.4.0 | MIT |
+| cliui | 8.0.1 | ISC |
+| clone-response | 1.0.3 | MIT |
+| color-convert | 2.0.1 | MIT |
+| color-name | 1.1.4 | MIT |
+| combined-stream | 1.0.8 | MIT |
+| commander | 5.1.0 | MIT |
+| compare-version | 0.1.2 | MIT |
+| concat-map | 0.0.1 | MIT |
+| convert-source-map | 2.0.0 | MIT |
+| core-util-is | 1.0.3 | MIT |
+| cross-dirname | 0.1.0 | MIT |
+| cross-spawn | 7.0.6 | MIT |
+| cross-spawn/node_modules/isexe | 2.0.0 | ISC |
+| cross-spawn/node_modules/which | 2.0.2 | ISC |
+| csstype | 3.2.3 | MIT |
+| debug | 4.4.3 | MIT |
+| decompress-response | 6.0.0 | MIT |
+| decompress-response/node_modules/mimic-response | 3.1.0 | MIT |
+| defer-to-connect | 2.0.1 | MIT |
+| define-data-property | 1.1.4 | MIT |
+| define-properties | 1.2.1 | MIT |
+| delayed-stream | 1.0.0 | MIT |
+| detect-node | 2.1.0 | MIT |
+| dir-compare | 4.2.0 | MIT |
+| dir-compare/node_modules/balanced-match | 1.0.2 | MIT |
+| dir-compare/node_modules/brace-expansion | 1.1.21 | MIT |
+| dir-compare/node_modules/minimatch | 3.1.5 | ISC |
+| dmg-builder | 26.17.0 | MIT |
+| dotenv | 16.6.1 | BSD-2-Clause |
+| dotenv-expand | 11.0.7 | BSD-2-Clause |
+| dunder-proto | 1.0.1 | MIT |
+| duplexer2 | 0.1.4 | BSD-3-Clause |
+| ejs | 3.1.10 | Apache-2.0 |
+| electron-builder | 26.17.0 | MIT |
+| electron-builder-squirrel-windows | 26.17.0 | MIT |
+| electron-publish | 26.16.0 | MIT |
+| electron-to-chromium | 1.5.459 | ISC |
+| electron-vite | 6.0.0 | MIT |
+| electron-winstaller | 5.4.0 | MIT |
+| electron-winstaller/node_modules/fs-extra | 7.0.1 | MIT |
+| electron-winstaller/node_modules/jsonfile | 4.0.0 | MIT |
+| electron-winstaller/node_modules/universalify | 0.1.2 | MIT |
+| emoji-regex | 8.0.0 | MIT |
+| end-of-stream | 1.4.5 | MIT |
+| env-paths | 3.0.0 | MIT |
+| err-code | 2.0.3 | MIT |
+| es-define-property | 1.0.1 | MIT |
+| es-errors | 1.3.0 | MIT |
+| es-module-lexer | 2.3.2 | MIT |
+| es-object-atoms | 1.1.2 | MIT |
+| es-set-tostringtag | 2.1.0 | MIT |
+| es6-error | 4.1.1 | MIT |
+| esbuild | 0.28.2 | MIT |
+| escalade | 3.2.0 | MIT |
+| escape-string-regexp | 4.0.0 | MIT |
+| estree-walker | 3.0.3 | MIT |
+| expect-type | 1.4.0 | Apache-2.0 |
+| exponential-backoff | 3.1.3 | Apache-2.0 |
+| fast-deep-equal | 3.1.3 | MIT |
+| fast-uri | 3.1.8 | BSD-3-Clause |
+| fdir | 6.5.0 | MIT |
+| filelist | 1.0.6 | Apache-2.0 |
+| filelist/node_modules/balanced-match | 1.0.2 | MIT |
+| filelist/node_modules/brace-expansion | 2.1.7 | MIT |
+| filelist/node_modules/minimatch | 5.1.9 | ISC |
+| form-data | 4.0.6 | MIT |
+| fs-extra | 10.1.0 | MIT |
+| fs.realpath | 1.0.0 | ISC |
+| fsevents | 2.3.3 | MIT |
+| function-bind | 1.1.2 | MIT |
+| gensync | 1.0.0-beta.2 | MIT |
+| get-caller-file | 2.0.5 | ISC |
+| get-intrinsic | 1.3.0 | MIT |
+| get-proto | 1.0.1 | MIT |
+| get-stream | 5.2.0 | MIT |
+| glob | 7.2.3 | ISC |
+| glob/node_modules/balanced-match | 1.0.2 | MIT |
+| glob/node_modules/brace-expansion | 1.1.21 | MIT |
+| glob/node_modules/minimatch | 3.1.5 | ISC |
+| global-agent | 3.0.0 | BSD-3-Clause |
+| globalthis | 1.0.4 | MIT |
+| gopd | 1.2.0 | MIT |
+| got | 11.8.6 | MIT |
+| graceful-fs | 4.2.11 | ISC |
+| has-flag | 4.0.0 | MIT |
+| has-property-descriptors | 1.0.2 | MIT |
+| has-symbols | 1.1.0 | MIT |
+| has-tostringtag | 1.0.2 | MIT |
+| hasown | 2.0.4 | MIT |
+| hosted-git-info | 4.1.0 | ISC |
+| hosted-git-info/node_modules/lru-cache | 6.0.0 | ISC |
+| hosted-git-info/node_modules/yallist | 4.0.0 | ISC |
+| http-cache-semantics | 4.3.0 | BSD-2-Clause |
+| http-proxy-agent | 7.0.2 | MIT |
+| http2-wrapper | 1.0.3 | MIT |
+| https-proxy-agent | 7.0.6 | MIT |
+| inflight | 1.0.6 | ISC |
+| inherits | 2.0.4 | ISC |
+| is-fullwidth-code-point | 3.0.0 | MIT |
+| isarray | 1.0.0 | MIT |
+| isbinaryfile | 5.0.7 | MIT |
+| isexe | 3.1.5 | BlueOak-1.0.0 |
+| jake | 10.9.4 | Apache-2.0 |
+| jiti | 2.7.0 | MIT |
+| js-tokens | 4.0.0 | MIT |
+| js-yaml | 4.3.2 | MIT |
+| jsesc | 3.1.0 | MIT |
+| json-buffer | 3.0.1 | MIT |
+| json-schema-traverse | 1.0.0 | MIT |
+| json-stringify-safe | 5.0.1 | ISC |
+| json5 | 2.2.3 | MIT |
+| jsonfile | 6.2.1 | MIT |
+| keyv | 4.5.4 | MIT |
+| lazy-val | 1.0.5 | MIT |
+| lodash | 4.18.1 | MIT |
+| lowercase-keys | 2.0.0 | MIT |
+| lru-cache | 5.1.1 | ISC |
+| magic-string | 1.4.3 | MIT |
+| matcher | 3.0.0 | MIT |
+| math-intrinsics | 1.1.0 | MIT |
+| mime | 2.6.0 | MIT |
+| mime-db | 1.52.0 | MIT |
+| mime-types | 2.1.35 | MIT |
+| mimic-response | 1.0.1 | MIT |
+| minimatch | 10.2.6 | BlueOak-1.0.0 |
+| minimist | 1.2.8 | MIT |
+| minipass | 7.1.3 | BlueOak-1.0.0 |
+| minizlib | 3.1.0 | MIT |
+| mkdirp | 0.5.6 | MIT |
+| ms | 2.1.3 | MIT |
+| nanoid | 3.3.20 | MIT |
+| node-abi | 4.38.0 | MIT |
+| node-api-version | 0.2.1 | MIT |
+| node-gyp | 12.4.0 | MIT |
+| node-gyp/node_modules/env-paths | 2.2.1 | MIT |
+| node-gyp/node_modules/isexe | 4.0.0 | BlueOak-1.0.0 |
+| node-gyp/node_modules/undici | 6.29.1 | MIT |
+| node-gyp/node_modules/which | 6.0.1 | ISC |
+| node-int64 | 0.4.0 | MIT |
+| node-releases | 2.0.59 | MIT |
+| nopt | 9.0.0 | ISC |
+| normalize-url | 6.1.0 | MIT |
+| object-keys | 1.1.1 | MIT |
+| obug | 2.2.1 | MIT |
+| once | 1.4.0 | ISC |
+| p-cancelable | 2.1.1 | MIT |
+| p-limit | 3.1.0 | MIT |
+| path-is-absolute | 1.0.1 | MIT |
+| path-key | 3.1.1 | MIT |
+| pathe | 2.0.3 | MIT |
+| pe-library | 0.4.1 | MIT |
+| picocolors | 1.1.1 | ISC |
+| picomatch | 4.0.7 | MIT |
+| pkijs | 3.4.1 | BSD-3-Clause |
+| plist | 3.1.0 | MIT |
+| postcss | 8.5.31 | MIT |
+| postject | 1.0.0-alpha.6 | MIT |
+| postject/node_modules/commander | 9.5.0 | MIT |
+| proc-log | 6.1.0 | ISC |
+| process-nextick-args | 2.0.1 | MIT |
+| progress | 2.0.3 | MIT |
+| promise-retry | 2.0.1 | MIT |
+| proper-lockfile | 4.1.2 | MIT |
+| pump | 3.0.4 | MIT |
+| pvtsutils | 1.3.6 | MIT |
+| pvutils | 1.2.0 | MIT |
+| quick-lru | 5.1.1 | MIT |
+| react-refresh | 0.18.0 | MIT |
+| read-binary-file-arch | 1.0.6 | MIT |
+| readable-stream | 2.3.8 | MIT |
+| require-directory | 2.1.1 | MIT |
+| require-from-string | 2.0.2 | MIT |
+| resedit | 1.7.2 | MIT |
+| resolve-alpn | 1.2.1 | MIT |
+| responselike | 2.0.1 | MIT |
+| retry | 0.12.0 | MIT |
+| rimraf | 2.6.3 | ISC |
+| roarr | 2.15.4 | BSD-3-Clause |
+| rolldown | 1.2.14 | MIT |
+| rollup | 4.64.10 | MIT |
+| safe-buffer | 5.1.2 | MIT |
+| sanitize-filename | 1.6.4 | WTFPL OR ISC |
+| sax | 1.6.1 | BlueOak-1.0.0 |
+| semver | 7.8.5 | ISC |
+| semver-compare | 1.0.0 | MIT |
+| serialize-error | 7.0.1 | MIT |
+| shebang-command | 2.0.0 | MIT |
+| shebang-regex | 3.0.0 | MIT |
+| siginfo | 2.0.0 | ISC |
+| signal-exit | 3.0.7 | ISC |
+| simple-update-notifier | 2.0.0 | MIT |
+| source-map | 0.6.1 | BSD-3-Clause |
+| source-map-js | 1.2.2 | BSD-3-Clause |
+| source-map-support | 0.5.21 | MIT |
+| sprintf-js | 1.1.3 | BSD-3-Clause |
+| stackback | 0.0.2 | MIT |
+| stat-mode | 1.0.0 | MIT |
+| std-env | 4.3.0 | MIT |
+| string_decoder | 1.1.1 | MIT |
+| string-width | 4.2.3 | MIT |
+| strip-ansi | 6.0.1 | MIT |
+| sumchecker | 3.0.1 | Apache-2.0 |
+| supports-color | 7.2.0 | MIT |
+| tar | 7.5.22 | BlueOak-1.0.0 |
+| tar/node_modules/yallist | 5.0.0 | BlueOak-1.0.0 |
+| temp | 0.9.4 | MIT |
+| temp-file | 3.4.0 | MIT |
+| tiny-async-pool | 1.3.0 | MIT |
+| tiny-async-pool/node_modules/semver | 5.7.2 | ISC |
+| tinybench | 2.9.0 | MIT |
+| tinyexec | 1.3.1 | MIT |
+| tinyglobby | 0.2.17 | MIT |
+| tinyrainbow | 3.2.0 | MIT |
+| tmp | 0.2.7 | MIT |
+| tmp-promise | 3.0.3 | MIT |
+| truncate-utf8-bytes | 1.0.2 | WTFPL |
+| tslib | 2.8.1 | 0BSD |
+| type-fest | 0.13.1 | (MIT OR CC0-1.0) |
+| typescript | 5.9.3 | Apache-2.0 |
+| undici | 7.30.1 | MIT |
+| undici-types | 7.24.6 | MIT |
+| universalify | 2.0.1 | MIT |
+| unzipper | 0.12.5 | MIT |
+| unzipper/node_modules/fs-extra | 11.3.1 | MIT |
+| update-browserslist-db | 1.3.4 | MIT |
+| utf8-byte-length | 1.0.5 | (WTFPL OR MIT) |
+| util-deprecate | 1.0.2 | MIT |
+| vite | 7.3.7 | MIT |
+| vitest | 4.1.12 | MIT |
+| vitest/node_modules/magic-string | 0.30.21 | MIT |
+| webcrypto-core | 1.9.2 | MIT |
+| which | 5.0.0 | ISC |
+| why-is-node-running | 2.3.0 | MIT |
+| wrap-ansi | 7.0.0 | MIT |
+| wrappy | 1.0.2 | ISC |
+| xmlbuilder | 15.1.1 | MIT |
+| y18n | 5.0.8 | ISC |
+| yallist | 3.1.1 | ISC |
+| yargs | 17.7.3 | MIT |
+| yargs-parser | 21.1.1 | ISC |
+| yocto-queue | 0.1.0 | MIT |
+
+Total: 447 paquetes (6 distribuidos, 441 de desarrollo).
+
+## 5. Recursos propios
+
+- Icono, monograma RV, iconografía e ilustraciones: creados para RESALEVAULT.
+- Tipografías: se usan fuentes del sistema operativo; no se distribuye ninguna tipografía.
+- Logotipos de transportistas: **no se incluye ninguno**. Son marcas registradas sin
+  autorización de uso; la aplicación genera un distintivo propio con iniciales.
+- Imágenes de producto: las aporta el usuario y se almacenan solo en su equipo.

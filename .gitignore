@@ -33,6 +33,9 @@ tools/keys/private/
 *.key
 build/*.pfx
 
+# Certificado y contrasena de firma de desarrollo
+tools/signing/
+
 # Variables de entorno y credenciales locales
 .env
 .env.*
