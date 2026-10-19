@@ -1,8 +1,8 @@
-# RESALEVAULT - Configuracion del instalador de Windows (Fase 8)
+# RESALEVAULT - Configuracion del instalador de Windows
 #
-# NOTA DE HONESTIDAD: este archivo esta preparado, pero el instalador NO se ha
-# generado ni probado todavia. Tampoco hay certificado de firma configurado, por
-# lo que Windows mostrara un aviso SmartScreen al ejecutarlo. Ver docs/ESTADO.md.
+# Estado: el instalador se genera y se firma (ver docs/FIRMA.md). Con un
+# certificado autofirmado de desarrollo Windows aun puede mostrar un aviso, y en
+# equipos con Device Guard/AppLocker puede quedar bloqueado. Ver docs/FIRMA.md.
 
 appId: com.resalevault.desktop
 productName: RESALEVAULT
@@ -19,6 +19,12 @@ files:
   - '!**/*.map'
   - '!**/*.ts'
 
+# Avisos de licencias de terceros: obligatorios si se distribuye codigo ajeno.
+# Se colocan en resources/ como fichero plano, legible sin abrir el asar.
+extraResources:
+  - from: THIRD-PARTY-NOTICES.md
+    to: THIRD-PARTY-NOTICES.md
+
 # Los datos del usuario NO viven aqui: estan en %APPDATA%\RESALEVAULT, de modo
 # que desinstalar o actualizar nunca borra el inventario.
 win:
@@ -27,8 +33,9 @@ win:
       arch:
         - x64
   icon: build/icon.png
-  # La firma se activara cuando exista un certificado valido:
-  # certificateFile / certificatePassword (via variables de entorno).
+  # La firma se configura por variables de entorno (WIN_CSC_LINK y
+  # WIN_CSC_KEY_PASSWORD). `npm run dist:signed` las pone automaticamente a
+  # partir del certificado de desarrollo. Ver docs/FIRMA.md.
 
 nsis:
   oneClick: false

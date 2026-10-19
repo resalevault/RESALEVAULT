@@ -199,7 +199,7 @@ async function bootstrap(): Promise<void> {
     }
   }
 
-  registerIpcHandlers(ipcContext)
+  registerIpcHandlers({ ...ipcContext, license })
   registerModuleHandlers({ ...ipcContext, media, labels, finance, csv, intelligence, license, ai, backups })
   registerTrackingHandlers({ ...ipcContext, browser })
 
@@ -247,11 +247,9 @@ app.on('before-quit', () => {
 
 // Fallos no controlados: se registran para diagnostico en lugar de desaparecer.
 process.on('uncaughtException', (error) => {
-  // eslint-disable-next-line no-console
   console.error('[RESALEVAULT] uncaughtException', error)
 })
 
 process.on('unhandledRejection', (reason) => {
-  // eslint-disable-next-line no-console
   console.error('[RESALEVAULT] unhandledRejection', reason)
 })

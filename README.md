@@ -5,15 +5,39 @@
 Aplicación de escritorio para Windows dirigida a revendedores: inventario,
 ubicaciones físicas, compras, pedidos y rentabilidad real.
 
-- **Versión:** 0.5.0 (Fases 1 a 5, Shipping Tracker y copias de seguridad)
+- **Versión:** 0.5.0
 - **Estado:** aplicación funcional con inventario completo, fotografías y
   documentos, importación/exportación CSV, compras con reparto de costes,
   pedidos con **beneficio neto**, devoluciones, preparación de pedidos con
   escaneo, códigos de barras y QR, informes financieros, alertas locales,
-  **AI Studio con clave propia (BYOK)**, licencias y planes,
-  **copias de seguridad con restauración** e internacionalización
-  (español / inglés), y **Shipping Tracker** con navegador integrado.
-- **Detalle honesto de lo implementado y lo pendiente:** [`docs/ESTADO.md`](docs/ESTADO.md)
+  **AI Studio con clave propia (BYOK)**, licencias y planes con **límites
+  aplicados de verdad**, **copias de seguridad con restauración**,
+  internacionalización (español / inglés) y **Shipping Tracker** con navegador
+  integrado aislado.
+- **Calidad:** 287 pruebas unitarias · 70 de humo · 54 de interfaz · ESLint sin
+  problemas · 71,2 % de cobertura · banco de pruebas con 50.000 artículos ·
+  integración continua configurada.
+- **Coste real invertido: 0 €.** Instalador firmado con certificado
+  **autofirmado** (no elimina los avisos de Windows: ver `docs/FIRMA.md`).
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [`docs/ESTADO.md`](docs/ESTADO.md) | Estado real: qué funciona, qué no y por qué |
+| [`docs/MANUAL-USUARIO.md`](docs/MANUAL-USUARIO.md) | Guía de uso para el usuario final |
+| [`docs/TEST-REPORT.md`](docs/TEST-REPORT.md) | Pruebas ejecutadas, cobertura y rendimiento medido |
+| [`docs/FREE-VS-PRO-VS-BUSINESS.md`](docs/FREE-VS-PRO-VS-BUSINESS.md) | Comparativa de planes |
+| [`docs/FIRMA.md`](docs/FIRMA.md) | Firma de código, hashes y limitaciones de Windows |
+| [`docs/BUILD-WINDOWS.md`](docs/BUILD-WINDOWS.md) | Compilación e instalación |
+| [`docs/LICENCIAS.md`](docs/LICENCIAS.md) | Sistema de licencias y emisión |
+| [`docs/PRIVACIDAD.md`](docs/PRIVACIDAD.md) | Qué datos se guardan y a dónde viajan |
+| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Historial de versiones |
+| [`docs/RECUPERACION.md`](docs/RECUPERACION.md) | Copias y recuperación |
+| [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) | Diseño interno |
+| [`docs/FORMULAS.md`](docs/FORMULAS.md) | Fórmulas de coste y beneficio |
+| [`docs/SEGUIMIENTO.md`](docs/SEGUIMIENTO.md) | Shipping Tracker y sus límites |
+| [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) | Licencias de terceros (generado) |
 
 ---
 
@@ -52,15 +76,23 @@ node node_modules/electron/install.js
 | `npm run build` | Compila proceso principal, preload e interfaz en `out/`. |
 | `npm run doctor` | Diagnóstico del entorno dentro de Electron (versiones, SQLite, escritura). |
 | `npm run typecheck` | Comprueba los tipos de todo el proyecto (Node y navegador). |
-| `npm test` | Ejecuta la batería de pruebas (111 pruebas). |
+| `npm test` | Ejecuta la batería de pruebas (**287 pruebas**, 21 archivos). |
 | `npm run test:watch` | Pruebas en modo vigilancia. |
-| `npm run verify` | `typecheck` + `test`. Es la comprobación rápida antes de publicar. |
+| `npm run test:coverage` | Pruebas + cobertura (71,2 % de líneas). |
+| `npm run lint` | ESLint sobre todo el proyecto (0 problemas). |
+| `npm run verify` | `typecheck` + `test`. Comprobación rápida antes de publicar. |
 | `npm run smoke` | Prueba de humo de la capa de datos **dentro de Electron real** (70 comprobaciones). |
-| `npm run smoke:ui` | Prueba de humo de la interfaz: carga el HTML compilado, crea datos por el puente IPC y pulsa la navegación (54 comprobaciones). |
-| `npm run icon` | Regenera `build/icon.png` (monograma RV) usando el motor de render de Electron. |
-| `npm run license:new` | **(solo administración)** emite una licencia firmada. Ver más abajo. |
-| `npm run dist:dir` | Empaqueta la aplicación sin instalador en `release/win-unpacked/`. **Verificado.** |
-| `npm run dist` | Genera el instalador NSIS de Windows en `release/`. *(Fase 8: configuración preparada, todavía sin ejecutar)* |
+| `npm run smoke:ui` | Prueba de humo de la interfaz, con Electron real y navegación (54 comprobaciones). |
+| `npm run bench` | Banco de pruebas de rendimiento con **50.000 artículos**. |
+| `npm run notices` | Regenera `THIRD-PARTY-NOTICES.md` desde `package-lock.json`. |
+| `npm run icon` | Regenera `build/icon.png` (monograma RV) usando Electron. |
+| `npm run license:keygen` | **(administración)** genera el par de claves de licencias. |
+| `npm run license:new` | **(administración)** emite una licencia firmada. |
+| `npm run license:verify` | **(administración)** verifica un código de licencia. |
+| `npm run dist:dir` | Empaqueta sin instalador en `release/win-unpacked/`. **Verificado.** |
+| `npm run dist` | Genera el instalador NSIS de Windows en `release/`. **Verificado.** |
+| `npm run sign:setup` | Crea un certificado autofirmado de desarrollo (gratuito). |
+| `npm run dist:signed` | Compila, **firma** y verifica el instalador, e imprime su SHA-256. |
 
 ## 4. Dónde se guardan los datos
 
@@ -113,33 +145,38 @@ src/
 │   ├── index.ts               Arranque, instancia única, cierre limpio
 │   ├── window.ts              Ventana sin marco + diagnóstico del renderer
 │   ├── errors.ts              Errores de dominio con código
-│   ├── ipc/register.ts        46 canales IPC con validación
+│   ├── ipc/                   register.ts + register-modules.ts: 151 canales
 │   ├── db/
 │   │   ├── database.ts        Conexión, transacciones, caché de sentencias
 │   │   ├── migrator.ts        Motor de migraciones versionadas
-│   │   ├── migrations/        001 esquema · 002 datos base
+│   │   ├── migrations/        001 esquema · 002 datos base · 003 comercio · 004 seguimiento
 │   │   ├── context.ts         Composición de repositorios
-│   │   └── repositories/      products, categories, locations, tags…
-│   └── services/              settings, paths, logger, security, demo-data
+│   │   └── repositories/      products, categories, locations, orders, tracking…
+│   └── services/              settings, paths, logger, security, backup, license,
+│                              finance, csv-io, intelligence, labels, media, ai,
+│                              browser (WebContentsView), demo-data
 ├── preload/index.ts           Puente contextBridge
-├── shared/                    Tipos, esquemas zod, CSP, SKU, formato
+├── shared/                    Tipos, esquemas zod, CSP, SKU, formato, planes, transportistas
 └── renderer/src/              Interfaz React
     ├── App.tsx                Composición + enrutado
     ├── app.css                Identidad visual completa
     ├── i18n/                  es.ts, en.ts, motor de traducción
     ├── lib/                   api.ts, app-context.tsx, hooks.ts
-    ├── components/            Icons, ui, TitleBar, Sidebar
-    └── pages/                 Dashboard, Inventory, ProductForm, …
-tests/                         111 pruebas automatizadas
-scripts/                       doctor, pruebas de humo, empaquetado
-docs/                          Arquitectura, fórmulas y estado
+    ├── components/            Icons, ui, TitleBar, Sidebar, CarrierBadge, PlanGate
+    └── pages/                 Dashboard, Inventory, Orders, ShippingTracker, AiStudio…
+tests/                         287 pruebas automatizadas (21 archivos)
+scripts/                       doctor, pruebas de humo, benchmark, empaquetado, licencias
+docs/                          Estado, manual, pruebas, firma, licencias, privacidad…
 ```
+
+**Base de datos:** 36 tablas, esquema **v4**, claves foráneas activas y WAL.
+Todo el dinero en **céntimos enteros**; fechas en ISO-8601; ids UUID v4.
 
 ## 7. Seguridad aplicada (resumen)
 
 - `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true`.
-- **No existe un `invoke` genérico**: el renderer solo puede llamar a los 46
-  métodos declarados, cada uno con su esquema de validación en el proceso
+- **No existe un `invoke` genérico**: el renderer solo puede llamar a los **151
+  canales** declarados, cada uno con su esquema de validación en el proceso
   principal.
 - Solo la ventana principal puede invocar IPC (se comprueba el `webContents`).
 - Content-Security-Policy estricta, por cabecera HTTP **y** por etiqueta `<meta>`.
@@ -150,24 +187,32 @@ docs/                          Arquitectura, fórmulas y estado
 - Los errores cruzan el puente como **código**, nunca con rutas ni SQL.
 - El registro (`logs/`) redacta automáticamente cualquier campo que parezca una
   credencial.
+- **Los límites de plan se comprueban en el proceso principal**, no solo
+  ocultando botones en la interfaz.
+- El navegador de transportistas (`WebContentsView`) va sin preload, sin Node,
+  solo HTTPS, con emergentes, descargas y permisos bloqueados.
 
-## 8. Costes externos previstos
+## 8. Costes externos
 
-| Concepto | Coste | Cuándo |
+| Concepto | Coste real | Cuándo |
 |---|---|---|
 | Desarrollo y uso local | **0 €** | ya |
-| Firma de código para Windows (certificado) | ~90–400 €/año | Fase 8 |
-| Backend de licencias (Cloudflare Workers + D1 o Supabase) | 0 € al empezar; ~5–25 €/mes con volumen | Fase 6 |
-| APIs de IA | **las paga el cliente con su propia clave** (BYOK) | Fase 5 |
-| Pasarela de pago | comisión por transacción | Fase 6 |
+| Git, ESLint, cobertura, CI, electron-builder | **0 €** | ya |
+| Certificado de firma **autofirmado** | **0 €** | ya |
+| Certificado de firma **de confianza pública** (OV/IV) | 150–300 €/año | antes de distribuir |
+| Backend de licencias (Cloudflare Workers + D1 o Supabase) | 0 € al empezar; ~5–25 €/mes con volumen | pendiente |
+| APIs de IA | **las paga el cliente con su propia clave** (BYOK) | ya |
+| Pasarela de pago | comisión por transacción | pendiente |
 
-No se promete coste cero indefinido en los servicios online.
+**Gasto real hasta la fecha: 0 €.** No se ha contratado ningún servicio, ni se
+ha introducido ninguna tarjeta, ni se ha iniciado ninguna prueba de pago. No se
+promete coste cero indefinido en los servicios online.
 
 ## 9. Licencias (administración)
 
 La aplicación **solo lleva la clave pública**: puede verificar licencias, nunca
 emitirlas. La clave privada vive en `tools/keys/license-private.pem`, que no se
-empaqueta (el instalador solo incluye `out/` y `package.json`).
+empaqueta y está excluida de Git.
 
 ```powershell
 npm run license:keygen                                      # solo la primera vez
@@ -175,9 +220,28 @@ npm run license:new -- --plan pro --kind founder --holder "Nombre"
 npm run license:verify -- --code <codigo>
 ```
 
-No se generan las 400 licencias fundadoras de golpe: se emiten una a una cuando
-haya clientes reales.
+No se generan las 400 licencias fundadoras de golpe: falta un registro de
+emisión y se emiten una a una cuando haya clientes reales. Detalle completo en
+[`docs/LICENCIAS.md`](docs/LICENCIAS.md).
 
-## 10. Licencia
+## 10. Instalador
+
+```
+release\RESALEVAULT-Setup-0.5.0.exe     118,44 MB
+SHA-256  91a65a6038516e66dd4d91993ddd3e0a6ebf61ef7a86f6d6fe1bacc09278327d
+Firma    presente (certificado AUTOFIRMADO: la raíz no es de confianza publica)
+```
+
+El instalador **no es reproducible byte a byte** (NSIS incluye marcas de tiempo):
+publica siempre el hash de la compilación concreta que entregues.
+
+Este equipo **bloquea su ejecución** por la política Device Guard de la
+organización. La instalación de extremo a extremo **no se ha podido verificar**.
+Ver [`docs/FIRMA.md`](docs/FIRMA.md).
+
+## 11. Licencia
 
 Software propietario. Todos los derechos reservados.
+
+Las licencias de los componentes de terceros que se distribuyen con el programa
+están en [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).

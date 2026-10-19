@@ -944,7 +944,10 @@ export const en: DictionaryShape<typeof es> = {
       'Founder licences are perpetual and capped at 200 per plan. They are not issued from this application.',
     noBackend:
       'Licence activation needs the online service, which arrives in Phase 6. This screen shows the real state: no licence is activated.',
-    planLimitsApplied: 'Your plan limits are already applied throughout the program.'
+    planLimitsApplied: 'Your plan limits are already applied throughout the program.',
+    requiresPro: 'This feature requires Vault Pro or Vault Business',
+    requiresProHint:
+      'The free plan includes inventory, purchases, orders, locations, codes and backups. Analytics, intelligence, CSV import and AI Studio are part of Pro.'
   },
 
   ai: {

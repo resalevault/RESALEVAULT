@@ -8,6 +8,7 @@ release/
 .vite/
 coverage/
 .tmp/
+*.tsbuildinfo
 
 # Registros
 *.log

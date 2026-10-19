@@ -83,14 +83,31 @@ try {
     [
       '-NoProfile',
       '-Command',
-      `(Get-AuthenticodeSignature -FilePath '${installer}').Status`
+      `$s = Get-AuthenticodeSignature -FilePath '${installer}'; "$($s.Status)|$($s.StatusMessage)"`
     ],
     { encoding: 'utf8' }
   ).trim()
-  process.stdout.write('Firma:     ' + signature + '\n')
-  if (signature !== 'Valid') {
+
+  const [status, ...rest] = signature.split('|')
+  const message = rest.join('|').trim()
+
+  process.stdout.write('Firma:     ' + status + '\n')
+
+  if (status === 'Valid') {
+    process.stdout.write('La firma es valida y la cadena de confianza esta completa.\n')
+  } else if (/not trusted by the trust provider|UntrustedRoot/i.test(message)) {
+    // Caso normal con un certificado AUTOFIRMADO: la firma existe y es
+    // criptograficamente correcta, pero su raiz no es de confianza publica.
     process.stdout.write(
-      '\nAVISO: la firma no es valida. Revisa docs/FIRMA.md antes de distribuir.\n'
+      'La firma EXISTE y es criptograficamente valida, pero su raiz no es de\n' +
+        'confianza publica (certificado autofirmado). Windows seguira mostrando\n' +
+        '"editor desconocido" y SmartScreen/Device Guard pueden bloquearlo.\n' +
+        'NO es un fallo del empaquetado. Ver docs/FIRMA.md.\n'
+    )
+  } else {
+    process.stdout.write(
+      'AVISO: la firma no se ha podido validar. Detalle:\n  ' + message + '\n' +
+        'Revisa docs/FIRMA.md antes de distribuir.\n'
     )
   }
 } catch {
@@ -98,3 +115,12 @@ try {
 }
 
 process.stdout.write('\nGuarda el SHA-256 junto al instalador para poder verificar la descarga.\n')
+process.stdout.write(
+  'Nota: el instalador NO es reproducible byte a byte (NSIS incluye marcas de\n' +
+    'tiempo). Publica siempre el hash de la compilacion que entregues.\n'
+)
+
+// Salida explicita: el comando PowerShell de verificacion puede devolver un
+// codigo distinto de cero al encontrar una cadena no confiable, y no queremos
+// que eso marque como fallida una firma que si existe.
+process.exit(0)

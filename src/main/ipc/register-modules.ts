@@ -103,6 +103,8 @@ export function registerModuleHandlers(ctx: ModuleContext): void {
   // -------------------------------------------------------------------------
 
   handle(CH_MODULES.mediaImport, zMediaImport, async ({ productId }, event) => {
+    // Cuota de archivos del plan (el limite por articulo lo aplica MediaService).
+    ctx.license.assertUploadQuota(1)
     const parent = BrowserWindow.fromWebContents(event.sender) ?? undefined
     const result = await dialog.showOpenDialog(parent as BrowserWindow, {
       title: 'Anadir archivos',
@@ -293,18 +295,23 @@ export function registerModuleHandlers(ctx: ModuleContext): void {
   // Etiquetas
   // -------------------------------------------------------------------------
 
-  handle(CH_MODULES.labelsProducts, zLabelProducts, ({ productIds, options }) =>
-    ctx.labels.buildProductSheet(productIds, options)
-  )
-  handle(CH_MODULES.labelsLocations, zLabelLocations, ({ locationIds, options }) =>
-    ctx.labels.buildLocationSheet(locationIds, options)
-  )
+  handle(CH_MODULES.labelsProducts, zLabelProducts, ({ productIds, options }) => {
+    ctx.license.assertFeature('barcodes')
+    return ctx.labels.buildProductSheet(productIds, options)
+  })
+  handle(CH_MODULES.labelsLocations, zLabelLocations, ({ locationIds, options }) => {
+    ctx.license.assertFeature('barcodes')
+    return ctx.labels.buildLocationSheet(locationIds, options)
+  })
 
   // -------------------------------------------------------------------------
   // Informes
   // -------------------------------------------------------------------------
 
-  handle(CH_MODULES.financeReport, zFinanceQuery, (query) => ctx.finance.report(noNullDates(query ?? {})))
+  handle(CH_MODULES.financeReport, zFinanceQuery, (query) => {
+    ctx.license.assertFeature('analytics')
+    return ctx.finance.report(noNullDates(query ?? {}))
+  })
   handle(CH_MODULES.financeCrossCheck, zId, (orderId) => ctx.finance.crossCheckOrder(orderId))
 
   // -------------------------------------------------------------------------
@@ -326,13 +333,15 @@ export function registerModuleHandlers(ctx: ModuleContext): void {
 
   handle(CH_MODULES.csvAnalyze, zCsvAnalyze, ({ path, mapping }) => ctx.csv.analyze(path, mapping))
 
-  handle(CH_MODULES.csvImport, zCsvImport, (options) =>
-    ctx.csv.importProducts({
+  handle(CH_MODULES.csvImport, zCsvImport, (options) => {
+    ctx.license.assertFeature('csvImport')
+    return ctx.csv.importProducts({
       path: options.path,
       mapping: options.mapping,
       duplicateStrategy: options.duplicateStrategy,
       dryRun: options.dryRun
-    }), { mutates: true, entity: 'products' })
+    })
+  }, { mutates: true, entity: 'products' })
 
   handle(CH_MODULES.csvChooseExport, zCsvExportDialog, async ({ format, suggestedName }, event) => {
     const parent = BrowserWindow.fromWebContents(event.sender) ?? undefined
@@ -358,7 +367,10 @@ export function registerModuleHandlers(ctx: ModuleContext): void {
   // Inteligencia (reglas locales; sin IA)
   // -------------------------------------------------------------------------
 
-  handle(CH_MODULES.intelligenceReport, null, () => ctx.intelligence.report())
+  handle(CH_MODULES.intelligenceReport, null, () => {
+    ctx.license.assertFeature('intelligence')
+    return ctx.intelligence.report()
+  })
   handle(CH_MODULES.intelligenceThresholdsGet, null, () => ctx.intelligence.getThresholds())
   handle(CH_MODULES.intelligenceThresholdsSet, zIntelligenceThresholds, (patch) =>
     ctx.intelligence.setThresholds(patch), { mutates: true, entity: 'settings' })

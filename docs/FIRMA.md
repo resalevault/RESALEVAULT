@@ -44,8 +44,8 @@ npm run dist:signed
 
 ```
 Artefacto: release\RESALEVAULT-Setup-0.5.0.exe
-Tamaño:    118,43 MB
-SHA-256:   cc6853208902259f90f21a78dfbfac8bb46329f316a446e5b598107f3fa4a0a0
+Tamaño:    118,44 MB
+SHA-256:   91a65a6038516e66dd4d91993ddd3e0a6ebf61ef7a86f6d6fe1bacc09278327d
 Firma:     UnknownError
 ```
 
@@ -60,6 +60,17 @@ StatusMessage: A certificate chain processed, but terminated in a root
 **Traducción: la firma existe y es válida criptográficamente, pero la raíz no es
 de confianza pública.** Esto es exactamente lo que cabe esperar de un
 certificado autofirmado. No es un fallo del empaquetado.
+
+También están firmados `win-unpacked\RESALEVAULT.exe` (el ejecutable interno) y
+`RESALEVAULT-Setup-0.5.0.__uninstaller.exe`, con el mismo estado.
+
+> **El instalador NO es reproducible byte a byte.** NSIS incluye marcas de tiempo,
+> así que dos compilaciones del mismo código dan hashes distintos. Por eso hay que
+> **publicar el hash de la compilación concreta que se entregue**, no un hash
+> "oficial" fijo. El script `npm run dist:signed` lo imprime en cada ejecución.
+>
+> Comprobado durante este trabajo: tres compilaciones consecutivas dieron
+> `cc685320…`, `c28bcd4f…` y `91a65a60…`.
 
 ---
 
@@ -168,6 +179,21 @@ igual.
 - Si el `.pfx` se ve comprometido: revoca el certificado, genera uno nuevo y
   vuelve a compilar. Con un autofirmado, basta con borrar `tools\signing\` y
   ejecutar `npm run sign:setup`.
+
+### Comprobación real del paquete (ejecutada)
+
+```
+release\win-unpacked\resources\
+  app.asar                  29.898 KB
+  elevate.exe                  120 KB
+  THIRD-PARTY-NOTICES.md      23,4 KB   ← avisos de terceros incluidos
+
+Búsqueda de *.pem, *.pfx, *.key, *.password, license-private*  → ninguna
+Búsqueda de *.sqlite, *.sqlite-wal                             → ninguno
+```
+
+Se confirma que **no hay claves privadas, ni datos de usuario, ni bases de datos
+de prueba** dentro del paquete distribuible.
 
 ---
 

@@ -29,5 +29,8 @@ const shared = {
 
 await build({ ...shared, entryPoints: ['scripts/electron-smoke.ts'], outfile: 'out/smoke.cjs' })
 await build({ ...shared, entryPoints: ['scripts/ui-smoke.ts'], outfile: 'out/ui-smoke.cjs' })
+await build({ ...shared, entryPoints: ['scripts/benchmark.ts'], outfile: 'out/benchmark.cjs' })
 
-process.stdout.write('Empaquetadas las pruebas de humo en out/smoke.cjs y out/ui-smoke.cjs\n')
+process.stdout.write(
+  'Empaquetadas las pruebas de humo y el banco de pruebas en out/smoke.cjs, out/ui-smoke.cjs y out/benchmark.cjs\n'
+)

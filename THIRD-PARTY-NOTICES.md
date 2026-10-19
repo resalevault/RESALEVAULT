@@ -2,7 +2,7 @@
 
 Este archivo se genera automáticamente con `npm run notices` a partir de `package-lock.json`. No editar a mano: los cambios se perderán.
 
-Generado: 2026-10-19T21:47:55.651Z
+Generado: 2026-10-19T22:16:15.417Z
 
 ## 1. Componentes distribuidos con el programa
 
@@ -94,6 +94,7 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | @babel/template | 7.29.7 | MIT |
 | @babel/traverse | 7.29.10 | MIT |
 | @babel/types | 7.29.8 | MIT |
+| @bcoe/v8-coverage | 1.0.2 | MIT |
 | @electron-internal/extract-zip | 1.0.5 | BSD-2-Clause |
 | @electron/asar | 3.4.1 | MIT |
 | @electron/asar/node_modules/balanced-match | 1.0.2 | MIT |
@@ -140,6 +141,30 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | @esbuild/win32-arm64 | 0.28.2 | MIT |
 | @esbuild/win32-ia32 | 0.28.2 | MIT |
 | @esbuild/win32-x64 | 0.28.2 | MIT |
+| @eslint-community/eslint-utils | 4.10.1 | MIT |
+| @eslint-community/eslint-utils/node_modules/eslint-visitor-keys | 3.4.3 | Apache-2.0 |
+| @eslint-community/regexpp | 4.12.2 | MIT |
+| @eslint/config-array | 0.21.2 | Apache-2.0 |
+| @eslint/config-array/node_modules/balanced-match | 1.0.2 | MIT |
+| @eslint/config-array/node_modules/brace-expansion | 1.1.21 | MIT |
+| @eslint/config-array/node_modules/minimatch | 3.1.5 | ISC |
+| @eslint/config-helpers | 0.4.2 | Apache-2.0 |
+| @eslint/core | 0.17.0 | Apache-2.0 |
+| @eslint/eslintrc | 3.3.7 | MIT |
+| @eslint/eslintrc/node_modules/ajv | 6.15.0 | MIT |
+| @eslint/eslintrc/node_modules/balanced-match | 1.0.2 | MIT |
+| @eslint/eslintrc/node_modules/brace-expansion | 1.1.21 | MIT |
+| @eslint/eslintrc/node_modules/globals | 14.0.0 | MIT |
+| @eslint/eslintrc/node_modules/json-schema-traverse | 0.4.1 | MIT |
+| @eslint/eslintrc/node_modules/minimatch | 3.1.5 | ISC |
+| @eslint/js | 9.39.5 | MIT |
+| @eslint/object-schema | 2.1.7 | Apache-2.0 |
+| @eslint/plugin-kit | 0.4.1 | Apache-2.0 |
+| @humanfs/core | 0.19.2 | Apache-2.0 |
+| @humanfs/node | 0.16.8 | Apache-2.0 |
+| @humanfs/types | 0.15.0 | Apache-2.0 |
+| @humanwhocodes/module-importer | 1.0.1 | Apache-2.0 |
+| @humanwhocodes/retry | 0.4.3 | Apache-2.0 |
 | @isaacs/fs-minipass | 4.0.1 | ISC |
 | @jridgewell/gen-mapping | 0.3.13 | MIT |
 | @jridgewell/remapping | 2.3.5 | MIT |
@@ -211,14 +236,28 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | @types/estree | 1.0.9 | MIT |
 | @types/fs-extra | 9.0.13 | MIT |
 | @types/http-cache-semantics | 4.2.0 | MIT |
+| @types/json-schema | 7.0.15 | MIT |
 | @types/keyv | 3.1.4 | MIT |
 | @types/ms | 2.1.0 | MIT |
 | @types/node | 24.19.2 | MIT |
 | @types/react | 19.3.0 | MIT |
 | @types/react-dom | 19.3.0 | MIT |
 | @types/responselike | 1.0.3 | MIT |
+| @typescript-eslint/eslint-plugin | 8.72.0 | MIT |
+| @typescript-eslint/eslint-plugin/node_modules/ignore | 7.0.13 | MIT |
+| @typescript-eslint/parser | 8.72.0 | MIT |
+| @typescript-eslint/project-service | 8.72.0 | MIT |
+| @typescript-eslint/scope-manager | 8.72.0 | MIT |
+| @typescript-eslint/tsconfig-utils | 8.72.0 | MIT |
+| @typescript-eslint/type-utils | 8.72.0 | MIT |
+| @typescript-eslint/types | 8.72.0 | MIT |
+| @typescript-eslint/typescript-estree | 8.72.0 | MIT |
+| @typescript-eslint/utils | 8.72.0 | MIT |
+| @typescript-eslint/visitor-keys | 8.72.0 | MIT |
+| @typescript-eslint/visitor-keys/node_modules/eslint-visitor-keys | 5.0.1 | Apache-2.0 |
 | @vitejs/plugin-react | 5.2.0 | MIT |
 | @vitejs/plugin-react/node_modules/@rolldown/pluginutils | 1.0.0-rc.3 | MIT |
+| @vitest/coverage-v8 | 4.1.12 | MIT |
 | @vitest/expect | 4.1.12 | MIT |
 | @vitest/mocker | 4.1.12 | MIT |
 | @vitest/mocker/node_modules/magic-string | 0.30.21 | MIT |
@@ -230,6 +269,8 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | @vitest/utils | 4.1.12 | MIT |
 | @xmldom/xmldom | 0.8.15 | MIT |
 | abbrev | 4.0.0 | ISC |
+| acorn | 8.19.0 | MIT |
+| acorn-jsx | 5.3.2 | MIT |
 | agent-base | 7.1.4 | MIT |
 | ajv | 8.20.0 | MIT |
 | ansi-regex | 5.0.1 | MIT |
@@ -246,6 +287,8 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | argparse | 2.0.1 | Python-2.0 |
 | asn1js | 3.1.0 | BSD-3-Clause |
 | assertion-error | 2.0.1 | MIT |
+| ast-v8-to-istanbul | 1.0.7 | MIT |
+| ast-v8-to-istanbul/node_modules/js-tokens | 10.0.0 | MIT |
 | async | 3.2.6 | MIT |
 | async-exit-hook | 2.0.1 | MIT |
 | asynckit | 0.4.0 | MIT |
@@ -266,6 +309,7 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | cacheable-lookup | 5.0.4 | MIT |
 | cacheable-request | 7.0.4 | MIT |
 | call-bind-apply-helpers | 1.0.2 | MIT |
+| callsites | 3.1.0 | MIT |
 | caniuse-lite | 1.0.30001816 | CC-BY-4.0 |
 | chai | 6.3.0 | MIT |
 | chalk | 4.1.2 | MIT |
@@ -290,6 +334,7 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | debug | 4.4.3 | MIT |
 | decompress-response | 6.0.0 | MIT |
 | decompress-response/node_modules/mimic-response | 3.1.0 | MIT |
+| deep-is | 0.1.4 | MIT |
 | defer-to-connect | 2.0.1 | MIT |
 | define-data-property | 1.1.4 | MIT |
 | define-properties | 1.2.1 | MIT |
@@ -327,16 +372,36 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | esbuild | 0.28.2 | MIT |
 | escalade | 3.2.0 | MIT |
 | escape-string-regexp | 4.0.0 | MIT |
+| eslint | 9.39.5 | MIT |
+| eslint-plugin-react-hooks | 7.1.1 | MIT |
+| eslint-scope | 8.4.0 | BSD-2-Clause |
+| eslint-visitor-keys | 4.2.1 | Apache-2.0 |
+| eslint/node_modules/ajv | 6.15.0 | MIT |
+| eslint/node_modules/balanced-match | 1.0.2 | MIT |
+| eslint/node_modules/brace-expansion | 1.1.21 | MIT |
+| eslint/node_modules/json-schema-traverse | 0.4.1 | MIT |
+| eslint/node_modules/minimatch | 3.1.5 | ISC |
+| espree | 10.4.0 | BSD-2-Clause |
+| esquery | 1.7.0 | BSD-3-Clause |
+| esrecurse | 4.3.0 | BSD-2-Clause |
+| estraverse | 5.3.0 | BSD-2-Clause |
 | estree-walker | 3.0.3 | MIT |
+| esutils | 2.0.3 | BSD-2-Clause |
 | expect-type | 1.4.0 | Apache-2.0 |
 | exponential-backoff | 3.1.3 | Apache-2.0 |
 | fast-deep-equal | 3.1.3 | MIT |
+| fast-json-stable-stringify | 2.1.0 | MIT |
+| fast-levenshtein | 2.0.6 | MIT |
 | fast-uri | 3.1.8 | BSD-3-Clause |
 | fdir | 6.5.0 | MIT |
+| file-entry-cache | 8.0.0 | MIT |
 | filelist | 1.0.6 | Apache-2.0 |
 | filelist/node_modules/balanced-match | 1.0.2 | MIT |
 | filelist/node_modules/brace-expansion | 2.1.7 | MIT |
 | filelist/node_modules/minimatch | 5.1.9 | ISC |
+| find-up | 5.0.0 | MIT |
+| flat-cache | 4.0.1 | MIT |
+| flatted | 3.4.4 | ISC |
 | form-data | 4.0.6 | MIT |
 | fs-extra | 10.1.0 | MIT |
 | fs.realpath | 1.0.0 | ISC |
@@ -348,10 +413,12 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | get-proto | 1.0.1 | MIT |
 | get-stream | 5.2.0 | MIT |
 | glob | 7.2.3 | ISC |
+| glob-parent | 6.0.2 | ISC |
 | glob/node_modules/balanced-match | 1.0.2 | MIT |
 | glob/node_modules/brace-expansion | 1.1.21 | MIT |
 | glob/node_modules/minimatch | 3.1.5 | ISC |
 | global-agent | 3.0.0 | BSD-3-Clause |
+| globals | 17.13.0 | MIT |
 | globalthis | 1.0.4 | MIT |
 | gopd | 1.2.0 | MIT |
 | got | 11.8.6 | MIT |
@@ -361,19 +428,30 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | has-symbols | 1.1.0 | MIT |
 | has-tostringtag | 1.0.2 | MIT |
 | hasown | 2.0.4 | MIT |
+| hermes-estree | 0.25.1 | MIT |
+| hermes-parser | 0.25.1 | MIT |
 | hosted-git-info | 4.1.0 | ISC |
 | hosted-git-info/node_modules/lru-cache | 6.0.0 | ISC |
 | hosted-git-info/node_modules/yallist | 4.0.0 | ISC |
+| html-escaper | 2.0.2 | MIT |
 | http-cache-semantics | 4.3.0 | BSD-2-Clause |
 | http-proxy-agent | 7.0.2 | MIT |
 | http2-wrapper | 1.0.3 | MIT |
 | https-proxy-agent | 7.0.6 | MIT |
+| ignore | 5.3.2 | MIT |
+| import-fresh | 3.3.1 | MIT |
+| imurmurhash | 0.1.4 | MIT |
 | inflight | 1.0.6 | ISC |
 | inherits | 2.0.4 | ISC |
+| is-extglob | 2.1.1 | MIT |
 | is-fullwidth-code-point | 3.0.0 | MIT |
+| is-glob | 4.0.3 | MIT |
 | isarray | 1.0.0 | MIT |
 | isbinaryfile | 5.0.7 | MIT |
 | isexe | 3.1.5 | BlueOak-1.0.0 |
+| istanbul-lib-coverage | 3.2.2 | BSD-3-Clause |
+| istanbul-lib-report | 3.0.1 | BSD-3-Clause |
+| istanbul-reports | 3.2.0 | BSD-3-Clause |
 | jake | 10.9.4 | Apache-2.0 |
 | jiti | 2.7.0 | MIT |
 | js-tokens | 4.0.0 | MIT |
@@ -381,15 +459,21 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | jsesc | 3.1.0 | MIT |
 | json-buffer | 3.0.1 | MIT |
 | json-schema-traverse | 1.0.0 | MIT |
+| json-stable-stringify-without-jsonify | 1.0.1 | MIT |
 | json-stringify-safe | 5.0.1 | ISC |
 | json5 | 2.2.3 | MIT |
 | jsonfile | 6.2.1 | MIT |
 | keyv | 4.5.4 | MIT |
 | lazy-val | 1.0.5 | MIT |
+| levn | 0.4.1 | MIT |
+| locate-path | 6.0.0 | MIT |
 | lodash | 4.18.1 | MIT |
+| lodash.merge | 4.6.2 | MIT |
 | lowercase-keys | 2.0.0 | MIT |
 | lru-cache | 5.1.1 | ISC |
 | magic-string | 1.4.3 | MIT |
+| magicast | 0.5.5 | MIT |
+| make-dir | 4.0.0 | MIT |
 | matcher | 3.0.0 | MIT |
 | math-intrinsics | 1.1.0 | MIT |
 | mime | 2.6.0 | MIT |
@@ -403,6 +487,7 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | mkdirp | 0.5.6 | MIT |
 | ms | 2.1.3 | MIT |
 | nanoid | 3.3.20 | MIT |
+| natural-compare | 1.4.0 | MIT |
 | node-abi | 4.38.0 | MIT |
 | node-api-version | 0.2.1 | MIT |
 | node-gyp | 12.4.0 | MIT |
@@ -417,8 +502,12 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | object-keys | 1.1.1 | MIT |
 | obug | 2.2.1 | MIT |
 | once | 1.4.0 | ISC |
+| optionator | 0.9.4 | MIT |
 | p-cancelable | 2.1.1 | MIT |
 | p-limit | 3.1.0 | MIT |
+| p-locate | 5.0.0 | MIT |
+| parent-module | 1.0.1 | MIT |
+| path-exists | 4.0.0 | MIT |
 | path-is-absolute | 1.0.1 | MIT |
 | path-key | 3.1.1 | MIT |
 | pathe | 2.0.3 | MIT |
@@ -430,12 +519,14 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | postcss | 8.5.31 | MIT |
 | postject | 1.0.0-alpha.6 | MIT |
 | postject/node_modules/commander | 9.5.0 | MIT |
+| prelude-ls | 1.2.1 | MIT |
 | proc-log | 6.1.0 | ISC |
 | process-nextick-args | 2.0.1 | MIT |
 | progress | 2.0.3 | MIT |
 | promise-retry | 2.0.1 | MIT |
 | proper-lockfile | 4.1.2 | MIT |
 | pump | 3.0.4 | MIT |
+| punycode | 2.3.1 | MIT |
 | pvtsutils | 1.3.6 | MIT |
 | pvutils | 1.2.0 | MIT |
 | quick-lru | 5.1.1 | MIT |
@@ -446,6 +537,7 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | require-from-string | 2.0.2 | MIT |
 | resedit | 1.7.2 | MIT |
 | resolve-alpn | 1.2.1 | MIT |
+| resolve-from | 4.0.0 | MIT |
 | responselike | 2.0.1 | MIT |
 | retry | 0.12.0 | MIT |
 | rimraf | 2.6.3 | ISC |
@@ -473,6 +565,7 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | string_decoder | 1.1.1 | MIT |
 | string-width | 4.2.3 | MIT |
 | strip-ansi | 6.0.1 | MIT |
+| strip-json-comments | 3.1.1 | MIT |
 | sumchecker | 3.0.1 | Apache-2.0 |
 | supports-color | 7.2.0 | MIT |
 | tar | 7.5.22 | BlueOak-1.0.0 |
@@ -488,15 +581,19 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | tmp | 0.2.7 | MIT |
 | tmp-promise | 3.0.3 | MIT |
 | truncate-utf8-bytes | 1.0.2 | WTFPL |
+| ts-api-utils | 2.5.0 | MIT |
 | tslib | 2.8.1 | 0BSD |
+| type-check | 0.4.0 | MIT |
 | type-fest | 0.13.1 | (MIT OR CC0-1.0) |
 | typescript | 5.9.3 | Apache-2.0 |
+| typescript-eslint | 8.72.0 | MIT |
 | undici | 7.30.1 | MIT |
 | undici-types | 7.24.6 | MIT |
 | universalify | 2.0.1 | MIT |
 | unzipper | 0.12.5 | MIT |
 | unzipper/node_modules/fs-extra | 11.3.1 | MIT |
 | update-browserslist-db | 1.3.4 | MIT |
+| uri-js | 4.4.1 | BSD-2-Clause |
 | utf8-byte-length | 1.0.5 | (WTFPL OR MIT) |
 | util-deprecate | 1.0.2 | MIT |
 | vite | 7.3.7 | MIT |
@@ -505,6 +602,7 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | webcrypto-core | 1.9.2 | MIT |
 | which | 5.0.0 | ISC |
 | why-is-node-running | 2.3.0 | MIT |
+| word-wrap | 1.2.5 | MIT |
 | wrap-ansi | 7.0.0 | MIT |
 | wrappy | 1.0.2 | ISC |
 | xmlbuilder | 15.1.1 | MIT |
@@ -513,8 +611,9 @@ Se listan por transparencia. No forman parte del instalador, por lo que no se re
 | yargs | 17.7.3 | MIT |
 | yargs-parser | 21.1.1 | ISC |
 | yocto-queue | 0.1.0 | MIT |
+| zod-validation-error | 4.0.2 | MIT |
 
-Total: 447 paquetes (6 distribuidos, 441 de desarrollo).
+Total: 546 paquetes (6 distribuidos, 540 de desarrollo).
 
 ## 5. Recursos propios
 

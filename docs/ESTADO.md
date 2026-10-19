@@ -3,7 +3,9 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **Fases 1, 2, 3 y 4 completadas**. Fase 5 parcial.
+Última actualización: **20/10/2026** — Bloque A (release gratuito): control de
+versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI,
+benchmark con 50.000 artículos y **aplicación real de los límites de plan**.
 
 ---
 
@@ -16,10 +18,11 @@ qué falta y qué costes implicará. No se marca nada como terminado sin pruebas
 | **3. Compras, pedidos y finanzas** | ✅ **Completada** (beneficio **neto**) |
 | **4. Productividad de almacén** | ✅ **Completada** (códigos, etiquetas, preparación) |
 | **5. Inteligencia e IA** | ✅ **Completada** (AI Studio BYOK) |
-| 6. Licencias y comercialización | 🟡 Base implementada; backend online pendiente |
-| 7. Business y expansión | ⬜ Pendiente |
-| 8. Lanzamiento | 🟡 Copias ✅, instalador generado (sin firmar) |
+| 6. Licencias y comercialización | 🟡 Límites **aplicados**; backend online pendiente |
+| 7. Business y expansión | 🟡 Local sí; multiusuario real ⛔ sin backend |
+| 8. Lanzamiento | 🟡 Copias ✅, instalador **firmado (autofirmado)**; instalación bloqueada por Device Guard |
 | **Shipping Tracker** | ✅ **Completado** (navegador integrado + 46 transportistas) |
+| **Calidad (ESLint, cobertura, CI, benchmark)** | ✅ **Completado** |
 
 ---
 
@@ -29,10 +32,18 @@ qué falta y qué costes implicará. No se marca nada como terminado sin pruebas
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
 | `npm test` | **287 / 287** correctas (21 archivos) |
+| `npm run test:coverage` | **71,2 %** líneas · 68,19 % sentencias · 72,29 % funciones · 58,38 % ramas |
+| `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
 | `npm run smoke:ui` | **54 / 54** comprobaciones de interfaz en Electron real |
-| `npm run dist:dir` + ejecución del `.exe` | arranca, migra y crea su base de datos |
+| `npm run build` | ✅ los tres procesos compilados |
+| `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
+| `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
+| `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
 | Arranque repetido (3 veces) | migraciones solo la primera vez |
+
+El detalle completo, con las cifras medidas y lo que **no** se ha probado, está
+en [`docs/TEST-REPORT.md`](TEST-REPORT.md).
 
 ### Qué cubren las pruebas de humo
 
@@ -202,12 +213,33 @@ el margen del usuario, y se etiquetan como estimación.
 | Elemento | Estado |
 |---|---|
 | Tres planes con límites centralizados (`shared/plans.ts`) | ✅ |
+| **Límites aplicados en el proceso principal** (no solo en la interfaz) | ✅ *nuevo* |
 | Firma Ed25519: la app solo lleva la clave **pública** | ✅ |
 | Herramienta administrativa con la clave **privada** (fuera del paquete) | ✅ |
 | Activación, desactivación, historial de eventos | ✅ |
 | Identificador de dispositivo estable | ✅ |
 | Cuotas de fundadores 200 / 200 definidas | ✅ |
-| Backend online (revocación, control de dispositivos, pagos) | ⬜ Fase 6 real |
+| Registro de emisión de licencias | ⬜ **prerequisito antes de emitir en serie** |
+| Backend online (revocación, control de dispositivos, pagos) | ⬜ no desplegado |
+
+### Límites realmente aplicados (corrección importante)
+
+Antes de este bloque, los planes existían pero **casi ningún límite se
+comprobaba** en el proceso principal. Ahora se aplican en
+`src/main/ipc/register.ts` y `register-modules.ts`:
+
+| Límite | Canal protegido |
+|---|---|
+| Cuota de artículos | `products:create` |
+| Cuota de archivos | `media:import` |
+| Importación CSV | `csv:import` |
+| Edición masiva | `products:bulkUpdate` / `bulkPreview` |
+| Analítica | `finance:report` |
+| Inteligencia | `intelligence:report` |
+| AI Studio + cuota mensual | `ai:generate` |
+
+En la interfaz, `PlanGate` explica la función bloqueada con un enlace a
+Licencias, en lugar de mostrar una pantalla rota.
 
 Generación de licencias:
 
@@ -218,7 +250,8 @@ npm run license:verify -- --code <codigo>
 ```
 
 **No se han generado las 400 licencias fundadoras.** Se emiten una a una cuando
-haya clientes reales y el sistema esté probado.
+haya clientes reales, exista registro de emisión y el proceso esté probado.
+Detalles en [`docs/LICENCIAS.md`](LICENCIAS.md).
 
 ---
 
@@ -227,38 +260,38 @@ haya clientes reales y el sistema esté probado.
 | Elemento | Estado |
 |---|---|
 | Icono propio (`build/icon.png`, monograma RV) | ✅ |
-| Empaquetado sin instalador verificado | ✅ |
 | **Copias de seguridad** (ZIP, verificación, rotación, restauración en dos fases) | ✅ |
-| Instalador NSIS generado (`RESALEVAULT-Setup-0.3.0.exe`, 118 MB) | ✅ **generado** |
-| Instalación probada en este equipo | ❌ **bloqueada por Windows** |
-| Firma de código | ⬜ requiere certificado |
-| Organizaciones, usuarios, permisos, sincronización | ⬜ Fase 7 |
+| Instalador NSIS generado | ✅ `RESALEVAULT-Setup-0.5.0.exe` |
+| **Firma de código** (certificado autofirmado, 0 €) | ✅ **firmado y verificado** |
+| **Avisos de terceros** incluidos en el paquete (`resources/`) | ✅ |
+| Instalación probada en este equipo | ❌ **bloqueada por Device Guard** |
+| Organizaciones, usuarios, permisos, sincronización | ⬜ local pendiente; online ⛔ sin backend |
 
-### Sobre el instalador (importante antes de distribuir)
+### Sobre la firma y el bloqueo (importante antes de distribuir)
 
-El instalador **se genera correctamente**, pero en este equipo **Windows lo
-bloquea al ejecutarlo**:
-
-```
-'RESALEVAULT-Setup-0.3.0.exe' was blocked by your organization's
-Device Guard policy.
-```
-
-No es un fallo del empaquetado: es la política de seguridad de Windows
-(Smart App Control / Device Guard) contra ejecutables **sin firmar**. La firma
-del instalador es:
+El instalador **se genera y se firma**. La verificación real:
 
 ```
-Status: NotSigned
+Get-AuthenticodeSignature release\RESALEVAULT-Setup-0.5.0.exe
+  Status:        UnknownError
+  StatusMessage: A certificate chain processed, but terminated in a root
+                 certificate which is not trusted by the trust provider.
 ```
 
-Por eso la instalación **no se ha podido verificar de extremo a extremo**. Lo
-que sí está verificado es el contenido: `release\win-unpacked\RESALEVAULT.exe`
-arranca, migra la base de datos y crea la copia automática.
+Es decir: **la firma es criptográficamente válida, pero la raíz no es de
+confianza pública**, porque el certificado es autofirmado. Eso es exactamente lo
+esperado. Un certificado autofirmado **no** elimina SmartScreen ni el bloqueo de
+Device Guard.
 
-Antes de entregar el programa a un cliente hace falta un **certificado de firma
-de código** (90–400 €/año) y configurarlo en `electron-builder.yml`. Sin firma,
-muchos equipos mostrarán este mismo bloqueo o un aviso de SmartScreen.
+En este equipo, Windows sigue bloqueando la ejecución del instalador por la
+política de la organización (`Device Guard`). **La instalación de extremo a
+extremo no se ha podido verificar y no se afirma lo contrario.** Lo que sí está
+verificado es el contenido: `release\win-unpacked\RESALEVAULT.exe` arranca,
+migra la base de datos y crea la copia automática.
+
+Procedimiento completo, generación del certificado y verificación de hashes en
+[`docs/FIRMA.md`](FIRMA.md). Para distribución pública hace falta un
+certificado OV/IV de una CA (150–300 €/año). **No se ha comprado ninguno.**
 
 ---
 
@@ -274,8 +307,16 @@ muchos equipos mostrarán este mismo bloqueo o un aviso de SmartScreen.
   usuario lanza explícitamente una tarea de IA, y en ese caso solo van los datos
   del artículo y el prompt.
 - **No cambia precios ni anuncios automáticamente.**
-- **No hay modo multiusuario.** El esquema lo prepara y los límites de plan ya
-  distinguen Business, pero la colaboración necesita backend.
+- **No hay modo multiusuario.** El esquema lo prepara y el plan Business declara
+  `multiUser`/`sync`, pero **la función no existe**: no hay backend.
+- **No hay actualización automática.** No hay servidor de actualizaciones y no se
+  simula uno. El proceso manual está en `docs/MANUAL-USUARIO.md`.
+- **No genera PDF ni XLSX todavía.** La exportación es CSV.
+- **No hace devoluciones parciales por línea**, ni multi-divisa, ni tipos de
+  cambio automáticos.
+- **No envía correos.** Requeriría un servicio de pago.
+- **No hay integración con marketplaces.** No hay API autorizada y **no se hace
+  scraping**.
 - **No promete seguridad absoluta** ni inmunidad frente a la piratería.
 - **Los informes por categoría solo publican el resultado directo de la
   mercancía.** Las comisiones y envíos no se reparten por categoría porque sería
@@ -289,10 +330,17 @@ muchos equipos mostrarán este mismo bloqueo o un aviso de SmartScreen.
 |---|---|---|
 | `node:sqlite` es experimental en Node | Bajo: aislado en `database.ts` | Vigilar |
 | Paquete del renderer ~1,07 MB | Bajo en escritorio | División de código si crece |
-| Sin ESLint | Bajo | Añadir antes de la Fase 7 |
-| Selector de artículos del pedido carga 300 para elegir | Medio con inventarios enormes | Búsqueda en servidor |
+| Paquetes de `node_modules` en el asar (`zod`, `bwip-js`) | Bajo | Empaquetar si molesta |
 | Rotación de inventario se calcula sobre el capital actual | Bajo (documentado en la UI) | Histórico de capital |
-| Sin firma de código | Medio en distribución | Certificado en Fase 8 |
+| Búsqueda por texto es un barrido lineal (~70 ms a 50.000) | Bajo, medido | Índice FTS5 si se superan 100.000 |
+| Informe financiero ~180 ms con 1.000 pedidos | Bajo | Cachear agregados si crece |
+| Sin firma de confianza pública | **Alto en distribución** | Certificado OV/IV |
+| Sin registro de emisión de licencias | **Alto antes de vender** | Implementarlo |
+| Sin actualización automática | Medio | Feed propio o proceso manual documentado |
+| `multiUser`/`sync` declarados pero sin implementar | Medio (puede confundir) | Implementar o quitar del plan |
+
+Los puntos ya resueltos (ESLint, selector de Pedidos, firma) se han movido a la
+sección de verificación.
 
 ---
 
@@ -301,9 +349,26 @@ muchos equipos mostrarán este mismo bloqueo o un aviso de SmartScreen.
 | Concepto | Importe estimado | Momento |
 |---|---|---|
 | Desarrollo y uso local | **0 €** | ya |
-| Certificado de firma Windows | 90–400 €/año | Fase 8 |
+| Git, ESLint, cobertura, CI (GitHub Actions), electron-builder | **0 €** | ya |
+| Certificado de firma **autofirmado** de desarrollo | **0 €** | ya |
+| Certificado de firma **de confianza pública** (OV/IV) | 150–300 €/año | antes de distribuir |
 | Backend de licencias | 0 € al principio; 5–25 €/mes con volumen | Fase 6 |
-| APIs de IA | **a cargo del cliente** (BYOK) | Fase 5 |
+| APIs de IA | **a cargo del cliente** (BYOK) | ya |
 | Pasarela de pago | comisión por transacción | Fase 6 |
 
-No se promete coste cero indefinido en ningún servicio online.
+### Gasto real hasta la fecha: **0 €**
+
+No se ha comprado ningún certificado, ni contratado ningún servidor, dominio,
+API, almacenamiento, correo ni suscripción. No se ha introducido ninguna tarjeta
+bancaria. No se ha iniciado ninguna prueba gratuita.
+
+### Lo que **no** se puede prometer gratis para siempre
+
+| Servicio | Situación hoy | Riesgo |
+|---|---|---|
+| GitHub Actions | Plan gratuito para repositorios públicos o con minutos incluidos | Los minutos pueden agotarse |
+| Cloudflare Workers + D1 / Supabase | Plan gratuito con cuotas | Pueden cambiar o dejar de bastar |
+| APIs de IA | **Siempre** a cargo del usuario | Es BYOK por diseño |
+
+Ninguna de estas dependencias es necesaria para usar el programa: si desaparecen,
+el inventario, los pedidos y las copias siguen funcionando.

@@ -18,10 +18,19 @@ import { api, AppError } from '../lib/api'
 import { useApp } from '../lib/app-context'
 import { Button, Card, Field, Select, TextInput } from '../components/ui'
 import { IconImportExport, IconPlus } from '../components/Icons'
+import { PlanGate } from '../components/PlanGate'
 
 const EXPORT_FORMATS = ['products', 'orders', 'purchases', 'expenses', 'picking'] as const
 
 export function ImportExportPage(): ReactNode {
+  return (
+    <PlanGate feature="csvImport">
+      <ImportExportContent />
+    </PlanGate>
+  )
+}
+
+function ImportExportContent(): ReactNode {
   const { t, notify, dataVersion, refreshData } = useApp()
 
   const [path, setPath] = useState<string | null>(null)

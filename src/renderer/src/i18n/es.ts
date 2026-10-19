@@ -948,7 +948,10 @@ export const es = {
       'Las licencias fundadoras son permanentes y estan limitadas a 200 por plan. No se emiten desde esta aplicacion.',
     noBackend:
       'La activacion de licencias necesita el servicio online, que llega en la Fase 6. Esta pantalla muestra el estado real: no hay ninguna licencia activada.',
-    planLimitsApplied: 'Los limites de tu plan ya se aplican en todo el programa.'
+    planLimitsApplied: 'Los limites de tu plan ya se aplican en todo el programa.',
+    requiresPro: 'Esta funcion requiere Vault Pro o Vault Business',
+    requiresProHint:
+      'El plan gratuito incluye inventario, compras, pedidos, ubicaciones, codigos y copias de seguridad. La analitica, la inteligencia, la importacion CSV y AI Studio forman parte de Pro.'
   },
 
   ai: {

@@ -44,11 +44,14 @@ import { buildDashboardSummary } from '../db/repositories/dashboard'
 import { clearDemoData, seedDemoData } from '../services/demo-data'
 import { readDatabaseHealth } from '../services/bootstrap'
 import type { AppPaths } from '../services/paths'
+import type { LicenseService } from '../services/license'
 
 export interface IpcContext extends IpcBaseContext {
   repos: Repositories
   paths: AppPaths
   version: string
+  /** Guardia de plan. Si falta, no se aplican limites (solo en pruebas). */
+  license?: LicenseService
 }
 
 export function registerIpcHandlers(ctx: IpcContext): void {
@@ -141,7 +144,11 @@ export function registerIpcHandlers(ctx: IpcContext): void {
 
   handle(CH.productsList, zProductQuery, (query) => repos.products.list(query))
   handle(CH.productsGet, zId, (id) => repos.products.get(id))
-  handle(CH.productsCreate, zProductCreate, (input) => repos.products.create(input), {
+  handle(CH.productsCreate, zProductCreate, (input) => {
+    // Cuota de plan comprobada en el proceso principal, no en la interfaz.
+    ctx.license?.assertProductQuota()
+    return repos.products.create(input)
+  }, {
     mutates: true,
     entity: 'products'
   })
@@ -162,8 +169,14 @@ export function registerIpcHandlers(ctx: IpcContext): void {
     mutates: true,
     entity: 'products'
   })
-  handle(CH.productsBulkPreview, zBulkUpdate, (input) => repos.products.bulkPreview(input))
-  handle(CH.productsBulkUpdate, zBulkUpdate, (input) => repos.products.bulkUpdate(input), {
+  handle(CH.productsBulkPreview, zBulkUpdate, (input) => {
+    ctx.license?.assertFeature('bulkEdit')
+    return repos.products.bulkPreview(input)
+  })
+  handle(CH.productsBulkUpdate, zBulkUpdate, (input) => {
+    ctx.license?.assertFeature('bulkEdit')
+    return repos.products.bulkUpdate(input)
+  }, {
     mutates: true,
     entity: 'products'
   })

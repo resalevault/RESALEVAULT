@@ -20,7 +20,7 @@
 
 import { createPrivateKey, createPublicKey, generateKeyPairSync, sign, verify as verifyRaw } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 
 const KEY_DIR = join(process.cwd(), 'tools', 'keys')
 const PRIVATE_KEY_FILE = join(KEY_DIR, 'license-private.pem')

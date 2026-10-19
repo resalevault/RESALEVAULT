@@ -17,12 +17,21 @@ import { useApp } from '../lib/app-context'
 import { useAsyncData } from '../lib/hooks'
 import { Button, Card, EmptyState, Field, Modal, TextArea, TextInput } from '../components/ui'
 import { IconAlert, IconCheck, IconIntelligence, IconLicense } from '../components/Icons'
+import { PlanGate } from '../components/PlanGate'
 
 // ===========================================================================
 // Intelligence
 // ===========================================================================
 
 export function IntelligencePage(): ReactNode {
+  return (
+    <PlanGate feature="intelligence">
+      <IntelligenceContent />
+    </PlanGate>
+  )
+}
+
+function IntelligenceContent(): ReactNode {
   const { t, number, dateTime, notify, dataVersion } = useApp()
   const report = useAsyncData(() => api.intelligence.report(), [dataVersion])
   const [settingsOpen, setSettingsOpen] = useState(false)

@@ -39,7 +39,6 @@ function main() {
 
   let sqlite = null
   check('node:sqlite', () => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     sqlite = require('node:sqlite')
     if (!sqlite || typeof sqlite.DatabaseSync !== 'function') {
       throw new Error('DatabaseSync no esta disponible en este runtime')

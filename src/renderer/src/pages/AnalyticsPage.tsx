@@ -22,10 +22,19 @@ import { useApp } from '../lib/app-context'
 import { useAsyncData } from '../lib/hooks'
 import { Button, Card, EmptyState, Field, MoneyInput, Select, TextInput } from '../components/ui'
 import { IconAnalytics, IconCheck, IconExternal } from '../components/Icons'
+import { PlanGate } from '../components/PlanGate'
 
 type Preset = 'thisMonth' | 'lastMonth' | 'thisYear' | 'all'
 
 export function AnalyticsPage(): ReactNode {
+  return (
+    <PlanGate feature="analytics">
+      <AnalyticsContent />
+    </PlanGate>
+  )
+}
+
+function AnalyticsContent(): ReactNode {
   const { t, money, percent, number, notify, dataVersion, today } = useApp()
   const [preset, setPreset] = useState<Preset>('thisMonth')
   const [from, setFrom] = useState('')

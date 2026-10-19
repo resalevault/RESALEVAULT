@@ -1,0 +1,98 @@
+name: CI
+
+# Integracion continua gratuita con GitHub Actions.
+# No publica artefactos ni usa secretos.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Tipos, pruebas y build
+    runs-on: windows-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Instalar dependencias (reproducible)
+        run: npm ci
+
+      - name: Comprobar tipos
+        run: npm run typecheck
+
+      - name: Pruebas unitarias y de integracion
+        run: npm test
+
+      - name: Avisos de terceros actualizados
+        # Falla si THIRD-PARTY-NOTICES.md esta desactualizado respecto al lock.
+        shell: pwsh
+        run: |
+          npm run notices
+          git diff --exit-code -- THIRD-PARTY-NOTICES.md
+        continue-on-error: false
+
+      - name: Compilar
+        run: npm run build
+
+  smoke:
+    name: Pruebas de humo (Electron real)
+    runs-on: windows-latest
+    timeout-minutes: 25
+    needs: quality
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Humo de datos
+        run: npm run smoke
+
+      - name: Humo de interfaz
+        run: npm run smoke:ui
+
+  audit:
+    name: Auditoria de dependencias
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Auditar dependencias de produccion
+        # Solo informa: una vulnerabilidad en una dependencia de desarrollo no
+        # debe bloquear un release, pero debe verse.
+        run: npm audit --omit=dev
+        continue-on-error: true

@@ -48,6 +48,7 @@ export function OrdersPage({ onlyAwaiting = false }: { onlyAwaiting?: boolean })
   const { t, money, percent, number, date, notify, dataVersion } = useApp()
 
   const [search, setSearch] = useState('')
+  const [productSearch, setProductSearch] = useState('')
   const [status, setStatus] = useState<string>(onlyAwaiting ? 'packed' : '')
   const [creating, setCreating] = useState(false)
   const [detailId, setDetailId] = useState<string | null>(null)
@@ -67,9 +68,17 @@ export function OrdersPage({ onlyAwaiting = false }: { onlyAwaiting?: boolean })
 
   const page = useAsyncData(() => api.orders.list(query), [query, dataVersion])
   const platforms = useAsyncData(() => api.platforms.list(), [dataVersion])
+  const productSearchDb = useDebounced(productSearch, 250)
   const products = useAsyncData(
-    () => api.products.list({ status: ['available', 'to_prepare', 'reserved'], pageSize: 300, sort: 'name_asc' }),
-    [dataVersion]
+    () =>
+      api.products.list({
+        status: ['available', 'to_prepare', 'reserved'],
+        // Busqueda EN EL PROCESO PRINCIPAL: no se cargan 300 articulos de golpe.
+        search: productSearchDb.trim() || undefined,
+        pageSize: 40,
+        sort: 'name_asc'
+      }),
+    [productSearchDb, dataVersion]
   )
 
   const totals = useMemo(() => {
@@ -216,6 +225,7 @@ export function OrdersPage({ onlyAwaiting = false }: { onlyAwaiting?: boolean })
         <OrderCreateModal
           platforms={(platforms.data ?? []).map((p) => ({ id: p.id, name: p.name }))}
           products={products.data?.items ?? []}
+          onProductSearch={setProductSearch}
           onClose={() => setCreating(false)}
           onCreated={(order) => {
             setCreating(false)
@@ -259,11 +269,13 @@ export function OrdersPage({ onlyAwaiting = false }: { onlyAwaiting?: boolean })
 function OrderCreateModal({
   platforms,
   products,
+  onProductSearch,
   onClose,
   onCreated
 }: {
   platforms: Array<{ id: string; name: string }>
   products: ProductSummary[]
+  onProductSearch: (term: string) => void
   onClose: () => void
   onCreated: (order: Order) => void
 }): ReactNode {
@@ -282,16 +294,7 @@ function OrderCreateModal({
   const [fees, setFees] = useState<Array<{ kind: OrderFeeKind; label: string; amountCents: number }>>([])
   const [saving, setSaving] = useState(false)
 
-  const filtered = useMemo(() => {
-    const term = search.trim().toLowerCase()
-    const list = term
-      ? products.filter(
-          (item) => item.sku.toLowerCase().includes(term) || item.name.toLowerCase().includes(term)
-        )
-      : products
-    return list.slice(0, 40)
-  }, [products, search])
-
+  // El filtrado lo hace el proceso principal (indice + LIMIT), no el cliente.
   const goodsTotal = selected.reduce((sum, line) => {
     const product = products.find((item) => item.id === line.productId)
     return sum + (product?.expectedSalePriceCents ?? 0)
@@ -383,7 +386,10 @@ function OrderCreateModal({
             style={{ paddingLeft: 32 }}
             placeholder={t('order.searchProducts')}
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => {
+              setSearch(event.target.value)
+              onProductSearch(event.target.value)
+            }}
           />
         </div>
 
@@ -393,7 +399,7 @@ function OrderCreateModal({
           <div className="table-wrap" style={{ maxHeight: 220, overflowY: 'auto' }}>
             <table className="table">
               <tbody>
-                {filtered.map((item) => {
+                {products.map((item) => {
                   const isSelected = selected.some((line) => line.productId === item.id)
                   return (
                     <tr key={item.id}>
