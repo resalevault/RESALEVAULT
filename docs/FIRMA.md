@@ -206,7 +206,88 @@ de prueba** dentro del paquete distribuible.
   desinstalador; está verificado con `Get-AuthenticodeSignature`.
 - **La confianza pública no existe.** No se ha gastado dinero y no se ha
   simulado lo contrario.
-- **La instalación sigue bloqueada en este equipo** por Device Guard, y un
+- **La instalación sigue bloqueada en este equipo** por una política de nivel
+  de firma Enterprise (evento `3033` de Code Integrity, ver sección 9), y un
   autofirmado no lo cambia.
 - Para entregar a clientes hace falta un certificado OV/IV. Es el único gasto
-  que desbloquea realmente la distribución.
+  que desbloquea realmente la distribución; a 0 €, la vía es verificar la
+  instalación en una máquina limpia (sección 10).
+
+---
+
+## 9. Diagnóstico del bloqueo de instalación (20/10/2026)
+
+Evidencia real recogida en este equipo, **sin modificar ni desactivar nada**:
+
+| Comprobación | Resultado |
+|---|---|
+| `Win32_DeviceGuard.CodeIntegrityPolicyEnforcementStatus` | `2` = integridad de código **impuesta** |
+| Evento `3033` (19/10/2026 23:01) | `node.exe` intentó ejecutar `RESALEVAULT-Setup-0.4.0.exe`: «did not meet the **Enterprise signing level requirements**» |
+| Evento `3033` (19/10/2026 22:58) | `cmd.exe` intentó ejecutar `RESALEVAULT-Setup-0.3.0.exe`: mismo rechazo |
+| Smart App Control (`VerifiedAndReputablePolicyState`) | `0` = **desactivado** (no es el causante) |
+| Windows Defender (`Get-MpThreatDetection`) | **cero detecciones** (no hay falso positivo que corregir) |
+| Política WDAC desplegada (`SiPolicy.p7b`) | ausente (la verificación viene activada por otra vía del sistema) |
+
+Conclusiones:
+
+1. El bloqueo lo emite la verificación de **nivel de firma Enterprise** de
+   Windows. Un certificado autofirmado no lo cumple, y **ninguna ofuscación,
+   inserción de NOP o reempaquetado lo arreglaría**: empaquetar un binario sin
+   publisher confiable empeora su reputación ante los antivirus, no la mejora.
+2. La política **no se toca ni se desactiva**: este proyecto no baja defensas
+   de Windows.
+3. **No existe hoy ninguna detección de antivirus** del proyecto. Se deja
+   escrito por honestidad.
+
+Salidas legítimas: certificado OV/IV (sección 4) o verificar la instalación en
+una máquina sin esa política (sección 10).
+
+---
+
+## 10. Verificación de instalación en una máquina limpia (0 €)
+
+Kit incluido en el repositorio: **`scripts/verify-install.ps1`**. Comprueba el
+hash SHA-256 del instalador (y opcionalmente que coincide con el publicado),
+instala en silencio, arranca la aplicación, comprueba que sigue en memoria a los
+20 segundos y que se crearon base de datos y migraciones; escribe un informe y
+devuelve código 0 (todo correcto) o 1.
+
+Pasos en la máquina destino (otro PC de Windows sin políticas de la
+organización; no hace falta ser administrador porque la instalación es por
+usuario):
+
+1. Copiar a un USB `RESALEVAULT-Setup-0.5.0.exe` y `verify-install.ps1`.
+2. Abrir PowerShell en esa carpeta y ejecutar:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\verify-install.ps1 -ExpectedHash d75a7b23ae068af141eef41947fe55853b2b4403a6af2ab2cbcd655aefbe8141
+   ```
+
+3. Debe terminar con `RESULTADO: TODO CORRECTO` y dejar el informe
+   `verificacion-install-<fecha>.txt`.
+
+Si no hay otra máquina física, una alternativa gratuita es VirtualBox con una
+ISO de evaluación oficial de Windows (90 días). Windows 11 Home no incluye ni
+Sandbox ni Hyper-V, por eso el kit no depende de ninguno de los dos.
+
+**Estado honesto: el kit está escrito, sin errores de sintaxis y probado en
+modo `-HashOnly` (hash correcto del instalador 0.5.0). La instalación en una
+maquina limpia sigue pendiente de ejecutarse y no se afirma lo contrario.**
+
+---
+
+## 11. Antivirus y SmartScreen (política de distribución)
+
+Situación medida a 20/10/2026: **Defender sin ninguna detección** del proyecto.
+
+Reglas que se seguirán al distribuir (legítimas y sin coste):
+
+- **Nada de ofuscación, cifrado de cadenas ni reempaquetado**: la transparencia
+  es lo que construye reputación; ocultar el binario la destruye y dispara las
+  heurísticas de los antivirus.
+- Publicar el **hash SHA-256** de cada release junto a la descarga (ya aparece
+  en «Acerca de» y en la documentación).
+- Enviar cada release nuevo a los portales de revisión gratuitos, empezando por
+  Microsoft: <https://www.microsoft.com/wdsi/filesubmission>.
+- Con certificado OV/IV (cuando haya presupuesto), SmartScreen acumula
+  reputación por volumen de instalaciones legítimas.

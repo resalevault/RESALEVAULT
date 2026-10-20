@@ -49,6 +49,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
 | `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
 | `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
+| Diagnóstico del bloqueo de instalación | ✅ causa raíz identificada con evento real `3033` (nivel de firma Enterprise); Defender sin detecciones; kit `verify-install.ps1` preparado (`docs/FIRMA.md` §9–10) |
 | Arranque repetido (3 veces) | migraciones solo la primera vez |
 
 El detalle completo, con las cifras medidas y lo que **no** se ha probado, está
@@ -299,7 +300,7 @@ clientes reales. Detalles en [`docs/LICENCIAS.md`](LICENCIAS.md).
 | Instalador NSIS generado | ✅ `RESALEVAULT-Setup-0.5.0.exe` |
 | **Firma de código** (certificado autofirmado, 0 €) | ✅ **firmado y verificado** |
 | **Avisos de terceros** incluidos en el paquete (`resources/`) | ✅ |
-| Instalación probada en este equipo | ❌ **bloqueada por Device Guard** |
+| Instalación probada en este equipo | ❌ bloqueada por política de nivel de **firma Enterprise** (evento CI `3033`; diagnóstico en `docs/FIRMA.md` §9); kit de verificación en máquina limpia listo (§10) |
 | Organizaciones, usuarios, permisos, sincronización | ⬜ local pendiente; online ⛔ sin backend |
 
 ### Sobre la firma y el bloqueo (importante antes de distribuir)
@@ -318,11 +319,16 @@ confianza pública**, porque el certificado es autofirmado. Eso es exactamente l
 esperado. Un certificado autofirmado **no** elimina SmartScreen ni el bloqueo de
 Device Guard.
 
-En este equipo, Windows sigue bloqueando la ejecución del instalador por la
-política de la organización (`Device Guard`). **La instalación de extremo a
-extremo no se ha podido verificar y no se afirma lo contrario.** Lo que sí está
-verificado es el contenido: `release\win-unpacked\RESALEVAULT.exe` arranca,
-migra la base de datos y crea la copia automática.
+En este equipo, Windows bloquea la ejecución del instalador con una **política
+de nivel de firma Enterprise** en modo impuesto (eventos `3033` de Code
+Integrity que citan el nombre del instalador; no es Smart App Control ni
+Defender: ambos comprobados y descartados). **La instalación de extremo a
+extremo no se ha podido verificar aquí y no se afirma lo contrario.** Lo que sí
+está verificado es el contenido: `release\win-unpacked\RESALEVAULT.exe`
+arranca, migra la base de datos y crea la copia automática. Para cerrar el
+pendiente hay un **kit de verificación en máquina limpia** de 0 €
+(`scripts/verify-install.ps1`, instrucciones en `docs/FIRMA.md` §10). **Defender
+no tiene ninguna detección** del proyecto (comprobado 20/10/2026).
 
 Procedimiento completo, generación del certificado y verificación de hashes en
 [`docs/FIRMA.md`](FIRMA.md). Para distribución pública hace falta un
