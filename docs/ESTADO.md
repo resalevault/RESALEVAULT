@@ -3,13 +3,18 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **20/10/2026** — **Bloque backend de licencias
-(Supabase)**: Edge Function desplegada con control de **puestos**, **revocación**
-y consulta de revocaciones; migración aplicada en el proyecto real; script de
-sincronización con verificación previa de firmas; **43 pruebas nuevas** del
-backend (446 en total, cobertura **88,32 %** de líneas) y **prueba de extremo a
-extremo en vivo contra el proyecto desplegado** (firma falsificada → 403, puestos
-agotados → 409, revocada → 403; ver `docs/BACKEND.md`). Detalle en
+Última actualización: **20/10/2026** — **Bloque de distribución gratuita**:
+rutas GitHub+winget y Microsoft Store preparadas a 0 €. Generador de manifiestos
+winget con 11 pruebas y **validado con el validador oficial de Microsoft**
+(`winget validate` → correcto); paquete **AppX/MSIX generado e inspeccionado**
+(protocolo `rv-media` declarado, versión 4 componentes, sin firmar a propósito
+para que lo firme la Store). Guía completa en [`docs/DISTRIBUCION.md`](DISTRIBUCION.md).
+Bloque anterior: **backend de licencias (Supabase)**: Edge Function desplegada
+con control de **puestos**, **revocación** y consulta de revocaciones; migración
+aplicada en el proyecto real; script de sincronización con verificación previa
+de firmas; **43 pruebas nuevas** del backend y **prueba de extremo a extremo en
+vivo contra el proyecto desplegado** (firma falsificada → 403, puestos agotados →
+409, revocada → 403; ver `docs/BACKEND.md`). Detalle en
 [`docs/TEST-REPORT.md`](TEST-REPORT.md). Bloques anteriores: control de
 versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI, banco de
 pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
@@ -29,7 +34,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | **5. Inteligencia e IA** | ✅ **Completada** (AI Studio BYOK) |
 | 6. Licencias y comercialización | 🟡 Límites aplicados + **backend online desplegado y probado**; falta el cliente en la app |
 | 7. Business y expansión | 🟡 Local sí; multiusuario real ⛔ sin backend |
-| 8. Lanzamiento | 🟡 Copias ✅, instalador **firmado (autofirmado)**; instalación bloqueada por Device Guard |
+| 8. Lanzamiento | 🟡 Copias ✅; instalador NSIS **firmado (autofirmado)**; **distribución gratuita preparada** (winget validado + paquete Store generado, ver [`docs/DISTRIBUCION.md`](DISTRIBUCION.md)); instalación local bloqueada por Device Guard |
 | **Shipping Tracker** | ✅ **Completado** (navegador integrado + 46 transportistas) |
 | **Calidad (ESLint, cobertura, CI, benchmark)** | ✅ **Completado** |
 
@@ -40,8 +45,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **446 / 446** correctas (35 archivos) |
-| `npm run test:coverage` | **88,32 %** líneas · 85,72 % sentencias · 90,77 % funciones · 77,92 % ramas |
+| `npm test` | **457 / 457** correctas (36 archivos) |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
 | `npm run smoke:ui` | **54 / 54** comprobaciones de interfaz en Electron real |
@@ -49,6 +53,8 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
 | `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
 | `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
+| `winget validate` (manifiestos v0.5.0) | ✅ **«Manifest validation succeeded»** con el validador oficial de Windows (20/10/2026) |
+| `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (169,8 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
 | Diagnóstico del bloqueo de instalación | ✅ causa raíz identificada con evento real `3033` (nivel de firma Enterprise); Defender sin detecciones; kit `verify-install.ps1` preparado (`docs/FIRMA.md` §9–10) |
 | Arranque repetido (3 veces) | migraciones solo la primera vez |
 

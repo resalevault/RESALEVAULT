@@ -10,6 +10,8 @@ coverage/
 coverage-json/
 .tmp/
 *.tsbuildinfo
+# Manifiestos winget generados (se regeneran con npm run winget:manifests)
+dist-winget/
 
 # Registros
 *.log

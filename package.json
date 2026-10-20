@@ -38,6 +38,8 @@
     "dist:dir": "npm run build && electron-builder --win --dir --config electron-builder.yml",
     "sign:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup-signing.ps1",
     "dist:signed": "npm run build && node scripts/dist-signed.mjs",
+    "dist:appx": "npm run build && electron-builder --win --config electron-builder.appx.yml",
+    "winget:manifests": "node scripts/winget-manifests.mjs",
     "bench": "node scripts/build-smoke.mjs && node out/benchmark.cjs"
   },
   "dependencies": {

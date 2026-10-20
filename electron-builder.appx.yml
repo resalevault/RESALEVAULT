@@ -1,0 +1,51 @@
+# RESALEVAULT - Paquete AppX/MSIX para la Microsoft Store (ruta B).
+#
+# Este archivo NO modifica el instalador NSIS (electron-builder.yml). Se usa con:
+#   npm run dist:appx
+# Proceso completo, requisitos y estado honesto: docs/DISTRIBUCION.md.
+#
+# IMPORTANTE - publisher: el campo `publisher` (Identity Publisher, formato
+# CN=...) DEBE coincidir exactamente con el Publisher de tu cuenta de Partner
+# Center. El valor de abajo es un marcador de posicion hasta crear la cuenta.
+
+appId: com.resalevault.desktop
+productName: RESALEVAULT
+copyright: Copyright (c) RESALEVAULT
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - out/**/*
+  - package.json
+  - '!**/*.map'
+  - '!**/*.ts'
+
+extraResources:
+  - from: THIRD-PARTY-NOTICES.md
+    to: THIRD-PARTY-NOTICES.md
+
+win:
+  target:
+    - target: appx
+      arch:
+        - x64
+  icon: build/icon.png
+
+# El protocolo propio rv-media se declara automaticamente en el manifiesto
+# del paquete (uap:Protocol) a partir de esta lista.
+protocols:
+  - name: RESALEVAULT media
+    schemes:
+      - rv-media
+
+appx:
+  identityName: RESALEVAULT
+  publisher: CN=RESALEVAULT
+  publisherDisplayName: RESALEVAULT
+  displayName: RESALEVAULT
+  languages:
+    - en-US
+    - es-ES
+  artifactName: RESALEVAULT-Store-${version}.${ext}
