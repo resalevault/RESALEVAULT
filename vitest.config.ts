@@ -20,14 +20,20 @@ export default defineConfig({
         'src/shared/**/*.ts',
         'src/main/db/**/*.ts',
         'src/main/services/**/*.ts',
-        'src/main/errors.ts'
+        'src/main/errors.ts',
+        'supabase/functions/**/*.ts'
       ],
       exclude: [
         'src/main/services/paths.ts',
         'src/main/services/security.ts',
         'src/main/services/browser/**',
         'src/main/services/ai/os-secret-store.ts',
-        'src/**/*.d.ts'
+        'src/**/*.d.ts',
+        // Adaptador HTTP de Deno: se comprueba con `deno check` y con la prueba
+        // de extremo a extremo contra el proyecto, no con Vitest.
+        'supabase/functions/**/index.ts',
+        // Constantes de un solo valor, cubiertas por tests/licence-keys-sync.
+        'supabase/functions/**/keys.ts'
       ],
       thresholds: {
         // Umbral bajo y honesto: se sube cuando de verdad se pruebe mas.

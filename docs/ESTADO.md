@@ -3,16 +3,18 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **20/10/2026** — Bloque A (release gratuito): control de
-versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI,
-banco de pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
+Última actualización: **20/10/2026** — **Bloque backend de licencias
+(Supabase)**: Edge Function desplegada con control de **puestos**, **revocación**
+y consulta de revocaciones; migración aplicada en el proyecto real; script de
+sincronización con verificación previa de firmas; **43 pruebas nuevas** del
+backend (446 en total, cobertura **88,32 %** de líneas) y **prueba de extremo a
+extremo en vivo contra el proyecto desplegado** (firma falsificada → 403, puestos
+agotados → 409, revocada → 403; ver `docs/BACKEND.md`). Detalle en
+[`docs/TEST-REPORT.md`](TEST-REPORT.md). Bloques anteriores: control de
+versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI, banco de
+pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 **registro de emisión de licencias auditable** (`npm run license:list`) y
-**pantalla «Acerca de» con avisos de terceros, enlace a Licencias y hash de la
-aplicación**. Además, **pruebas de la lógica de dinero, de archivos y de
-configuración** (CSV, etiquetas, ajustes, errores, pedidos, almacenamiento
-multimedia, repositorios de proveedores/compras/gastos/plataformas/atributos/
-anuncios, AI Studio, límites de plan y utilidades de datos): la cobertura sube
-al 88,1 % de líneas.
+**pantalla «Acerca de»**.
 
 ---
 
@@ -25,7 +27,7 @@ al 88,1 % de líneas.
 | **3. Compras, pedidos y finanzas** | ✅ **Completada** (beneficio **neto**) |
 | **4. Productividad de almacén** | ✅ **Completada** (códigos, etiquetas, preparación) |
 | **5. Inteligencia e IA** | ✅ **Completada** (AI Studio BYOK) |
-| 6. Licencias y comercialización | 🟡 Límites **aplicados**; backend online pendiente |
+| 6. Licencias y comercialización | 🟡 Límites aplicados + **backend online desplegado y probado**; falta el cliente en la app |
 | 7. Business y expansión | 🟡 Local sí; multiusuario real ⛔ sin backend |
 | 8. Lanzamiento | 🟡 Copias ✅, instalador **firmado (autofirmado)**; instalación bloqueada por Device Guard |
 | **Shipping Tracker** | ✅ **Completado** (navegador integrado + 46 transportistas) |
@@ -38,8 +40,8 @@ al 88,1 % de líneas.
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **407 / 407** correctas (32 archivos) |
-| `npm run test:coverage` | **88,12 %** líneas · 85,47 % sentencias · 90,59 % funciones · 77,49 % ramas |
+| `npm test` | **446 / 446** correctas (35 archivos) |
+| `npm run test:coverage` | **88,32 %** líneas · 85,72 % sentencias · 90,77 % funciones · 77,92 % ramas |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
 | `npm run smoke:ui` | **54 / 54** comprobaciones de interfaz en Electron real |
@@ -227,7 +229,31 @@ el margen del usuario, y se etiquetan como estimación.
 | Identificador de dispositivo estable | ✅ |
 | Cuotas de fundadores 200 / 200 definidas | ✅ |
 | Registro de emisión de licencias (auditoría + reverificación) | ✅ *nuevo* (`npm run license:list`) |
-| Backend online (revocación, control de dispositivos, pagos) | ⬜ no desplegado |
+| **Backend online en Supabase** (puestos, revocación, `/health`) | ✅ *nuevo* **desplegado y probado en vivo** (20/10/2026) |
+| Cliente online en la aplicación (activa y consulta revocaciones) | ⬜ pendiente (siguiente bloque) |
+| Pasarela de pagos | ⬜ no implementada (sin presupuesto) |
+
+### Backend online desplegado (20/10/2026)
+
+- **Proveedor: Supabase Free** (elegido por el propietario del proyecto),
+  proyecto `ugfefewrikcghfwqhezi`, coste **0 €**.
+- **Edge Function `licence`** con las rutas `/activate`, `/deactivate`,
+  `/revocations` y `/health`; las tablas `licenses` y `license_activations`
+  tienen RLS **sin políticas**: solo el `service_role` las toca.
+- **La clave privada Ed25519 no está en el servidor**: la emisión sigue siendo
+  local (`npm run license:new`) y la subida del registro (`npm run license:sync`)
+  verifica cada firma **antes** de subirla.
+- **Prueba en vivo realizada**: firma falsificada → `403 bad_signature`; dos
+  activaciones ok → tercera `409 seats_exhausted`; liberar un puesto → ok;
+  revocar → `403 revoked` y `/revocations` devuelve el hash. Tabla completa en
+  [`docs/TEST-REPORT.md`](TEST-REPORT.md) y [`docs/BACKEND.md`](BACKEND.md).
+- **Offline-first**: el token se valida sin red; el servidor se consulta como
+  mucho cada 7 días. Si Supabase pausa el proyecto por inactividad (~1 semana),
+  las licencias existentes **siguen funcionando**.
+
+Aviso honesto: **el cliente de la aplicación de escritorio todavía no se conecta
+al backend**. La validación que usa hoy la app es la local (Ed25519), que está
+probada.
 
 ### Límites realmente aplicados (corrección importante)
 
@@ -314,7 +340,9 @@ certificado OV/IV de una CA (150–300 €/año). **No se ha comprado ninguno.**
   clave). Las peticiones están probadas; la respuesta real, no.
 - **No se envía información del negocio a ningún servidor** salvo cuando el
   usuario lanza explícitamente una tarea de IA, y en ese caso solo van los datos
-  del artículo y el prompt.
+  del artículo y el prompt. Para las licencias existe ya un backend en Supabase
+  (solo recibe el código de licencia y el identificador de dispositivo, nunca
+  inventario ni pedidos) y **el cliente de la app aún no está conectado a él**.
 - **No cambia precios ni anuncios automáticamente.**
 - **No hay modo multiusuario.** El esquema lo prepara y el plan Business declara
   `multiUser`/`sync`, pero **la función no existe**: no hay backend.
@@ -360,7 +388,7 @@ sección de verificación.
 | Git, ESLint, cobertura, CI (GitHub Actions), electron-builder | **0 €** | ya |
 | Certificado de firma **autofirmado** de desarrollo | **0 €** | ya |
 | Certificado de firma **de confianza pública** (OV/IV) | 150–300 €/año | antes de distribuir |
-| Backend de licencias | 0 € al principio; 5–25 €/mes con volumen | Fase 6 |
+| Backend de licencias (Supabase Free) | **0 €** (verificado 20/10/2026) | desplegado; revisar DPA antes de vender |
 | APIs de IA | **a cargo del cliente** (BYOK) | ya |
 | Pasarela de pago | comisión por transacción | Fase 6 |
 
@@ -375,7 +403,7 @@ bancaria. No se ha iniciado ninguna prueba gratuita.
 | Servicio | Situación hoy | Riesgo |
 |---|---|---|
 | GitHub Actions | Plan gratuito para repositorios públicos o con minutos incluidos | Los minutos pueden agotarse |
-| Cloudflare Workers + D1 / Supabase | Plan gratuito con cuotas | Pueden cambiar o dejar de bastar |
+| Supabase Free | 0 € hoy: 500 MB de base de datos, 5 GB de tráfico, 500.000 invocaciones/mes | **Pausa el proyecto tras ~1 semana de inactividad** (reactivable gratis); las cuotas y condiciones pueden cambiar |
 | APIs de IA | **Siempre** a cargo del usuario | Es BYOK por diseño |
 
 Ninguna de estas dependencias es necesaria para usar el programa: si desaparecen,

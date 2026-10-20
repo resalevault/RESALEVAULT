@@ -11,7 +11,9 @@ revisada. Si algo no está implementado, se dice.
 
 RESALEVAULT es una aplicación de escritorio. No tiene servidor propio, no tiene
 telemetría, no tiene analíticas y no envía nada a terceros salvo cuando **el
-usuario** lo pide explícitamente.
+usuario** lo pide explícitamente. La única excepción prevista es el **backend de
+licencias** (Supabase), descrito en la sección 6; hoy el cliente de la app **aún
+no está conectado a él**.
 
 ---
 
@@ -110,11 +112,30 @@ La vista de transportistas usa `WebContentsView` con estas restricciones
 
 ## 6. Licencias
 
-- La activación es **local**: no se envía nada a ningún servidor.
+- La validación que usa hoy la aplicación es **local**: se verifica la firma
+  Ed25519 del código en el propio equipo y **no se envía nada a ningún servidor**.
 - El identificador de dispositivo es un UUID aleatorio generado en su equipo,
   no un identificador del hardware ni un número de serie.
 - La clave privada de licencias está en el equipo del emisor, **nunca** en el
-  instalador.
+  instalador ni en el backend.
+
+### Backend de licencias (Supabase) — ya desplegado, cliente pendiente
+
+Existe un backend en **Supabase** (proveedor elegido por el propietario del
+proyecto; plan gratuito) cuyo único cometido es controlar puestos y revocaciones:
+
+- **Qué viajaría** (cuando el cliente de la app se conecte, que aún no está):
+  el código de licencia (ya lo tiene quien lo introduce), el UUID aleatorio del
+  dispositivo, una etiqueta opcional del equipo, la versión de la app y el
+  sistema operativo. **Ningún dato del inventario, pedidos, clientes o
+  proveedores.**
+- **Dónde**: `https://ugfefewrikcghfwqhezi.supabase.co` (Edge Function; las
+  tablas tienen RLS sin políticas y solo el rol de servicio las escribe).
+- **Offline-first**: sin conexión la licencia sigue validándose en local; el
+  servidor se consulta como mucho una vez cada 7 días y su ausencia **nunca**
+  bloquea el programa. Si Supabase pausa el proyecto por inactividad (~1 semana),
+  las licencias existentes siguen funcionando.
+- Detalle técnico y pruebas: [`docs/BACKEND.md`](BACKEND.md).
 
 ---
 
@@ -142,7 +163,7 @@ inventario.
 
 ## 9. Compartir datos con terceros
 
-**No se comparte ningún dato.** No hay:
+**No se comparte ningún dato del negocio.** No hay:
 
 - Publicidad.
 - Analíticas de uso.
@@ -151,10 +172,18 @@ inventario.
 - Fuentes web de tipos de cambio (se introducen a mano).
 - APIs de marketplaces conectadas.
 
+Única comunicación con un tercero prevista: el **backend de licencias**
+(Supabase, sección 6), que solo recibiría código de licencia e identificador de
+dispositivo. **Hoy no hay cliente conectado.**
+
 ---
 
 ## 10. Si algún día cambia esto
 
-Si se añade cualquier componente con red (actualizaciones automáticas, backend de
-licencias, marketplaces), se documentará **aquí**, con su proveedor, sus
-condiciones y qué datos viajan. **Ninguna función se activará en silencio.**
+Si se añade cualquier componente con red (actualizaciones automáticas,
+marketplaces…), se documentará **aquí**, con su proveedor, sus condiciones y qué
+datos viajan. **Ninguna función se activará en silencio.**
+
+El backend de licencias ya está documentado en la sección 6. Cuando se conecte
+el cliente de la app, este documento se actualizará de nuevo con el resultado
+real de esa conexión.

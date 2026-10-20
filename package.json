@@ -30,6 +30,7 @@
     "license:new": "node scripts/generate-license.mjs new",
     "license:verify": "node scripts/generate-license.mjs verify",
     "license:list": "node scripts/generate-license.mjs list",
+    "license:sync": "node --env-file-if-exists=.env.local scripts/license-sync.mjs",
     "smoke:build": "node scripts/build-smoke.mjs",
     "smoke": "npm run smoke:build && electron out/smoke.cjs",
     "smoke:ui": "npm run smoke:build && npm run build && electron out/ui-smoke.cjs",

@@ -13,8 +13,8 @@ Versión: `0.5.0`.
 | Comando | Resultado |
 |---|---|
 | `npm run typecheck` | ✅ 0 errores (2 proyectos: `tsconfig.node.json` y `tsconfig.web.json`) |
-| `npm test` | ✅ 32 archivos, **407 pruebas** en verde |
-| `npm run test:coverage` | ✅ 407 pruebas + cobertura medida (apartado 3) |
+| `npm test` | ✅ 35 archivos, **446 pruebas** en verde |
+| `npm run test:coverage` | ✅ 446 pruebas + cobertura medida (apartado 3) |
 | `npm run smoke` | ✅ **70 comprobaciones** correctas, 0 fallidas |
 | `npm run smoke:ui` | ✅ **54 comprobaciones** correctas, 0 fallidas |
 | `npm run build` | ✅ proceso principal, preload y renderer generados |
@@ -29,7 +29,7 @@ resultados.**
 
 ## 2. Qué comprueba cada suite
 
-### 2.1 `npm test` — pruebas unitarias y de integración (407)
+### 2.1 `npm test` — pruebas unitarias y de integración (446)
 
 Cubren la lógica de negocio sobre una base de datos real (no un doble):
 
@@ -43,6 +43,11 @@ Cubren la lógica de negocio sobre una base de datos real (no un doble):
 - Métodos de pago y cuadre de caja (con y sin escudos).
 - Reglas de inteligencia (12 reglas) y sus avisos.
 - Estados de licencia, planes, límites y eventos.
+- **Backend de licencias (43 pruebas)**: verificación de firmas y códigos
+  (pruebas de alteración, vectores SHA-256, límites de plan/tipo/versión), las
+  reglas de la Edge Function (puestos, caducidad, revocación, mapeo de errores
+  HTTP) y una guarda impide que las constantes duplicadas de
+  `supabase/functions/licence/keys.ts` se desvíen de las de la aplicación.
 - **Aplicación real de los límites de plan** (6 pruebas dedicadas): cuota de
   artículos, cuota de archivos, funciones bloqueadas del plan Free, y que
   archivar libera cuota sin borrar filas. Incluye una activación **real**
@@ -78,14 +83,15 @@ navega por la aplicación con DOM nativo:
 ## 3. Cobertura de código
 
 `npm run test:coverage` (proveedor v8, sobre `src/shared`, `src/main/db`,
-`src/main/services` y `src/main/errors.ts`):
+`src/main/services`, `src/main/errors.ts` y `supabase/functions/**` — excluyendo
+el adaptador de Deno `index.ts` y las constantes `keys.ts`):
 
 | Métrica | Valor | Umbral configurado |
 |---|---|---|
-| Líneas | **88,12 %** | 50 % |
-| Sentencias | **85,47 %** | 50 % |
-| Funciones | **90,59 %** | 50 % |
-| Ramas | **77,49 %** | 40 % |
+| Líneas | **88,32 %** | 50 % |
+| Sentencias | **85,72 %** | 50 % |
+| Funciones | **90,77 %** | 50 % |
+| Ramas | **77,92 %** | 40 % |
 
 Los umbrales son **bajos a propósito**: se prefiere un número honesto que subir
 con pruebas de valor, no rellenar porcentajes con tests triviales. Se excluyen
@@ -159,7 +165,34 @@ Se re-evalúa si se superan los 100.000 artículos.
 
 ---
 
-## 5. Pruebas de aceptación del producto
+## 5. Prueba en vivo del backend de licencias (Supabase)
+
+Ejecutada el **20/10/2026** contra el proyecto real desplegado
+(`ugfefewrikcghfwqhezi.supabase.co/functions/v1/licence`), con una licencia
+emitida y sincronizada de verdad. Todas las filas son salidas reales:
+
+| Acción | Resultado HTTP | Cuerpo |
+|---|---|---|
+| `GET /health` | 200 | `{"ok":true,"version":1}` |
+| Activar código con firma alterada | 403 | `{"ok":false,"reason":"bad_signature"}` |
+| Activar máquina A | 200 | `{"ok":true,"seatsUsed":1,...}` |
+| Activar máquina B | 200 | `{"ok":true,"seatsUsed":2,...}` |
+| Activar máquina C (puestos llenos) | 409 | `{"ok":false,"reason":"seats_exhausted"}` |
+| Desactivar máquina A | 200 | `{"ok":true,"removed":true}` |
+| Activar máquina C (puesto liberado) | 200 | `{"ok":true,"seatsUsed":2,...}` |
+| Revocar licencia en la DB (service_role) | 200 | fila con `status=revoked` |
+| Activar con licencia revocada | 403 | `{"ok":false,"reason":"revoked"}` |
+| `GET /revocations?since=…` | 200 | `{"codes":["6285e77f…"]}` |
+| `npm run license:sync` (4 licencias) | — | *Registro verificado: 4… Subidas/actualizadas: 4* |
+
+La prueba de revocación se hizo con la clave de servicio **desde el equipo del
+emisor** (el cliente de la app no está conectado todavía): se alteró el estado
+en la tabla y se comprobó que la Edge Function la rechaza. El detalle está en
+[`docs/BACKEND.md`](BACKEND.md).
+
+---
+
+## 6. Pruebas de aceptación del producto
 
 | Criterio | Estado | Evidencia |
 |---|---|---|
@@ -186,13 +219,13 @@ Se re-evalúa si se superan los 100.000 artículos.
 
 ---
 
-## 6. Lo que NO se ha probado (y por qué)
+## 7. Lo que NO se ha probado (y por qué)
 
 | Pendiente | Motivo real |
 |---|---|
 | Instalación en un Windows limpio | Este equipo bloquea el instalador por **Device Guard** (política de la organización). No hay otra máquina disponible. **No se afirma que la instalación esté probada.** |
-| Activación de licencias *online* | No existe backend desplegado. El sistema local sí está probado. |
+| Activación de licencias *online* **desde la aplicación** | El backend está desplegado y probado en vivo por HTTP (apartado 5), pero **el cliente de la app aún no lo llama**: falta el bloque de integración. |
 | API de DHL u otros transportistas | Requieren registro de desarrollador (cuenta y aprobación). Sin credenciales, no se puede probar. |
 | Conectores de marketplaces | Ninguna plataforma ha autorizado el acceso. Solo existe la arquitectura abstracta, **sin integración real**. |
-| Sincronización multiusuario | Requiere backend compartido. No se ha desplegado ninguno. |
+| Sincronización multiusuario | El backend de licencias **no** sirve para sincronizar datos. No existe un backend multiusuario. |
 | Pruebas de accesibilidad con lector de pantalla | No hay herramienta de lectores de pantalla instalada. La navegación por teclado y los contrastes no se han certificado. |

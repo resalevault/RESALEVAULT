@@ -46,6 +46,9 @@ tools/signing/
 *.local
 secrets.json
 
+# Estado local de la CLI de Supabase (proyecto vinculado, URLs internas)
+supabase/.temp/
+
 # ---------------------------------------------------------------------------
 # DATOS DE USUARIO (no son parte del codigo)
 # ---------------------------------------------------------------------------
