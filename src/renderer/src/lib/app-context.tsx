@@ -58,6 +58,7 @@ export interface AppContextValue {
   t: Translator
   locale: LocaleCode
   theme: ThemeMode
+  accentColor: string
   currency: string
 
   money: (cents: number) => string
@@ -77,6 +78,7 @@ export interface AppContextValue {
   browserAction: (action: 'back' | 'forward' | 'reload' | 'close') => void
 
   updateSettings: (patch: Partial<AppSettings>) => Promise<void>
+  updateAccentColor: (color: string) => void
   reloadHealth: () => Promise<void>
   refreshData: () => void
   notify: (message: string, tone?: ToastTone) => void
@@ -206,12 +208,22 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       .catch(() => undefined)
   }, [])
 
-  // Tema e idioma se reflejan en el documento para que el CSS y los lectores
-  // de pantalla usen el valor correcto.
+  // Tema, color de acento e idioma se reflejan en el documento para que el CSS
+  // y los lectores de pantalla usen el valor correcto.
+  const [accentColor, setAccentColor] = useState<string>(() => {
+    try { return localStorage.getItem('rv-accent-color') || 'green' } catch { return 'green' }
+  })
   useEffect(() => {
     document.documentElement.dataset.theme = settings.theme
+    document.documentElement.dataset.accent = accentColor
     document.documentElement.lang = settings.locale
-  }, [settings.theme, settings.locale])
+  }, [settings.theme, settings.locale, accentColor])
+
+  // Funcion para cambiar el color de acento (persiste en localStorage).
+  const updateAccentColor = useCallback((color: string) => {
+    setAccentColor(color)
+    try { localStorage.setItem('rv-accent-color', color) } catch { /* ignorar */ }
+  }, [])
 
   const t = useMemo(() => createTranslator(settings.locale), [settings.locale])
 
@@ -322,6 +334,7 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       t,
       locale: settings.locale,
       theme: settings.theme,
+      accentColor,
       currency: settings.currency,
       money,
       moneyCompact,
@@ -335,6 +348,7 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       browserState,
       browserAction,
       updateSettings,
+      updateAccentColor,
       reloadHealth,
       refreshData,
       notify,
@@ -345,6 +359,7 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       fatalError,
       info,
       settings,
+      accentColor,
       health,
       route,
       dataVersion,
@@ -362,6 +377,7 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       browserState,
       browserAction,
       updateSettings,
+      updateAccentColor,
       reloadHealth,
       refreshData,
       notify,

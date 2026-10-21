@@ -1,9 +1,9 @@
-﻿# RESALEVAULT â€” Estado del proyecto
+# RESALEVAULT â€” Estado del proyecto
 
 Documento de transparencia: quÃ© funciona **de verdad** (verificado ejecutÃ¡ndolo),
 quÃ© falta y quÃ© costes implicarÃ¡. No se marca nada como terminado sin pruebas.
 
-Ãšltima actualizaciÃ³n: **21/10/2026** â€” **Arreglado un fallo real de instalaciÃ³n de
+Ultima actualizacion: **21/10/2026** - **v0.6.0 - Mejora de la interfaz y color de acento personalizable**: corregido el scroll (las paginas no hacian scroll porque .content no limitaba la altura), anadido selector de color de acento (8 presets) en Ajustes, aplicado al instante a toda la interfaz y guardado en localStorage. Version subida a 0.6.0. Bloque anterior: **Arreglado un fallo real de instalacion de
 dependencias en CI**: a partir de **npm 11.19** los scripts de ciclo de vida de
 las **dependencias** estÃ¡n **bloqueados por defecto** (`allowScripts`), y Electron
 44 ya **no declara** un `install` que se ejecute solo. Resultado: en un clon limpio,
