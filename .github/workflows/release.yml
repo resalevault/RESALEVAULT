@@ -1,0 +1,103 @@
+name: Release
+
+# Publica una release en GitHub cuando se sube una etiqueta v*.
+# Genera el instalador de Windows, crea la release y adjunta el instalador +
+# SHA256SUMS.txt. Esto permite que la app (electron-updater) detecte y
+# descargue actualizaciones automaticamente.
+#
+# Uso:
+#   git tag v0.5.1
+#   git push origin v0.5.1
+#
+# No requiere secretos adicionales: usa el GITHUB_TOKEN automatico.
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Etiqueta a publicar (ej. v0.5.1)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Compilar y publicar release
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Comprobar tipos
+        run: npm run typecheck
+
+      - name: Pruebas
+        run: npm test
+
+      - name: Compilar
+        run: npm run build
+
+      - name: Generar instalador
+        run: npx electron-builder --win --config electron-builder.yml
+
+      - name: Generar SHA256SUMS.txt
+        shell: pwsh
+        run: |
+          $hash = (Get-FileHash release\RESALEVAULT-Setup-*.exe -Algorithm SHA256).Hash
+          $name = (Get-ChildItem release\RESALEVAULT-Setup-*.exe).Name
+          "$hash  $name" | Out-File -FilePath release\SHA256SUMS.txt -Encoding utf8
+          Get-Content release\SHA256SUMS.txt
+
+      - name: Determinar etiqueta
+        id: tag
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $t = "${{ github.event.inputs.tag }}"
+          } else {
+            $t = "${{ github.ref_name }}"
+          }
+          "tag=$t" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Crear release y adjuntar artefactos
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: RESALEVAULT ${{ steps.tag.outputs.tag }}
+          body: |
+            Instalador para **Windows 10 / 11 (x64)**. Los datos se guardan en tu
+            equipo y la aplicacion funciona sin conexion.
+
+            **SHA-256 del instalador:** ver `SHA256SUMS.txt` adjunto.
+
+            Comprueba la integridad con:
+            ```powershell
+            Get-FileHash .\RESALEVAULT-Setup-*.exe -Algorithm SHA256
+            ```
+
+            > El instalador no esta firmado por una autoridad de certificacion de
+            > confianza, asi que Windows puede mostrar un aviso de SmartScreen.
+            > **No hay que desactivar ninguna proteccion de Windows** para
+            > instalarlo.
+          files: |
+            release/RESALEVAULT-Setup-*.exe
+            release/SHA256SUMS.txt
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

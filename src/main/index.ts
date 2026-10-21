@@ -35,6 +35,7 @@ import { AiService } from './services/ai/service'
 import { createOsSecretStore } from './services/ai/os-secret-store'
 import { BackupService, applyPendingRestoreToPaths } from './services/backup/service'
 import { CarrierBrowser } from './services/browser/carrier-browser'
+import { setupAutoUpdater } from './services/updater'
 
 let opened: OpenedDatabase | null = null
 let mainWindow: BrowserWindow | null = null
@@ -213,6 +214,8 @@ async function bootstrap(): Promise<void> {
   registerIpcHandlers({ ...ipcContext, license })
   registerModuleHandlers({ ...ipcContext, media, labels, finance, csv, intelligence, license, links, ai, backups })
   registerTrackingHandlers({ ...ipcContext, browser })
+  // Auto-actualizacion: comprobacion silenciosa al arrancar (solo en produccion).
+  setupAutoUpdater()
 
   // 5. Ventana.
   const created = createMainWindow(logger)

@@ -65,18 +65,27 @@ por impacto para el usuario.
 - Las recomendaciones de precio se muestran como **estimaciones**; no se afirma
   disponer de datos de mercado reales.
 
-## 7. No hay actualización automática
+## 7. Actualización automática (parcial)
 
-- **Qué pasa**: la aplicación **no comprueba ni instala actualizaciones**. No
-  incluye `electron-updater` ni ningún mecanismo equivalente.
-- **Consecuencia**: para actualizar, el usuario descarga la nueva versión desde
-  la página de Releases (o la Store, cuando esté publicada) y la instala encima.
-  Sus datos se conservan (viven en su carpeta de usuario, no en la de instalación).
-- **Por qué no está ahora**: un actualizador automático necesita un canal de
-  publicación firmado. Sin certificado de CA pública ni infraestructura propia,
-  hacerlo mal (descargar y ejecutar sin verificar) sería **peor** que no tenerlo.
-- **Decisión pendiente**: añadirlo más adelante con verificación de firma/hash, o
-  dejarlo manual. Mientras tanto, es **manual y documentado**, no prometido.
+- **Qué hay ahora**: la app incluye `electron-updater` con feed de GitHub
+  Releases. Al arrancar (solo en el instalador NSIS, no en desarrollo ni en el
+  `.appx` de la Store), comprueba silenciosamente si hay una versión más nueva.
+  Si la hay, pregunta al usuario y, si acepta, la descarga y la instala al
+  reiniciar.
+- **Verificación de firma**: **desactivada** (`verifyUpdateCodeSignature = false`)
+  porque el instalador no está firmado por una CA pública (presupuesto 0 €).
+  Se confía en el feed de GitHub y en el hash publicado en `SHA256SUMS.txt`.
+  Es un compromiso de seguridad aceptado y documentado.
+- **Limitaciones**:
+  - Solo funciona en el instalador NSIS. En el paquete de la Store, la
+    actualización la gestiona la propia Store.
+  - No hay comprobación manual desde la interfaz (todavía); solo la automática
+    al arrancar.
+  - El feed apunta a `16ray/RESALEVAULT` en GitHub; si el repositorio no
+    existe aún, la comprobación falla silenciosamente.
+- **Cómo se publica**: al subir una etiqueta `v*`, el workflow
+  `.github/workflows/release.yml` compila y publica la release con el instalador
+  adjunto. La app la detecta automáticamente.
 
 ## 8. El instalador NSIS no es reproducible byte a byte
 

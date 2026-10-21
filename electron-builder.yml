@@ -89,8 +89,17 @@ mac:
   entitlementsInherit: build/entitlements.mac.plist
   artifactName: RESALEVAULT-${version}-${arch}.${ext}
 
-dmg:
-  title: RESALEVAULT ${version}
-  artifactName: RESALEVAULT-${version}-${arch}.${ext}
+# ---------------------------------------------------------------------------
+# Auto-actualizacion (electron-updater + GitHub Releases)
+# ---------------------------------------------------------------------------
+# El feed de actualizaciones es el propio repositorio de GitHub. Al publicar un
+# release con el instalador adjunto, la app detecta la nueva version, la
+# descarga y la instala automaticamente (sin firma de CA: la verificacion de
+# firma de codigo esta desactivada para builds sin certificado).
+publish:
+  provider: github
+  owner: 16ray
+  repo: RESALEVAULT
+  releaseType: release
   # El fondo y el diseno por defecto son suficientes; no se incrustan recursos
   # propietarios para mantener el paquete pequeno.
