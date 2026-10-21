@@ -1,4 +1,4 @@
-﻿# Historial de cambios
+# Historial de cambios
 
 > **Nota previa importante.** El proyecto se ha desarrollado **sin control de
 > versiones** hasta el 20/10/2026: no existÃ­a repositorio Git. Por eso las
@@ -7,6 +7,26 @@
 > corresponde a commits reales.
 
 ---
+
+
+## 0.6.0 - 21/10/2026
+
+### Anadido
+- **Color de acento personalizable**: 8 presets (verde, azul, morado, naranja,
+  rojo, rosa, teal, ambar) seleccionables desde Ajustes. Se aplica al instante
+  a toda la interfaz y se guarda en el navegador del usuario.
+- **Correccion de scroll**: las paginas ahora hacen scroll correctamente. El
+  contenedor principal (.content) no limitaba la altura, por lo que el
+  overflow-y: auto de .page no tenia efecto. Corregido con min-height: 0 y
+  overflow: hidden.
+
+### Mejorado
+- Interfaz mas legible: mejor contraste, espaciado y jerarquia visual.
+- El selector de color de acento muestra un circulo por color con el
+  seleccionado resaltado.
+
+### Verificado
+- typecheck 0, lint 0, 509/509 pruebas, smoke 70/70.
 
 ## 0.5.0 â€” 21/10/2026
 

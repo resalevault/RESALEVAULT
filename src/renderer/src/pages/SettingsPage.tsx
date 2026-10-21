@@ -27,7 +27,7 @@ import { IconExternal, IconPlus, IconTrash } from '../components/Icons'
 import { BackupsCard } from './BackupsCard'
 
 export function SettingsPage(): ReactNode {
-  const { t, notify, settings, updateSettings, health, reloadHealth, info, dataVersion, refreshData, number, navigate } =
+  const { t, notify, settings, updateSettings, accentColor, updateAccentColor, health, reloadHealth, info, dataVersion, refreshData, number, navigate } =
     useApp()
 
   const [currency, setCurrency] = useState(settings.currency)
@@ -201,6 +201,37 @@ export function SettingsPage(): ReactNode {
                 <option value="dark">{t('settings.themeDark')}</option>
                 <option value="light">{t('settings.themeLight')}</option>
               </Select>
+            </Field>
+
+            <Field label="Color de acento">
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {[
+                  { id: 'green', color: '#c8ff3d', label: 'Verde' },
+                  { id: 'blue', color: '#3b82f6', label: 'Azul' },
+                  { id: 'purple', color: '#a855f7', label: 'Morado' },
+                  { id: 'orange', color: '#f97316', label: 'Naranja' },
+                  { id: 'red', color: '#ef4444', label: 'Rojo' },
+                  { id: 'pink', color: '#ec4899', label: 'Rosa' },
+                  { id: 'teal', color: '#14b8a6', label: 'Teal' },
+                  { id: 'amber', color: '#f59e0b', label: 'Ambar' },
+                ].map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    title={preset.label}
+                    onClick={() => updateAccentColor(preset.id)}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: '50%',
+                      border: accentColor === preset.id ? '3px solid var(--text)' : '2px solid var(--border)',
+                      background: preset.color,
+                      cursor: 'pointer',
+                      padding: 0,
+                    }}
+                  />
+                ))}
+              </div>
             </Field>
 
             <Field label={t('settings.currency')} hint={t('settings.currencyHint')}>
