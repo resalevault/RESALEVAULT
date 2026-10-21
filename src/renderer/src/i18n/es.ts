@@ -954,7 +954,7 @@ export const es = {
     foundingHint:
       'Las licencias fundadoras son permanentes y estan limitadas a 200 por plan. No se emiten desde esta aplicacion.',
     noBackend:
-      'La activacion de licencias necesita el servicio online, que llega en la Fase 6. Esta pantalla muestra el estado real: no hay ninguna licencia activada.',
+      'La activacion comprueba la firma en tu equipo y, si hay conexion, confirma el puesto en el servidor. Sin conexion, una licencia ya activada sigue funcionando.',
     planLimitsApplied: 'Los limites de tu plan ya se aplican en todo el programa.',
     requiresPro: 'Esta funcion requiere Vault Pro o Vault Business',
     requiresProHint:
@@ -969,7 +969,27 @@ export const es = {
     buyCopied: 'Enlace copiado al portapapeles.',
     buyOpenFailed: 'No se pudo abrir el enlace. Copia el enlace y abrelo a mano.',
     buyNoPayment:
-      'La compra NO se hace desde esta aplicacion: no se piden datos de pago ni se activa ninguna licencia al pulsar el boton.'
+      'La compra NO se hace desde esta aplicacion: no se piden datos de pago ni se activa ninguna licencia al pulsar el boton.',
+    onlineTitle: 'Comprobacion online',
+    onlineStateVerified: 'Verificada con el servidor',
+    onlineStateOffline: 'Sin conexion (tu licencia sigue activa)',
+    onlineStateRejected: 'Rechazada por el servidor',
+    onlineStateUnknown: 'Sin comprobar todavia',
+    onlineLastCheck: 'Ultima comprobacion',
+    onlineNever: 'Nunca',
+    onlineCheckNow: 'Comprobar ahora',
+    onlineChecking: 'Comprobando...',
+    onlineSeatsUsed: 'Equipos activados',
+    onlineOfflineHint:
+      'No se pudo contactar con el servidor. Tu licencia sigue funcionando sin conexion; se volvera a intentar mas adelante.',
+    onlineRejectedHint:
+      'El servidor ha rechazado esta licencia. Tus datos NO se han borrado: solo han cambiado los limites del plan.',
+    onlineReasonRevoked: 'La licencia fue revocada.',
+    onlineReasonSuspended: 'La licencia esta suspendida.',
+    onlineReasonExpired: 'La licencia ha caducado.',
+    onlineReasonSeatsExhausted: 'No quedan puestos libres en esta licencia.',
+    onlineReasonUnknownCode: 'El servidor no reconoce este codigo.',
+    onlineReasonGeneric: 'La comprobacion no se ha podido completar.'
   },
 
   ai: {

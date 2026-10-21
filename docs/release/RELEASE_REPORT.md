@@ -64,14 +64,14 @@ dentro de Electron real):
 
 | Nivel | Ejecutadas | Superadas | Fallidas | Bloqueadas |
 |---|---|---|---|---|
-| Unitarias / integración (Vitest) | 469 | 469 | 0 | 0 |
+| Unitarias / integración (Vitest) | 500 | 500 | 0 | 0 |
 | Humo del proceso principal (`npm run smoke`) | 70 | 70 | 0 | 0 |
-| Humo de la interfaz en Electron (`npm run smoke:ui`) | 61 | 61 | 0 | 0 |
+| Humo de la interfaz en Electron (`npm run smoke:ui`) | 65 | 65 | 0 | 0 |
 | Validación de manifiestos winget (validador oficial) | 1 | 1 | 0 | 0 |
 | Instalación real en equipo limpio | — | — | — | **1 (bloqueada)** |
 
-- **Cobertura**: 88.33 % de líneas · 85.74 % de sentencias · 90.85 % de funciones
-  · 77.95 % de ramas.
+- **Cobertura**: 88.66 % de líneas · 86.00 % de sentencias · 90.75 % de funciones
+  · 78.40 % de ramas.
 - **Pruebas de seguridad**: el paquete de producción se extrajo y se buscó
   `sb_secret_`, `service_role`, claves privadas y mapas de código → **0 hallazgos**.
 - **Pruebas negativas incluidas**: firma de licencia falsificada → 403; puestos
@@ -115,6 +115,13 @@ Carpeta: `RESALEVAULT_RELEASE\`
 > Los hashes se calculan sobre **este** artefacto concreto. El instalador NSIS
 > **no es reproducible byte a byte** (incrusta marcas de tiempo): una nueva
 > compilación da un hash distinto aunque el código sea idéntico.
+
+> **Aviso de vigencia (21/10/2026):** los artefactos de la tabla se compilaron
+> **antes** de añadir el cliente online de licencias. El código ha cambiado desde
+> entonces, así que **hay que regenerar instalador y `.appx` y recalcular los
+> hashes** antes de publicar nada. Los hashes de arriba corresponden a la
+> compilación anterior y quedan como referencia histórica; no se presentan como
+> válidos para el código actual.
 
 - **Formato y arquitectura**: NSIS x64 y AppX x64.
 - **Estado de firma**: **sin firmar**. No hay certificado de CA. El `.appx` se deja

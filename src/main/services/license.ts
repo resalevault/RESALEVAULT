@@ -32,6 +32,8 @@ import type { Database } from '../db/database'
 import { appError } from '../errors'
 import { logActivity } from '../db/repositories/activity'
 import { newId, nowIso, toNumber, toNullableString, toStringValue } from '../db/support'
+import type { LicenceOnlineClient } from './licence-online'
+import { codeHash } from './licence-online'
 
 interface LicensePayload {
   v: number
@@ -145,10 +147,20 @@ interface LicenseRow {
   seats: number
   holder: string
   notes: string
+  online_state: string
+  online_error: string
 }
 
 export class LicenseService {
-  constructor(private readonly db: Database) {}
+  constructor(
+    private readonly db: Database,
+    /**
+     * Cliente online OPCIONAL. Sin el, el servicio funciona igual que antes:
+     * verificacion pura offline. Se inyecta en la aplicacion real y en las
+     * pruebas que comprueban la integracion.
+     */
+    private readonly online: LicenceOnlineClient | null = null
+  ) {}
 
   /** Identificador estable de este equipo. Se crea la primera vez. */
   deviceId(): string {
@@ -170,7 +182,7 @@ export class LicenseService {
     return (
       this.db.get<LicenseRow>(
         `SELECT id, plan, kind, payload, signature, code_hash, status, activated_at, expires_at,
-                last_check_at, device_id, seats, holder, notes
+                last_check_at, device_id, seats, holder, notes, online_state, online_error
          FROM licenses WHERE status = 'active' ORDER BY activated_at DESC LIMIT 1`
       ) ?? null
     )
@@ -215,14 +227,27 @@ export class LicenseService {
         limits: PLAN_LIMITS.free,
         usage,
         signatureValid: false,
-        notes: 'No hay ninguna licencia activada.'
+        notes: 'No hay ninguna licencia activada.',
+        online: { state: 'unknown', reason: '', lastCheckAt: null }
       }
     }
 
     // Se reverifica SIEMPRE: una fila manipulada a mano en la base de datos no
     // debe conceder un plan de pago.
     const verification = verifyLicenseCode(`${row.payload}.${row.signature}`)
-    const plan: LicensePlan = verification.ok && verification.payload ? verification.payload.plan : 'free'
+    let plan: LicensePlan = verification.ok && verification.payload ? verification.payload.plan : 'free'
+
+    // Revocacion conocida: si el hash del codigo esta en la cache local de
+    // revocaciones, el plan se rebaja a Free aunque la firma sea correcta. Se
+    // conserva TODO el contenido del usuario; solo cambian los limites.
+    const revokedLocally = this.isRevokedCode(row.payload, row.signature)
+    if (revokedLocally) plan = 'free'
+
+    const notes = revokedLocally
+      ? 'Esta licencia ha sido revocada. El plan se ha rebajado a Free; tus datos siguen intactos.'
+      : verification.ok
+        ? toStringValue(row.notes)
+        : `La firma no es valida (${verification.reason ?? 'desconocido'}). El plan se ha rebajado a Free.`
 
     return {
       plan,
@@ -237,10 +262,26 @@ export class LicenseService {
       limits: PLAN_LIMITS[plan],
       usage,
       signatureValid: verification.ok,
-      notes: verification.ok
-        ? toStringValue(row.notes)
-        : `La firma no es valida (${verification.reason ?? 'desconocido'}). El plan se ha rebajado a Free.`
+      notes,
+      online: {
+        state: (toStringValue(row.online_state) || 'unknown') as 'unknown' | 'verified' | 'offline' | 'rejected',
+        reason: toStringValue(row.online_error),
+        lastCheckAt: toNullableString(row.last_check_at)
+      }
     }
+  }
+
+  /** True si el codigo activo figura en la cache local de revocaciones. */
+  private isRevokedCode(payload: string, signature: string): boolean {
+    if (!payload || !signature) return false
+    // La cache guarda el SHA-256 del codigo completo, que es lo que envia el
+    // servidor. El codigo completo es `payload.signature`.
+    const hash = codeHash(`${payload}.${signature}`)
+    const found = this.db.scalar<number>(
+      'SELECT 1 AS v FROM license_revocations WHERE code_hash = $hash',
+      { $hash: hash }
+    )
+    return found === 1
   }
 
   limits(): PlanLimits {
@@ -313,6 +354,11 @@ export class LicenseService {
   deactivate(): LicenseState {
     const row = this.active()
     if (row) {
+      // Liberar el puesto en el servidor es "mejor esfuerzo": si no hay red, la
+      // desactivacion local sigue adelante para no atrapar al usuario.
+      if (this.online) {
+        void this.online.releaseSeat(`${row.payload}.${row.signature}`, this.deviceId())
+      }
       this.db.transaction(() => {
         this.db.run("UPDATE licenses SET status = 'inactive', updated_at = $at WHERE id = $id", {
           $id: row.id,
@@ -334,6 +380,63 @@ export class LicenseService {
         { $limit: Math.min(200, Math.max(1, limit)) }
       )
       .map((row) => ({ at: row.at, event: row.event, detail: toStringValue(row.detail) }))
+  }
+
+  // -------------------------------------------------------------------------
+  // Comprobacion ONLINE (puestos y revocaciones)
+  // -------------------------------------------------------------------------
+
+  /**
+   * Refresca el estado online de la licencia activa: descarga primero las
+   * revocaciones (para que una revocacion reciente surta efecto) y despues
+   * confirma el puesto de este equipo.
+   *
+   * Reglas:
+   *  - Sin licencia activa, o sin red, no se hace nada y no se lanza error.
+   *  - Un rechazo BLOQUEANTE (revocada, caducada, suspendida, puestos agotados)
+   *    queda registrado; el estado de la licencia cambia solo en el caso de
+   *    revocacion, que se refleja via la cache local. NUNCA se borran datos.
+   *  - Los fallos temporales (sin red, error del servidor) no alteran el plan.
+   */
+  async refreshOnline(force = false): Promise<LicenseState> {
+    if (!this.online) return this.state()
+    const row = this.active()
+    if (!row) return this.state()
+
+    const code = `${row.payload}.${row.signature}`
+    const machineId = this.deviceId()
+
+    // 1. Revocaciones primero: si una revocacion nos afecta, el estado debe
+    //    reflejarla antes de intentar confirmar el puesto.
+    await this.online.syncRevocations()
+
+    // 2. La cache local puede haber marcado esta licencia como revocada.
+    if (this.isRevokedCode(row.payload, row.signature)) {
+      this.db.run(
+        "UPDATE licenses SET status = 'revoked', online_state = 'rejected', online_error = 'revoked', updated_at = $at WHERE id = $id AND status = 'active'",
+        { $id: row.id, $at: nowIso() }
+      )
+      this.db.run(
+        `INSERT INTO license_events (id, license_id, at, event, detail) VALUES ($id, $license, $at, 'online_rejected', 'revoked')`,
+        { $id: newId(), $license: row.id, $at: nowIso() }
+      )
+      return this.state()
+    }
+
+    // 3. Confirmar el puesto. Nunca lanza.
+    await this.online.verify(code, machineId, 'Este equipo', force)
+    return this.state()
+  }
+
+  /** Descarga revocaciones sin confirmar puesto. Util al arrancar. */
+  async syncRevocations(): Promise<{ fetched: number; updated: boolean }> {
+    if (!this.online) return { fetched: 0, updated: false }
+    return this.online.syncRevocations()
+  }
+
+  /** True si el plan actual tiene comprobacion online disponible. */
+  get onlineEnabled(): boolean {
+    return this.online !== null
   }
 
   /**

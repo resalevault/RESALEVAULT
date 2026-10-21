@@ -3,8 +3,12 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Bloque de cierre de producto**: botón
-obligatorio **«Comprar licencia» / «Buy license»** que abre el Discord oficial
+Última actualización: **21/10/2026** — **Cliente online de licencias**: la
+aplicación de escritorio ya **confirma el puesto y consulta revocaciones** contra
+la Edge Function, con reglas offline-first (nunca borra datos, nunca corta el
+trabajo sin conexión) y sin exponer ningún secreto. 31 pruebas nuevas, 97 % de
+cobertura del cliente, **65/65 comprobaciones** de interfaz y **500/500** pruebas
+totales. Bloque anterior: botón obligatorio **«Comprar licencia» / «Buy license»** que abre el Discord oficial
 (canal IPC dedicado con lista blanca, 12 pruebas nuevas y **61/61 comprobaciones**
 de interfaz en Electron real); **soporte macOS preparado** (objetivo `dmg`/`zip`
 x64+arm64, permisos mínimos, barra nativa `hiddenInset`); **higiene de producción
@@ -57,10 +61,11 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **469 / 469** correctas (37 archivos) |
+| `npm test` | **500 / 500** correctas (38 archivos) |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
+| `npm run test:coverage` | **88,66 % líneas** · 86,00 % sentencias · 90,75 % funciones · 78,40 % ramas |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
-| `npm run smoke:ui` | **61 / 61** comprobaciones de interfaz en Electron real |
+| `npm run smoke:ui` | **65 / 65** comprobaciones de interfaz en Electron real |
 | `npm run build` | ✅ los tres procesos compilados |
 | `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
 | `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
@@ -253,7 +258,7 @@ el margen del usuario, y se etiquetan como estimación.
 | Cuotas de fundadores 200 / 200 definidas | ✅ |
 | Registro de emisión de licencias (auditoría + reverificación) | ✅ *nuevo* (`npm run license:list`) |
 | **Backend online en Supabase** (puestos, revocación, `/health`) | ✅ *nuevo* **desplegado y probado en vivo** (20/10/2026) |
-| Cliente online en la aplicación (activa y consulta revocaciones) | ⬜ pendiente (siguiente bloque) |
+| **Cliente online en la aplicación** (activa puesto, consulta revocaciones) | ✅ *nuevo* (31 pruebas nuevas) |
 | Pasarela de pagos | ⬜ no implementada (sin presupuesto) |
 
 ### Backend online desplegado (20/10/2026)
@@ -274,9 +279,40 @@ el margen del usuario, y se etiquetan como estimación.
   mucho cada 7 días. Si Supabase pausa el proyecto por inactividad (~1 semana),
   las licencias existentes **siguen funcionando**.
 
-Aviso honesto: **el cliente de la aplicación de escritorio todavía no se conecta
-al backend**. La validación que usa hoy la app es la local (Ed25519), que está
-probada.
+### Cliente online de la aplicación (21/10/2026)
+
+El cliente de escritorio **ya se conecta** al backend, con estas reglas:
+
+- **Offline primero, sin excepciones**: la firma Ed25519 se verifica siempre en
+  local. El backend sirve para controlar **puestos** y **revocaciones**, no para
+  conceder el plan. Si el servidor cae, una licencia ya activada **conserva su
+  plan** y la app sigue funcionando.
+- **Nunca borra datos**: un rechazo del servidor solo cambia el estado de la
+  licencia (y, en una revocación, los límites del plan). Inventario, pedidos y
+  fotos quedan intactos. Hay una prueba dedicada que lo comprueba.
+- **Comprobación perezosa**: se refresca como mucho cada 7 días
+  (`ONLINE_RECHECK_DAYS`). Las revocaciones se piden solo desde el último cursor
+  (`/revocations?since=…`) y se guardan sus **hashes** en una caché local
+  (`license_revocations`), de modo que una revocación surte efecto aunque el
+  equipo esté sin conexión al consultar.
+- **Sin secretos**: la app envía la clave **publishable** de Supabase como
+  `Bearer` (pública por diseño, limitada por RLS). La clave `sb_secret_` **nunca**
+  sale del servidor. Verificado sobre el paquete compilado: 0 apariciones.
+- **Un solo canal IPC dedicado** (`license:refresh`), botón «Comprobar ahora» en
+  la pantalla de Licencias y estado visible (verificada / sin conexión /
+  rechazada), traducido a español e inglés.
+- **Nuevas piezas**: `src/main/services/licence-online.ts`,
+  `src/shared/licence-backend.ts`, migración `005-license-online.ts`,
+  `tests/licence-online.test.ts` (31 pruebas, 97 % de cobertura del cliente).
+
+Migración 005 (aditiva, no destructiva): `licenses.online_state`,
+`licenses.online_error`, `licenses.revocation_cursor` y la tabla
+`license_revocations`.
+
+Aviso honesto: el cliente respeta lo que diga el servidor, pero **la instalación
+real en una máquina limpia sigue bloqueada** por este equipo (nivel de firma
+Enterprise), y **la publicación en GitHub/Store sigue pendiente** de las cuentas
+del propietario. Nada de eso se puede afirmar como hecho.
 
 ### Límites realmente aplicados (corrección importante)
 

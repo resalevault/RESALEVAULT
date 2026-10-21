@@ -158,6 +158,8 @@ export const CH_MODULES = {
   licenseActivate: 'license:activate',
   licenseDeactivate: 'license:deactivate',
   licenseEvents: 'license:events',
+  /** Comprobacion online bajo demanda (puestos + revocaciones). */
+  licenseRefresh: 'license:refresh',
   /** Enlaces externos permitidos (compra de licencia). Solo https de la lista. */
   linksTargets: 'links:targets',
   linksOpen: 'links:open',
@@ -414,6 +416,8 @@ export interface LicenseApi {
   activate(input: { code: string; holder?: string }): Promise<Result<LicenseState>>
   deactivate(): Promise<Result<LicenseState>>
   events(): Promise<Result<Array<{ at: string; event: string; detail: string }>>>
+  /** Comprueba puestos y revocaciones contra el servidor. Nunca lanza si no hay red. */
+  refresh(): Promise<Result<LicenseState>>
 }
 
 /**

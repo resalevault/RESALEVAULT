@@ -786,6 +786,18 @@ export interface LicenseState {
   /** Si es false, la firma no se pudo verificar y el plan cae a Free. */
   signatureValid: boolean
   notes: string
+  /**
+   * Estado de la comprobacion ONLINE (puestos y revocaciones). Es informativo:
+   * una licencia con firma valida sigue funcionando sin conexion. `unknown`
+   * cuando aun no se ha intentado o no toca.
+   */
+  online: {
+    state: 'unknown' | 'verified' | 'offline' | 'rejected'
+    /** Motivo del ultimo rechazo del servidor, si lo hubo. */
+    reason: string
+    /** Fecha de la ultima comprobacion correcta, si la hubo. */
+    lastCheckAt: ISODateTime | null
+  }
 }
 
 export interface LicenseActivationInput {

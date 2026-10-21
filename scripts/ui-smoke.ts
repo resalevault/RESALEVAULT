@@ -29,6 +29,7 @@ import { CsvService } from '@main/services/csv-io'
 import { IntelligenceService } from '@main/services/intelligence'
 import { LabelService } from '@main/services/labels'
 import { LicenseService } from '@main/services/license'
+import { LicenceOnlineClient } from '@main/services/licence-online'
 import { LinkService } from '@main/services/links'
 import { MediaService } from '@main/services/media'
 import { AiService } from '@main/services/ai/service'
@@ -149,7 +150,17 @@ async function main(): Promise<void> {
     finance,
     csv: new CsvService(opened.repos, finance, () => settings.get().locale),
     intelligence: new IntelligenceService(opened.db),
-    license: new LicenseService(opened.db),
+    license: new LicenseService(
+      opened.db,
+      // Cliente online con `fetch` SIMULADA: la prueba de humo nunca sale a
+      // internet. Devuelve "sin red" para ejercitar el camino offline real.
+      new LicenceOnlineClient(opened.db, {
+        endpoint: 'https://smoke.invalid/fn',
+        fetchImpl: (async () => {
+          throw new Error('smoke: sin red')
+        }) as unknown as typeof fetch
+      })
+    ),
     links: new LinkService(),
     ai: new AiService(opened.db, opened.repos.products, { secrets: createOsSecretStore() }),
     backups: new BackupService(opened.db, {
@@ -605,6 +616,41 @@ async function main(): Promise<void> {
   check(
     'la pantalla aclara que NO se compra desde la app',
     await evaluate<boolean>("document.body.innerText.toLowerCase().includes('no se piden datos de pago')")
+  )
+
+  // -------------------------------------------------------------------------
+  process.stdout.write('\nComprobacion online de licencia\n-------------------------------\n')
+  // -------------------------------------------------------------------------
+  // La tarjeta de estado online debe existir siempre (aunque no haya licencia).
+  // Se compara en minusculas: los titulos de seccion se muestran en mayusculas
+  // por CSS, y `innerText` devuelve el texto ya transformado.
+  check(
+    'se muestra la tarjeta de comprobacion online',
+    await evaluate<boolean>(
+      "document.body.innerText.toLowerCase().includes('comprobacion online')"
+    )
+  )
+
+  // Sin licencia activa, el estado es "sin comprobar todavia" y NO hay boton de
+  // comprobar: no tiene sentido consultar el servidor sin licencia.
+  check(
+    'sin licencia, el estado online es "sin comprobar todavia"',
+    await evaluate<boolean>("document.body.innerText.includes('Sin comprobar todavia')")
+  )
+  const checkButtonAbsent = await evaluate<boolean>(
+    `(() => ![...document.querySelectorAll('button')].some((el) => el.textContent.trim() === 'Comprobar ahora'))()`
+  )
+  check('sin licencia no se ofrece comprobar ahora', checkButtonAbsent)
+
+  // El puente existe y responde SIEMPRE un resultado (nunca lanza), incluso sin
+  // red: el proceso principal captura los fallos.
+  const refreshResult = await evaluate<string>(
+    `window.resalevault.license.refresh().then((r) => JSON.stringify(r)).catch(() => 'LANZO')`
+  )
+  check(
+    'la llamada de comprobacion responde sin lanzar aunque no haya red',
+    refreshResult !== 'LANZO' && (JSON.parse(refreshResult) as { ok: boolean }).ok === true,
+    refreshResult.slice(0, 140)
   )
 
   // -------------------------------------------------------------------------

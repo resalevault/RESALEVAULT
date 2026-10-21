@@ -401,6 +401,10 @@ export function registerModuleHandlers(ctx: ModuleContext): void {
     entity: 'license'
   })
   handle(CH_MODULES.licenseEvents, null, () => ctx.license.events())
+  handle(CH_MODULES.licenseRefresh, null, () => ctx.license.refreshOnline(true), {
+    mutates: true,
+    entity: 'license'
+  })
 
   // -------------------------------------------------------------------------
   // Enlaces externos (lista blanca)

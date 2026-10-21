@@ -950,7 +950,7 @@ export const en: DictionaryShape<typeof es> = {
     foundingHint:
       'Founder licences are perpetual and capped at 200 per plan. They are not issued from this application.',
     noBackend:
-      'Licence activation needs the online service, which arrives in Phase 6. This screen shows the real state: no licence is activated.',
+      'Activation checks the signature on your device and, when there is a connection, confirms the seat on the server. Offline, an already activated license keeps working.',
     planLimitsApplied: 'Your plan limits are already applied throughout the program.',
     requiresPro: 'This feature requires Vault Pro or Vault Business',
     requiresProHint:
@@ -965,7 +965,27 @@ export const en: DictionaryShape<typeof es> = {
     buyCopied: 'Link copied to the clipboard.',
     buyOpenFailed: 'The link could not be opened. Copy it and open it manually.',
     buyNoPayment:
-      'The purchase is NOT made from this application: no payment details are requested and no license is activated by pressing the button.'
+      'The purchase is NOT made from this application: no payment details are requested and no license is activated by pressing the button.',
+    onlineTitle: 'Online check',
+    onlineStateVerified: 'Verified with the server',
+    onlineStateOffline: 'No connection (your license stays active)',
+    onlineStateRejected: 'Rejected by the server',
+    onlineStateUnknown: 'Not checked yet',
+    onlineLastCheck: 'Last check',
+    onlineNever: 'Never',
+    onlineCheckNow: 'Check now',
+    onlineChecking: 'Checking...',
+    onlineSeatsUsed: 'Activated devices',
+    onlineOfflineHint:
+      'The server could not be reached. Your license keeps working offline; it will be retried later.',
+    onlineRejectedHint:
+      'The server rejected this license. Your data has NOT been deleted: only the plan limits changed.',
+    onlineReasonRevoked: 'The license was revoked.',
+    onlineReasonSuspended: 'The license is suspended.',
+    onlineReasonExpired: 'The license has expired.',
+    onlineReasonSeatsExhausted: 'There are no free seats left on this license.',
+    onlineReasonUnknownCode: 'The server does not recognise this code.',
+    onlineReasonGeneric: 'The check could not be completed.'
   },
 
   ai: {

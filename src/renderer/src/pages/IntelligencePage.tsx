@@ -307,11 +307,12 @@ function ThresholdsModal({
 // ===========================================================================
 
 export function LicensePage(): ReactNode {
-  const { t, number, notify, dataVersion } = useApp()
+  const { t, number, dateTime, notify, dataVersion } = useApp()
   const state = useAsyncData(() => api.license.state(), [dataVersion])
   const [code, setCode] = useState('')
   const [activating, setActivating] = useState(false)
   const [buyBusy, setBuyBusy] = useState(false)
+  const [checkBusy, setCheckBusy] = useState(false)
   const [discordUrl, setDiscordUrl] = useState<string>('https://discord.gg/9bMhnGvjrx')
 
   // Se pregunta al proceso principal el destino real (lista blanca). Si la
@@ -360,6 +361,51 @@ export function LicensePage(): ReactNode {
       })
       .catch(reportError)
       .finally(() => setBuyBusy(false))
+  }
+
+  // Comprobacion online BAJO DEMANDA. Nunca es obligatoria: si no hay red, el
+  // resultado es 'offline' y la licencia sigue activa. La llamada se resuelve
+  // siempre (el proceso principal captura los fallos de red), asi que aqui solo
+  // se refresca el estado mostrado.
+  const checkOnline = (): void => {
+    setCheckBusy(true)
+    void api.license
+      .refresh()
+      .then(() => state.reload())
+      .catch(reportError)
+      .finally(() => setCheckBusy(false))
+  }
+
+  const onlineStateLabel = (value: 'unknown' | 'verified' | 'offline' | 'rejected'): string => {
+    switch (value) {
+      case 'verified':
+        return t('plan.onlineStateVerified')
+      case 'offline':
+        return t('plan.onlineStateOffline')
+      case 'rejected':
+        return t('plan.onlineStateRejected')
+      default:
+        return t('plan.onlineStateUnknown')
+    }
+  }
+
+  // Traduce el motivo tecnico del servidor a un texto entendible. Los motivos
+  // desconocidos caen a un mensaje generico: nunca se muestra una clave cruda.
+  const onlineReasonLabel = (reason: string): string => {
+    switch (reason) {
+      case 'revoked':
+        return t('plan.onlineReasonRevoked')
+      case 'suspended':
+        return t('plan.onlineReasonSuspended')
+      case 'expired':
+        return t('plan.onlineReasonExpired')
+      case 'seats_exhausted':
+        return t('plan.onlineReasonSeatsExhausted')
+      case 'unknown_code':
+        return t('plan.onlineReasonUnknownCode')
+      default:
+        return t('plan.onlineReasonGeneric')
+    }
   }
 
   const data = state.data
@@ -439,6 +485,31 @@ export function LicensePage(): ReactNode {
               </div>
             </Card>
           </div>
+
+          <Card title={t('plan.onlineTitle')}>
+            <div className="stack stack--sm">
+              <Row label={t('common.status')} value={onlineStateLabel(data.online.state)} />
+              <Row
+                label={t('plan.onlineLastCheck')}
+                value={data.online.lastCheckAt ? dateTime(data.online.lastCheckAt) : t('plan.onlineNever')}
+              />
+              {data.online.state === 'offline' ? (
+                <div className="notice notice--warn">{t('plan.onlineOfflineHint')}</div>
+              ) : null}
+              {data.online.state === 'rejected' ? (
+                <div className="notice notice--warn">
+                  {onlineReasonLabel(data.online.reason)} {t('plan.onlineRejectedHint')}
+                </div>
+              ) : null}
+              {data.status === 'active' ? (
+                <div className="row" style={{ justifyContent: 'flex-end' }}>
+                  <Button disabled={checkBusy} onClick={checkOnline}>
+                    {checkBusy ? t('plan.onlineChecking') : t('plan.onlineCheckNow')}
+                  </Button>
+                </div>
+              ) : null}
+            </div>
+          </Card>
 
           <Card title={t('plan.activate')}>
             <p className="dim" style={{ marginTop: 0 }}>

@@ -227,7 +227,8 @@ const api: ResaleVaultApi = {
     state: () => invoke(CH_MODULES.licenseState),
     activate: (input) => invoke(CH_MODULES.licenseActivate, input),
     deactivate: () => invoke(CH_MODULES.licenseDeactivate),
-    events: () => invoke(CH_MODULES.licenseEvents)
+    events: () => invoke(CH_MODULES.licenseEvents),
+    refresh: () => invoke(CH_MODULES.licenseRefresh)
   },
 
   links: {

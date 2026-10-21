@@ -306,7 +306,8 @@ export const api = {
     state: bind(() => bridge.license.state()),
     activate: bind((input: Parameters<typeof bridge.license.activate>[0]) => bridge.license.activate(input)),
     deactivate: bind(() => bridge.license.deactivate()),
-    events: bind(() => bridge.license.events())
+    events: bind(() => bridge.license.events()),
+    refresh: bind(() => bridge.license.refresh())
   },
 
   links: {

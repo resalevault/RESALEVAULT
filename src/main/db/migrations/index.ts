@@ -11,13 +11,15 @@ import { migration001 } from './001-initial'
 import { migration002 } from './002-seed'
 import { migration003 } from './003-commerce'
 import { migration004 } from './004-tracking'
+import { migration005 } from './005-license-online'
 import type { Migration } from '../migrator'
 
 export const MIGRATIONS: readonly Migration[] = [
   migration001,
   migration002,
   migration003,
-  migration004
+  migration004,
+  migration005
 ]
 
 export const LATEST_SCHEMA_VERSION: number =

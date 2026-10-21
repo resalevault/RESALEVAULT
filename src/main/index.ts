@@ -29,6 +29,7 @@ import { FinanceService } from './services/finance'
 import { CsvService } from './services/csv-io'
 import { IntelligenceService } from './services/intelligence'
 import { LicenseService } from './services/license'
+import { LicenceOnlineClient } from './services/licence-online'
 import { LinkService } from './services/links'
 import { AiService } from './services/ai/service'
 import { createOsSecretStore } from './services/ai/os-secret-store'
@@ -141,7 +142,13 @@ async function bootstrap(): Promise<void> {
   )
   const csv = new CsvService(opened.repos, finance, () => settings.get().locale)
   const intelligence = new IntelligenceService(opened.db)
-  const license = new LicenseService(opened.db)
+  // Cliente online de licencias: confirma puestos y descarga revocaciones.
+  // Es "mejor esfuerzo": si no hay red, la licencia sigue funcionando offline.
+  const licenceOnline = new LicenceOnlineClient(opened.db, {
+    appVersion: app.getVersion(),
+    os: process.platform
+  })
+  const license = new LicenseService(opened.db, licenceOnline)
   // Enlaces externos permitidos (compra de licencia por Discord). El destino
   // real vive en la lista blanca compartida: la interfaz solo pide un nombre.
   const links = new LinkService()
@@ -231,6 +238,28 @@ async function bootstrap(): Promise<void> {
       carrierBrowser?.attachToWindow(mainWindow)
     }
   })
+
+  // Comprobacion online de la licencia: perezosa y en segundo plano. No bloquea
+  // el arranque y NUNCA impide usar la aplicacion sin conexion.
+  if (license.onlineEnabled) {
+    mainWindow.webContents.once('did-finish-load', () => {
+      void license
+        .refreshOnline()
+        .then((state) => {
+          if (state.online.state !== 'unknown') {
+            logger.info('Licencia: estado online', {
+              state: state.online.state,
+              reason: state.online.reason
+            })
+          }
+        })
+        .catch((error: unknown) => {
+          logger.warn('Licencia: la comprobacion online fallo (se sigue en offline)', {
+            error: error instanceof Error ? error.message : 'desconocido'
+          })
+        })
+    })
+  }
 }
 
 app.on('window-all-closed', () => {
