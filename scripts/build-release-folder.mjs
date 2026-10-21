@@ -170,6 +170,7 @@ log('\nDocumentation')
 const docsDir = join(releaseDir, 'Documentation')
 mkdirSync(docsDir, { recursive: true })
 const docFiles = [
+  'GUION_PUBLICACION.md',
   'RELEASE_REPORT.md',
   'TEST_RESULTS.md',
   'KNOWN_ISSUES.md',

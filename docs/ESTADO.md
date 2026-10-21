@@ -3,27 +3,24 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Revisión de promesas del material
-público**: auditoría de cada afirmación de la ficha de la Store
-(`STORE_LISTING.md`) y del PR de winget (`WINGET_PR_BODY.md`) contra el código.
-**Todas se confirman**: «vinted/wallapop…» son canales reales sembrados
-(`002-seed.ts`); el informe desglosa de verdad por **canal (plataforma)**,
-categoría y mes (`finance.ts`); la instalación es **por usuario sin permisos de
-administrador** (`perMachine: false`) y el desinstalador **no borra los datos**
-(`deleteAppDataOnUninstall: false`); el manifiesto declara `nullsoft`/`Scope:
-user` y el `InstallerSha256` coincide con el instalador real; y el cliente online
-**solo envía** código, `machineId`, etiqueta, versión y SO — **nunca** inventario,
-pedidos ni clientes (`licence-online.ts`), así que la promesa de privacidad es
-exacta. Corregidos dos puntos: (1) el cuerpo del release de GitHub estaba
-**duplicado a mano** en `STORE_LISTING.md` §2 y ya divergía del generado → ahora
-§2 remite a `--print-notes` (una sola fuente: el changelog); (2) se matizó
-«funciones gratuitas todo el tiempo que quieras» añadiendo «**no dependen de
-ningún servidor**», para no sugerir que un servicio en línea sea eterno. Bloque
-anterior: **Coherencia documental + texto de release automático**: auditoría
-cruzada de cifras y corrección de contradicciones reales (500/500 → 501/501 en
-`ESTADO` e `IP_PROTECTION_REPORT`; titular «(54)» → «(65)» en `TEST-REPORT`;
-161,0 MB → 160,98 MB del `.appx`). Ahora 158 canales, 37 tablas, esquema v5,
-501/501, 70/70 y 65/65 son idénticos en todos los documentos.
+Última actualización: **21/10/2026** — **Guion de publicación único**: nuevo
+`docs/release/GUION_PUBLICACION.md`, el documento que une las dos rutas
+(GitHub+winget y Microsoft Store) en **un solo orden de ejecución**, marcando en
+cada paso si es **TÚ** (requiere tu cuenta/equipo) o **YO** (comando ya probado).
+Incluye el estado de partida real (qué está listo y qué no), el camino corto
+recomendado y lo que **no** hay que hacer. Además, honestidad sobre MSIX: el
+README de la entrega ahora avisa de que, en la versión de la Store, Windows
+**virtualiza** `%APPDATA%` (comprobado en la documentación oficial de Microsoft)
+y la app muestra la ruta real desde Ajustes. El guion entra en la carpeta de
+entrega (18 ficheros). Bloque anterior: **Revisión de promesas del material
+público**: auditoría de cada afirmación de la ficha de la Store y del PR de
+winget contra el código; todas se confirman (canales reales, informes por
+canal/categoría, instalación por usuario, privacidad exacta), y se corrigieron
+dos puntos (cuerpo del release duplicado → remite a `--print-notes`; matiz «no
+dependen de ningún servidor» en la ficha). Bloque anterior: **Coherencia
+documental + texto de release automático**: contradicciones corregidas
+(500/500 → 501/501, «(54)» → «(65)», 161,0 MB → 160,98 MB) y 158 canales, 37
+tablas, esquema v5, 501/501, 70/70 y 65/65 idénticos en todos los documentos.
 (`ENVIO_STORE.md`) con el comando para verificar el `publisher` real dentro del
 `.appx`, y guía de capturas (`CAPTURAS.md`) con resoluciones oficiales y las 6
 pantallas concretas, usando los **datos de ejemplo** que ya trae la app

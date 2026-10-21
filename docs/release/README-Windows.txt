@@ -49,6 +49,12 @@ DÓNDE ESTÁN TUS DATOS
       ├── backups\   copias de seguridad
       └── logs\      registros de diagnóstico
 
+  Esa ruta es la de la instalación con el instalador (README-Windows).
+  Si has instalado el paquete de la Microsoft Store (.appx), Windows
+  guarda los mismos datos en una carpeta privada del paquete
+  (%LOCALAPPDATA%\Packages\...\LocalCache\...) y la aplicación te
+  muestra la ruta real desde "Ajustes"; los datos son los mismos.
+
   Tus datos NO se borran al desinstalar. Si quieres eliminarlos,
   hazlo manualmente desde esa carpeta.
 
