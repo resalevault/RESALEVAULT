@@ -3,12 +3,22 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **20/10/2026** — **Bloque de distribución gratuita**:
-rutas GitHub+winget y Microsoft Store preparadas a 0 €. Generador de manifiestos
-winget con 11 pruebas y **validado con el validador oficial de Microsoft**
-(`winget validate` → correcto); paquete **AppX/MSIX generado e inspeccionado**
-(protocolo `rv-media` declarado, versión 4 componentes, sin firmar a propósito
-para que lo firme la Store). Guía completa en [`docs/DISTRIBUCION.md`](DISTRIBUCION.md).
+Última actualización: **21/10/2026** — **Bloque de cierre de producto**: botón
+obligatorio **«Comprar licencia» / «Buy license»** que abre el Discord oficial
+(canal IPC dedicado con lista blanca, 12 pruebas nuevas y **61/61 comprobaciones**
+de interfaz en Electron real); **soporte macOS preparado** (objetivo `dmg`/`zip`
+x64+arm64, permisos mínimos, barra nativa `hiddenInset`); **higiene de producción
+corregida** (los paquetes de prueba `smoke`/`ui-smoke`/`benchmark` ya **no viajan**
+al usuario — verificado extrayendo el `.asar` y el `.appx`); instalador NSIS y
+AppX regenerados y **carpeta de entrega `RESALEVAULT_RELEASE` creada en el
+escritorio real** con documentación y hashes verificados. Informe completo en
+[`docs/AUDITORIA.md`](AUDITORIA.md) y `RESALEVAULT_RELEASE/Documentation/`.
+Bloque anterior: **distribución gratuita**: rutas GitHub+winget y Microsoft Store
+preparadas a 0 €. Generador de manifiestos winget con 11 pruebas y **validado con
+el validador oficial de Microsoft** (`winget validate` → correcto); paquete
+**AppX/MSIX generado e inspeccionado** (protocolo `rv-media` declarado, versión 4
+componentes, sin firmar a propósito para que lo firme la Store). Guía completa en
+[`docs/DISTRIBUCION.md`](DISTRIBUCION.md).
 Bloque anterior: **backend de licencias (Supabase)**: Edge Function desplegada
 con control de **puestos**, **revocación** y consulta de revocaciones; migración
 aplicada en el proyecto real; script de sincronización con verificación previa
@@ -34,9 +44,11 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | **5. Inteligencia e IA** | ✅ **Completada** (AI Studio BYOK) |
 | 6. Licencias y comercialización | 🟡 Límites aplicados + **backend online desplegado y probado**; falta el cliente en la app |
 | 7. Business y expansión | 🟡 Local sí; multiusuario real ⛔ sin backend |
-| 8. Lanzamiento | 🟡 Copias ✅; instalador NSIS **firmado (autofirmado)**; **distribución gratuita preparada** (winget validado + paquete Store generado, ver [`docs/DISTRIBUCION.md`](DISTRIBUCION.md)); instalación local bloqueada por Device Guard |
+| 8. Lanzamiento | 🟡 Copias ✅; instalador NSIS **firmado (autofirmado)**; **distribución gratuita preparada** (winget validado + paquete Store generado, ver [`docs/DISTRIBUCION.md`](DISTRIBUCION.md)); **carpeta de entrega `RESALEVAULT_RELEASE` creada**; instalación local bloqueada por Device Guard |
 | **Shipping Tracker** | ✅ **Completado** (navegador integrado + 46 transportistas) |
 | **Calidad (ESLint, cobertura, CI, benchmark)** | ✅ **Completado** |
+| **Comprar licencia (Discord)** | ✅ **Completado** (botón es/en + lista blanca + 12 pruebas + 61/61 interfaz) |
+| **macOS** | ⛔ **Bloqueado**: configuración y permisos listos, pero no hay un Mac para compilar/firmar (ver `RESALEVAULT_RELEASE/Documentation/MACOS_STATUS.md`) |
 
 ---
 
@@ -45,16 +57,20 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **457 / 457** correctas (36 archivos) |
+| `npm test` | **469 / 469** correctas (37 archivos) |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
-| `npm run smoke:ui` | **54 / 54** comprobaciones de interfaz en Electron real |
+| `npm run smoke:ui` | **61 / 61** comprobaciones de interfaz en Electron real |
 | `npm run build` | ✅ los tres procesos compilados |
 | `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
 | `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
 | `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
 | `winget validate` (manifiestos v0.5.0) | ✅ **«Manifest validation succeeded»** con el validador oficial de Windows (20/10/2026) |
-| `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (169,8 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
+| `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (161,0 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
+| `npm run dist` (instalador final) | ✅ `RESALEVAULT-Setup-0.5.0.exe` (117,6 MB) — SHA-256 `2CB281A7…E2883F` |
+| Paquete de producción inspeccionado | ✅ extraído el `.asar`: **sin mapas de código**, **sin** `smoke`/`ui-smoke`/`benchmark` y **0 secretos** (salidas de prueba ya no viajan al usuario) |
+| `winget validate` (hash nuevo) | ✅ **«Manifest validation succeeded»** con el `InstallerSha256` del instalador real (21/10/2026) |
+| Carpeta de entrega | ✅ `RESALEVAULT_RELEASE` creada en el escritorio real (`C:\Users\16ray\Desktop`); hashes recomputados sobre los ficheros entregados y coincidentes |
 | Diagnóstico del bloqueo de instalación | ✅ causa raíz identificada con evento real `3033` (nivel de firma Enterprise); Defender sin detecciones; kit `verify-install.ps1` preparado (`docs/FIRMA.md` §9–10) |
 | Arranque repetido (3 veces) | migraciones solo la primera vez |
 
