@@ -72,9 +72,9 @@ IDIOMAS
 Español e inglés, con la moneda y el formato que elijas.
 
 SOBRE LAS LICENCIAS
-Puedes usar las funciones gratuitas todo el tiempo que quieras. Las funciones
-avanzadas se activan con una licencia. Si una licencia caduca, tu trabajo y tus
-datos NO se pierden: sigues accediendo a ellos.
+Puedes usar las funciones gratuitas todo el tiempo que quieras: no dependen de
+ningún servidor. Las funciones avanzadas se activan con una licencia. Si una
+licencia caduca, tu trabajo y tus datos NO se pierden: sigues accediendo a ellos.
 ```
 
 Inglés:
@@ -98,9 +98,9 @@ LANGUAGES
 Spanish and English, with the currency and format you choose.
 
 ABOUT LICENCES
-You can use the free features for as long as you like. Advanced features are
-unlocked with a licence. If a licence expires, your work and your data are NOT
-lost: you keep access to them.
+You can use the free features for as long as you like: they do not depend on any
+server. Advanced features are unlocked with a licence. If a licence expires, your
+work and your data are NOT lost: you keep access to them.
 ```
 
 ### Novedades de esta versión (What's new in this version)
@@ -146,34 +146,27 @@ RESALEVAULT v0.5.0 — primera versión pública
 
 **Cuerpo:**
 
-```markdown
-Primera versión pública de RESALEVAULT, la herramienta de escritorio para
-gestionar compraventa e inventario.
+El cuerpo **lo genera el script** a partir de la sección `0.5.0` de
+`docs/CHANGELOG.md` (una sola fuente de verdad: la release y el changelog dicen
+lo mismo) más el SHA-256 real y el aviso honesto de firma. **No lo escribas a
+mano aquí**: obtén el texto exacto con
 
-## Descargas
-- `RESALEVAULT-Setup-0.5.0.exe` — instalador para Windows 10/11 (x64).
-- `SHA256SUMS.txt` — hashes SHA-256 para comprobar la descarga.
-
-## Comprobar la descarga (recomendado)
 ```powershell
-Get-FileHash .\RESALEVAULT-Setup-0.5.0.exe -Algorithm SHA256
+npm run publish:github -- --print-notes
 ```
-El valor debe coincidir con el de `SHA256SUMS.txt`.
 
-## Qué incluye
-- Inventario, compras, ventas, márgenes y etiquetas.
-- Funciona **sin conexión**; las funciones gratuitas no dependen de servidores.
-- Comprobación opcional del puesto de licencia y de revocaciones.
-- Datos locales: `%APPDATA%\RESALEVAULT`.
+y pégalo como cuerpo de la release. Ese mismo comando lo usa
+`npm run publish:github -- --confirm` al crear la release automáticamente.
 
-## Aviso honesto sobre la firma
-Este instalador **no está firmado por una autoridad de certificación de
-confianza** (cuestan 150–300 €/año). Windows puede mostrar «editor
-desconocido» o un aviso de SmartScreen. El paquete está firmado con un
-certificado **autofirmado de desarrollo**, no reconocido por Windows.
-Se publica el hash SHA-256 para que puedas verificar la integridad. No se pide
-desactivar ninguna protección de Windows para instalarlo.
+Si prefieres publicar a mano, el texto generado ya incluye:
+- encabezado con el **SHA-256 real** del instalador y cómo comprobarlo;
+- la sección de cambios de la versión (tomada del changelog);
+- el aviso honesto de firma (no firmado por CA de confianza; **no** hay que
+  desactivar ninguna protección de Windows).
 
+Puedes añadir, si quieres, estos dos apartados que el generador no incluye:
+
+````markdown
 ## Requisitos
 - Windows 10/11 de 64 bits.
 - No requiere permisos de administrador (instalación por usuario).
@@ -182,7 +175,7 @@ desactivar ninguna protección de Windows para instalarlo.
 No hay binario de macOS. Se publicará cuando se pueda compilar y firmar en un
 Mac (ver `docs/release/MACOS_STATUS.md`). No se ofrece un `.exe` como si fuera
 de macOS.
-```
+````
 
 ---
 

@@ -3,26 +3,27 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Coherencia documental + texto de release
-automático**: auditoría cruzada de las cifras de todos los documentos. Se
-corrigieron contradicciones reales (`ESTADO` e `IP_PROTECTION_REPORT` decían
-**500/500** pruebas teniendo 501; `TEST-REPORT` titulara la sección de interfaz
-con **(54)** y el cuerpo con 65; `ESTADO` decía 161,0 MB del `.appx` siendo
-160,98). Ahora **158 canales**, **37 tablas**, esquema **v5**, **501/501**, 70/70
-y 65/65 salen idénticos en todas partes (comprobado por barrido). Además,
-`npm run publish:github --print-notes` genera el **cuerpo de la release a partir
-de la sección 0.5.0 de `docs/CHANGELOG.md`** (una sola fuente de verdad) con el
-SHA-256 real y el aviso honesto de firma; el script sigue **simulando por
-defecto**. Bloque anterior: **README público y publicación automatizada**: el
-`README.md` se reescribió para ser la cara pública del repositorio (sin rutas
-locales, cifras reales: **501 pruebas**, 65/65 interfaz, 88,66 % de cobertura,
-esquema v5, **158 canales**); `CHANGELOG` con la entrada pública de la 0.5.0; y
-**`scripts/publish-github.mjs`** (comando `npm run publish:github`) que crea el
-repositorio, sube el código y publica la release **simulando por defecto** (solo
-ejecuta con `--confirm`, exige árbol limpio, no sobrescribe releases y nunca
-imprime el token). Cifras obsoletas corregidas en `ARQUITECTURA`,
-`BUILD-WINDOWS`, `TEST-REPORT` y `FREE-VS-PRO-VS-BUSINESS`. Bloque anterior:
-**Kit de envío a la Microsoft Store listo**: checklist de envío
+Última actualización: **21/10/2026** — **Revisión de promesas del material
+público**: auditoría de cada afirmación de la ficha de la Store
+(`STORE_LISTING.md`) y del PR de winget (`WINGET_PR_BODY.md`) contra el código.
+**Todas se confirman**: «vinted/wallapop…» son canales reales sembrados
+(`002-seed.ts`); el informe desglosa de verdad por **canal (plataforma)**,
+categoría y mes (`finance.ts`); la instalación es **por usuario sin permisos de
+administrador** (`perMachine: false`) y el desinstalador **no borra los datos**
+(`deleteAppDataOnUninstall: false`); el manifiesto declara `nullsoft`/`Scope:
+user` y el `InstallerSha256` coincide con el instalador real; y el cliente online
+**solo envía** código, `machineId`, etiqueta, versión y SO — **nunca** inventario,
+pedidos ni clientes (`licence-online.ts`), así que la promesa de privacidad es
+exacta. Corregidos dos puntos: (1) el cuerpo del release de GitHub estaba
+**duplicado a mano** en `STORE_LISTING.md` §2 y ya divergía del generado → ahora
+§2 remite a `--print-notes` (una sola fuente: el changelog); (2) se matizó
+«funciones gratuitas todo el tiempo que quieras» añadiendo «**no dependen de
+ningún servidor**», para no sugerir que un servicio en línea sea eterno. Bloque
+anterior: **Coherencia documental + texto de release automático**: auditoría
+cruzada de cifras y corrección de contradicciones reales (500/500 → 501/501 en
+`ESTADO` e `IP_PROTECTION_REPORT`; titular «(54)» → «(65)» en `TEST-REPORT`;
+161,0 MB → 160,98 MB del `.appx`). Ahora 158 canales, 37 tablas, esquema v5,
+501/501, 70/70 y 65/65 son idénticos en todos los documentos.
 (`ENVIO_STORE.md`) con el comando para verificar el `publisher` real dentro del
 `.appx`, y guía de capturas (`CAPTURAS.md`) con resoluciones oficiales y las 6
 pantallas concretas, usando los **datos de ejemplo** que ya trae la app
