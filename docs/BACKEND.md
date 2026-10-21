@@ -149,6 +149,37 @@ válida):
 **Todos los resultados anteriores son salidas reales de las peticiones.** No se
 ha simulado ninguna respuesta.
 
+### 6 bis. Prueba en vivo del CLIENTE de la aplicación (21/10/2026)
+
+Además de las respuestas HTTP, se ejecutó la **clase real**
+`LicenceOnlineClient` (la misma que usa la aplicación) contra el backend real,
+con una licencia emitida (`pro`, perpetual, 2 puestos) y sincronizada. Es una
+prueba temporal, ejecutada una vez y borrada después: **no forma parte de la
+suite** porque depende de la red y sería inestable.
+
+| # | Acción del cliente real | Resultado |
+|---|---|---|
+| 1 | `verify()` del primer equipo | **`verified`**, `online_state=verified` en la base ✅ |
+| 2 | `syncRevocations()` | **`updated:true`**, cursor guardado ✅ |
+| 3 | `verify()` del segundo equipo | **`verified`** (2/2 puestos) ✅ |
+| 4 | `verify()` del tercer equipo | **`rejected` / `seats_exhausted`** ✅ |
+| 5 | `releaseSeat()` + reintento del tercero | **`remote:true`** y **`verified`** ✅ |
+| 6 | `verify()` con la red simulada caída | **`offline`**; la licencia sigue **`active`** y con plan **`pro`** ✅ |
+
+Diagnóstico cruzado con `curl.exe` y con `fetch` de Node: el backend responde
+**409 `seats_exhausted`** cuando los puestos están ocupados, coherente con lo
+que ve el cliente.
+
+**Hallazgo honesto (transitorio):** en una primera pasada, una llamada superó el
+tiempo máximo de 8 s (arranque en frío del servicio) y el cliente devolvió
+`offline`. Eso **no es un fallo**: es exactamente el comportamiento diseñado
+(conservar la licencia sin cortar el trabajo). En la segunda pasada, con el
+servicio caliente, todo pasó. Esto confirma por qué la comprobación online **no
+debe** ser un requisito para usar la aplicación.
+
+Los puestos de prueba se liberaron al terminar (`removed:true`); no quedaron
+activaciones colgadas.
+
 ---
 
 ## 7. Costes y riesgos (honestos)
@@ -165,8 +196,11 @@ ha simulado ninguna respuesta.
 
 ## 8. Qué falta (siguiente bloque)
 
-1. **Cliente en la app** (`src/main/services/…`): llamar a `/activate` y
-   `/deactivate`, consultar `/revocations` como máximo cada 7 días, y caer al
-   modo local si no hay red. Con IPC propio (nada de canales genéricos) y pruebas.
-2. Prueba E2E del flujo completo **desde la aplicación** (no solo HTTP).
-3. Actualizar `PRIVACIDAD.md` cuando el cliente empiece a conectarse.
+1. ~~Cliente en la app~~ **Hecho (21/10/2026)**: `src/main/services/licence-online.ts`,
+   IPC dedicado `license:refresh`, pruebas (`tests/licence-online.test.ts`, 31) y
+   prueba en vivo (§6 bis).
+2. ~~Prueba E2E del flujo completo desde la aplicación~~ **Hecho**: §6 bis.
+3. Actualizar `PRIVACIDAD.md` ahora que el cliente se conecta: la app envía a la
+   Edge Function el **código de licencia**, un **identificador de equipo**
+   generado localmente, la etiqueta del equipo, la versión y el sistema
+   operativo. No envía inventario, pedidos, fotos ni datos personales.
