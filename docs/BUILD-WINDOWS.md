@@ -1,26 +1,26 @@
-# RESALEVAULT — Compilación e instalación en Windows
+﻿# RESALEVAULT â€” CompilaciÃ³n e instalaciÃ³n en Windows
 
 ---
 
 ## 1. Requisitos
 
-| Requisito | Versión | Comprobación |
+| Requisito | VersiÃ³n | ComprobaciÃ³n |
 |---|---|---|
-| Node.js | ≥ 22.12 | `node --version` (probado con 24.21 y con Electron 44: Node 24.22) |
-| npm | ≥ 10 | `npm --version` |
+| Node.js | â‰¥ 22.12 | `node --version` (probado con 24.21 y con Electron 44: Node 24.22) |
+| npm | â‰¥ 10 | `npm --version` |
 | Windows | 10/11 x64 | `win32` |
-| Visual Studio Build Tools | **NO hacen falta** | no hay módulos nativos |
+| Visual Studio Build Tools | **NO hacen falta** | no hay mÃ³dulos nativos |
 
-> **No se usa `better-sqlite3` ni ningún módulo nativo con compilador C++.** La
+> **No se usa `better-sqlite3` ni ningÃºn mÃ³dulo nativo con compilador C++.** La
 > base de datos es `node:sqlite`, incluida en el runtime de Electron. Por eso
-> el entorno de compilación no necesita Build Tools ni Python.
+> el entorno de compilaciÃ³n no necesita Build Tools ni Python.
 
 ---
 
 ## 2. Compilar para desarrollo
 
 ```powershell
-npm ci          # instalación reproducible desde package-lock.json
+npm ci          # instalaciÃ³n reproducible desde package-lock.json
 npm run dev     # arranca en modo desarrollo con recarga
 ```
 
@@ -28,19 +28,19 @@ npm run dev     # arranca en modo desarrollo con recarga
 
 ```powershell
 npm run typecheck     # 0 errores
-npm test              # 510 pruebas
+npm test              # 509 pruebas
 npm run lint          # ESLint, 0 problemas
 npm run smoke         # 66 comprobaciones de datos (70 en la maquina de emision)
 npm run smoke:ui      # 65 comprobaciones con Electron real
 npm run doctor        # entorno y node:sqlite
-npm run build         # compilación de los tres procesos
+npm run build         # compilaciÃ³n de los tres procesos
 ```
 
-`npm run bench` genera el banco de pruebas con 50.000 artículos
+`npm run bench` genera el banco de pruebas con 50.000 artÃ­culos
 (ver `docs/TEST-REPORT.md`).
 
-> **Nota sobre el número del humo.** `npm run smoke` da **66** comprobaciones en
-> un clon limpio. Da **70** solo si existe la clave privada de emisión
+> **Nota sobre el nÃºmero del humo.** `npm run smoke` da **66** comprobaciones en
+> un clon limpio. Da **70** solo si existe la clave privada de emisiÃ³n
 > (`tools/keys/license-private.pem`, que **no se versiona**): sus 4 comprobaciones
 > extra firman y validan una licencia de prueba. Si te salen 66, es lo correcto.
 
@@ -54,12 +54,12 @@ npm run dist
 
 Sale en `release/`:
 
-- `RESALEVAULT-Setup-<versión>.exe` — instalador NSIS
-- `win-unpacked/` — versión sin instalar (útil para probar)
+- `RESALEVAULT-Setup-<versiÃ³n>.exe` â€” instalador NSIS
+- `win-unpacked/` â€” versiÃ³n sin instalar (Ãºtil para probar)
 
-La instalación **no requiere administrador**: es por usuario
+La instalaciÃ³n **no requiere administrador**: es por usuario
 (`perMachine: false`). El desinstalador **conserva** `%APPDATA%\RESALEVAULT`
-por diseño (`deleteAppDataOnUninstall: false`): desinstalar no borra el
+por diseÃ±o (`deleteAppDataOnUninstall: false`): desinstalar no borra el
 inventario.
 
 ## 5. Firma (recomendada)
@@ -70,7 +70,7 @@ npm run dist:signed   # compila, firma y verifica
 ```
 
 Ver `docs/FIRMA.md`. Resumen: el autofirmado **no** elimina los avisos de
-Windows ni el bloqueo de Device Guard. Para distribución pública hace falta un
+Windows ni el bloqueo de Device Guard. Para distribuciÃ³n pÃºblica hace falta un
 certificado OV/IV.
 
 ## 6. Verificar la integridad de un instalador recibido
@@ -84,18 +84,18 @@ El SHA-256 se publica junto a cada instalador.
 
 ---
 
-## 7. Qué se incluye y qué no
+## 7. QuÃ© se incluye y quÃ© no
 
 ### Se incluye
 
-- Compilación de los tres procesos (`out/main`, `out/preload`, `out/renderer`)
-- `zod` y `bwip-js` (dependencias de producción)
+- CompilaciÃ³n de los tres procesos (`out/main`, `out/preload`, `out/renderer`)
+- `zod` y `bwip-js` (dependencias de producciÃ³n)
 - `THIRD-PARTY-NOTICES.md` en `resources/`
 - Licencias de Electron/Chromium generadas por electron-builder
 
 ### NO se incluye
 
-| Qué | Por qué |
+| QuÃ© | Por quÃ© |
 |---|---|
 | `node_modules` de desarrollo | no son parte del programa |
 | `tools/keys/license-private.pem` | **clave privada de licencias** |
@@ -106,18 +106,18 @@ El SHA-256 se publica junto a cada instalador.
 
 ---
 
-## 8. Errores habituales de compilación
+## 8. Errores habituales de compilaciÃ³n
 
-| Error | Causa real | Solución |
+| Error | Causa real | SoluciÃ³n |
 |---|---|---|
-| `Cannot create symbolic link … winCodeSign` | Windows sin privilegio de creación de enlaces simbólicos | Es cosmético al extraer la caché; **la firma sigue funcionando** |
-| `Cannot find module 'node:sqlite'` | Electron anterior a 40 | usar la versión de `package-lock.json` |
-| SmartScreen / Device Guard bloquea el instalador | Sin certificado de confianza pública | ver `docs/FIRMA.md` |
+| `Cannot create symbolic link â€¦ winCodeSign` | Windows sin privilegio de creaciÃ³n de enlaces simbÃ³licos | Es cosmÃ©tico al extraer la cachÃ©; **la firma sigue funcionando** |
+| `Cannot find module 'node:sqlite'` | Electron anterior a 40 | usar la versiÃ³n de `package-lock.json` |
+| SmartScreen / Device Guard bloquea el instalador | Sin certificado de confianza pÃºblica | ver `docs/FIRMA.md` |
 | `EACCES` al escribir en `release/` | proceso anterior bloqueando la carpeta | cerrar instaladores abiertos |
 
 ---
 
-## 9. Instalación manual en un equipo propio (sin CA pública)
+## 9. InstalaciÃ³n manual en un equipo propio (sin CA pÃºblica)
 
-Solo en equipos que tú controles. Ver sección 4 de `docs/FIRMA.md`: importar el
+Solo en equipos que tÃº controles. Ver secciÃ³n 4 de `docs/FIRMA.md`: importar el
 `.cer` en `Cert:\LocalMachine\Root`. **Nunca pidas esto a un cliente.**

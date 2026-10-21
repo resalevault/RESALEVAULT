@@ -1,93 +1,93 @@
-# RESALEVAULT — Estado del proyecto
+﻿# RESALEVAULT â€” Estado del proyecto
 
-Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
-qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
+Documento de transparencia: quÃ© funciona **de verdad** (verificado ejecutÃ¡ndolo),
+quÃ© falta y quÃ© costes implicarÃ¡. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Arreglado un fallo real de instalación de
+Ãšltima actualizaciÃ³n: **21/10/2026** â€” **Arreglado un fallo real de instalaciÃ³n de
 dependencias en CI**: a partir de **npm 11.19** los scripts de ciclo de vida de
-las **dependencias** están **bloqueados por defecto** (`allowScripts`), y Electron
+las **dependencias** estÃ¡n **bloqueados por defecto** (`allowScripts`), y Electron
 44 ya **no declara** un `install` que se ejecute solo. Resultado: en un clon limpio,
 `npm ci` **no descargaba el binario de Electron** y los trabajos `smoke`/`smoke:ui`
-de CI habrían **fallado**. Reproducido y verificado: `npm ci` en un clon limpio
+de CI habrÃ­an **fallado**. Reproducido y verificado: `npm ci` en un clon limpio
 dejaba `node_modules/electron/dist/electron.exe` ausente; con el arreglo
 (`"postinstall": "install-electron"`), el mismo `npm ci` produce un Electron
-funcional (`v44.9.0`, humo **66/66**). Añadido además **`npm run preflight`**
+funcional (`v44.9.0`, humo **66/66**). AÃ±adido ademÃ¡s **`npm run preflight`**
 (`scripts/preflight.mjs`, 8 pruebas), que detecta el binario ausente y explica la
-causa y la solución en lugar de fallar de forma críptica; se ejecuta antes de
-`dev`, `smoke`, `smoke:ui`, `doctor` y `bench`. Total de pruebas: **510** (39
-archivos). Además, la carpeta de entrega incluye ya la **política de privacidad**
-(`PRIVACY.md`) y los **términos de servicio** (`TERMS.md`, borrador): **20
-ficheros**. Bloque anterior: **Términos de
-servicio y auditoría de coherencia**: nuevo **borrador** `TERMS.md` (es/en) con los
-hechos reales del programa (planes, puestos, caducidad, revocación, nunca se borran
-datos), pendiente de tu revisión; el manifiesto de winget añade **`LicenseUrl`**
+causa y la soluciÃ³n en lugar de fallar de forma crÃ­ptica; se ejecuta antes de
+`dev`, `smoke`, `smoke:ui`, `doctor` y `bench`. Total de pruebas: **509** (39
+archivos). AdemÃ¡s, la carpeta de entrega incluye ya la **polÃ­tica de privacidad**
+(`PRIVACY.md`) y los **tÃ©rminos de servicio** (`TERMS.md`, borrador): **20
+ficheros**. Bloque anterior: **TÃ©rminos de
+servicio y auditorÃ­a de coherencia**: nuevo **borrador** `TERMS.md` (es/en) con los
+hechos reales del programa (planes, puestos, caducidad, revocaciÃ³n, nunca se borran
+datos), pendiente de tu revisiÃ³n; el manifiesto de winget aÃ±ade **`LicenseUrl`**
 (lo piden los revisores para paquetes propietarios) y `winget validate` sigue
-pasando. Además, una **auditoría de coherencia** encontró y corrigió **13
-afirmaciones falsas u obsoletas** de la documentación (cobertura, pruebas del
-backend, códigos de error, límite de fotos, «no hay backend», firma del exe,
-tamaños, migraciones). Bloque anterior: **Guion de publicación único**: nuevo
+pasando. AdemÃ¡s, una **auditorÃ­a de coherencia** encontrÃ³ y corrigiÃ³ **13
+afirmaciones falsas u obsoletas** de la documentaciÃ³n (cobertura, pruebas del
+backend, cÃ³digos de error, lÃ­mite de fotos, Â«no hay backendÂ», firma del exe,
+tamaÃ±os, migraciones). Bloque anterior: **Guion de publicaciÃ³n Ãºnico**: nuevo
 `docs/release/GUION_PUBLICACION.md`, el documento que une las dos rutas
-(GitHub+winget y Microsoft Store) en **un solo orden de ejecución**, marcando en
-cada paso si es **TÚ** (requiere tu cuenta/equipo) o **YO** (comando ya probado).
-Incluye el estado de partida real (qué está listo y qué no), el camino corto
-recomendado y lo que **no** hay que hacer. Además, honestidad sobre MSIX: el
-README de la entrega ahora avisa de que, en la versión de la Store, Windows
-**virtualiza** `%APPDATA%` (comprobado en la documentación oficial de Microsoft)
+(GitHub+winget y Microsoft Store) en **un solo orden de ejecuciÃ³n**, marcando en
+cada paso si es **TÃš** (requiere tu cuenta/equipo) o **YO** (comando ya probado).
+Incluye el estado de partida real (quÃ© estÃ¡ listo y quÃ© no), el camino corto
+recomendado y lo que **no** hay que hacer. AdemÃ¡s, honestidad sobre MSIX: el
+README de la entrega ahora avisa de que, en la versiÃ³n de la Store, Windows
+**virtualiza** `%APPDATA%` (comprobado en la documentaciÃ³n oficial de Microsoft)
 y la app muestra la ruta real desde Ajustes. El guion entra en la carpeta de
-entrega (18 ficheros). Bloque anterior: **Revisión de promesas del material
-público**: auditoría de cada afirmación de la ficha de la Store y del PR de
-winget contra el código; todas se confirman (canales reales, informes por
-canal/categoría, instalación por usuario, privacidad exacta), y se corrigieron
-dos puntos (cuerpo del release duplicado → remite a `--print-notes`; matiz «no
-dependen de ningún servidor» en la ficha). Bloque anterior: **Coherencia
-documental + texto de release automático**: contradicciones corregidas
-(500/500 → 501/501, «(54)» → «(65)», 161,0 MB → 160,98 MB) y 158 canales, 37
-tablas, esquema v5, 501/501, 70/70 y 65/65 idénticos en todos los documentos.
+entrega (18 ficheros). Bloque anterior: **RevisiÃ³n de promesas del material
+pÃºblico**: auditorÃ­a de cada afirmaciÃ³n de la ficha de la Store y del PR de
+winget contra el cÃ³digo; todas se confirman (canales reales, informes por
+canal/categorÃ­a, instalaciÃ³n por usuario, privacidad exacta), y se corrigieron
+dos puntos (cuerpo del release duplicado â†’ remite a `--print-notes`; matiz Â«no
+dependen de ningÃºn servidorÂ» en la ficha). Bloque anterior: **Coherencia
+documental + texto de release automÃ¡tico**: contradicciones corregidas
+(500/500 â†’ 501/501, Â«(54)Â» â†’ Â«(65)Â», 161,0 MB â†’ 160,98 MB) y 158 canales, 37
+tablas, esquema v5, 501/501, 70/70 y 65/65 idÃ©nticos en todos los documentos.
 (`ENVIO_STORE.md`) con el comando para verificar el `publisher` real dentro del
-`.appx`, y guía de capturas (`CAPTURAS.md`) con resoluciones oficiales y las 6
+`.appx`, y guÃ­a de capturas (`CAPTURAS.md`) con resoluciones oficiales y las 6
 pantallas concretas, usando los **datos de ejemplo** que ya trae la app
-(reversibles). Bloque anterior: **Material de publicación listo**: los
+(reversibles). Bloque anterior: **Material de publicaciÃ³n listo**: los
 manifiestos de winget se corrigieron al esquema **1.12.0** (el recomendado por la
 plantilla de PR de `microsoft/winget-pkgs`) y llevan la cabecera
 `yaml-language-server` obligatoria; el validador oficial de Microsoft da
-**«Manifest validation succeeded.»** **sin avisos**. Añadidos el texto del
-release, el cuerpo del PR, la ficha de la Store y una **`PRIVACY.md` pública**
+**Â«Manifest validation succeeded.Â»** **sin avisos**. AÃ±adidos el texto del
+release, el cuerpo del PR, la ficha de la Store y una **`PRIVACY.md` pÃºblica**
 (la exige la Store). Bloque anterior: **Artefactos regenerados con el cliente
 online**: instalador NSIS firmado (autofirmado) y paquete AppX reconstruidos y
 **verificados extrayendo el `app.asar`** (contienen el cliente, 0 secretos);
 carpeta de entrega `RESALEVAULT_RELEASE` reconstruida en el escritorio real.
 Bloque anterior: **cliente online de
-licencias** — la aplicación de escritorio ya **confirma el puesto y consulta
+licencias** â€” la aplicaciÃ³n de escritorio ya **confirma el puesto y consulta
 revocaciones** contra
 la Edge Function, con reglas offline-first (nunca borra datos, nunca corta el
-trabajo sin conexión) y sin exponer ningún secreto. 31 pruebas nuevas, 97 % de
+trabajo sin conexiÃ³n) y sin exponer ningÃºn secreto. 31 pruebas nuevas, 97 % de
 cobertura del cliente, **65/65 comprobaciones** de interfaz y **501/501** pruebas
-totales. Bloque anterior: botón obligatorio **«Comprar licencia» / «Buy license»** que abre el Discord oficial
+totales. Bloque anterior: botÃ³n obligatorio **Â«Comprar licenciaÂ» / Â«Buy licenseÂ»** que abre el Discord oficial
 (canal IPC dedicado con lista blanca, 12 pruebas nuevas y **61/61 comprobaciones**
 de interfaz en Electron real); **soporte macOS preparado** (objetivo `dmg`/`zip`
-x64+arm64, permisos mínimos, barra nativa `hiddenInset`); **higiene de producción
+x64+arm64, permisos mÃ­nimos, barra nativa `hiddenInset`); **higiene de producciÃ³n
 corregida** (los paquetes de prueba `smoke`/`ui-smoke`/`benchmark` ya **no viajan**
-al usuario — verificado extrayendo el `.asar` y el `.appx`); instalador NSIS y
+al usuario â€” verificado extrayendo el `.asar` y el `.appx`); instalador NSIS y
 AppX regenerados y **carpeta de entrega `RESALEVAULT_RELEASE` creada en el
-escritorio real** con documentación y hashes verificados. Informe completo en
+escritorio real** con documentaciÃ³n y hashes verificados. Informe completo en
 [`docs/AUDITORIA.md`](AUDITORIA.md) y `RESALEVAULT_RELEASE/Documentation/`.
-Bloque anterior: **distribución gratuita**: rutas GitHub+winget y Microsoft Store
-preparadas a 0 €. Generador de manifiestos winget y **validado con
-el validador oficial de Microsoft** (`winget validate` → correcto); paquete
-**AppX/MSIX generado e inspeccionado** (protocolo `rv-media` declarado, versión 4
-componentes, sin firmar a propósito para que lo firme la Store). Guía completa en
+Bloque anterior: **distribuciÃ³n gratuita**: rutas GitHub+winget y Microsoft Store
+preparadas a 0 â‚¬. Generador de manifiestos winget y **validado con
+el validador oficial de Microsoft** (`winget validate` â†’ correcto); paquete
+**AppX/MSIX generado e inspeccionado** (protocolo `rv-media` declarado, versiÃ³n 4
+componentes, sin firmar a propÃ³sito para que lo firme la Store). GuÃ­a completa en
 [`docs/DISTRIBUCION.md`](DISTRIBUCION.md).
 Bloque anterior: **backend de licencias (Supabase)**: Edge Function desplegada
-con control de **puestos**, **revocación** y consulta de revocaciones; migración
-aplicada en el proyecto real; script de sincronización con verificación previa
+con control de **puestos**, **revocaciÃ³n** y consulta de revocaciones; migraciÃ³n
+aplicada en el proyecto real; script de sincronizaciÃ³n con verificaciÃ³n previa
 de firmas; **39 pruebas nuevas** del backend y **prueba de extremo a extremo en
-vivo contra el proyecto desplegado** (firma falsificada → 403, puestos agotados →
-409, revocada → 403; ver `docs/BACKEND.md`). Detalle en
+vivo contra el proyecto desplegado** (firma falsificada â†’ 403, puestos agotados â†’
+409, revocada â†’ 403; ver `docs/BACKEND.md`). Detalle en
 [`docs/TEST-REPORT.md`](TEST-REPORT.md). Bloques anteriores: control de
 versiones, firma autofirmada, avisos de terceros, ESLint, cobertura, CI, banco de
-pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
-**registro de emisión de licencias auditable** (`npm run license:list`) y
-**pantalla «Acerca de»**.
+pruebas con 50.000 artÃ­culos, **aplicaciÃ³n real de los lÃ­mites de plan**,
+**registro de emisiÃ³n de licencias auditable** (`npm run license:list`) y
+**pantalla Â«Acerca deÂ»**.
 
 ---
 
@@ -95,80 +95,80 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 
 | Fase | Estado |
 |---|---|
-| **1. Base técnica** | ✅ **Completada** |
-| **2. Inventario** | ✅ **Completada** (incluye fotos, documentos y CSV) |
-| **3. Compras, pedidos y finanzas** | ✅ **Completada** (beneficio **neto**) |
-| **4. Productividad de almacén** | ✅ **Completada** (códigos, etiquetas, preparación) |
-| **5. Inteligencia e IA** | ✅ **Completada** (AI Studio BYOK) |
-| 6. Licencias y comercialización | 🟡 Límites aplicados + **backend online desplegado y probado**; falta el cliente en la app |
-| 7. Business y expansión | 🟡 Local sí; multiusuario real ⛔ sin backend de colaboración |
-| 8. Lanzamiento | 🟡 Copias ✅; instalador NSIS **firmado (autofirmado)**; **distribución gratuita preparada** (winget validado + paquete Store generado, ver [`docs/DISTRIBUCION.md`](DISTRIBUCION.md)); **carpeta de entrega `RESALEVAULT_RELEASE` creada**; instalación local bloqueada por Device Guard |
-| **Shipping Tracker** | ✅ **Completado** (navegador integrado + 46 transportistas) |
-| **Calidad (ESLint, cobertura, CI, benchmark)** | ✅ **Completado** |
-| **Comprar licencia (Discord)** | ✅ **Completado** (botón es/en + lista blanca + 12 pruebas + 61/61 interfaz) |
-| **macOS** | ⛔ **Bloqueado**: configuración y permisos listos, pero no hay un Mac para compilar/firmar (ver `RESALEVAULT_RELEASE/Documentation/MACOS_STATUS.md`) |
+| **1. Base tÃ©cnica** | âœ… **Completada** |
+| **2. Inventario** | âœ… **Completada** (incluye fotos, documentos y CSV) |
+| **3. Compras, pedidos y finanzas** | âœ… **Completada** (beneficio **neto**) |
+| **4. Productividad de almacÃ©n** | âœ… **Completada** (cÃ³digos, etiquetas, preparaciÃ³n) |
+| **5. Inteligencia e IA** | âœ… **Completada** (AI Studio BYOK) |
+| 6. Licencias y comercializaciÃ³n | ðŸŸ¡ LÃ­mites aplicados + **backend online desplegado y probado**; falta el cliente en la app |
+| 7. Business y expansiÃ³n | ðŸŸ¡ Local sÃ­; multiusuario real â›” sin backend de colaboraciÃ³n |
+| 8. Lanzamiento | ðŸŸ¡ Copias âœ…; instalador NSIS **firmado (autofirmado)**; **distribuciÃ³n gratuita preparada** (winget validado + paquete Store generado, ver [`docs/DISTRIBUCION.md`](DISTRIBUCION.md)); **carpeta de entrega `RESALEVAULT_RELEASE` creada**; instalaciÃ³n local bloqueada por Device Guard |
+| **Shipping Tracker** | âœ… **Completado** (navegador integrado + 46 transportistas) |
+| **Calidad (ESLint, cobertura, CI, benchmark)** | âœ… **Completado** |
+| **Comprar licencia (Discord)** | âœ… **Completado** (botÃ³n es/en + lista blanca + 12 pruebas + 61/61 interfaz) |
+| **macOS** | â›” **Bloqueado**: configuraciÃ³n y permisos listos, pero no hay un Mac para compilar/firmar (ver `RESALEVAULT_RELEASE/Documentation/MACOS_STATUS.md`) |
 
 ---
 
-## Verificación ejecutada
+## VerificaciÃ³n ejecutada
 
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **510 / 510** correctas (39 archivos) |
+| `npm test` | **509 / 509** correctas (39 archivos) |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
-| `npm run test:coverage` | **88,66 % líneas** · 86,00 % sentencias · 90,75 % funciones · 78,40 % ramas |
+| `npm run test:coverage` | **88,66 % lÃ­neas** Â· 86,00 % sentencias Â· 90,75 % funciones Â· 78,40 % ramas |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
 | `npm run smoke:ui` | **65 / 65** comprobaciones de interfaz en Electron real |
-| `npm run build` | ✅ los tres procesos compilados |
-| `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
-| `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
-| `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
-| `winget validate` (manifiestos v0.5.0, esquema **1.12.0**) | ✅ **«Manifest validation succeeded.»** con el validador oficial de Windows, **sin avisos** (21/10/2026) |
-| `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (160,98 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
-| `npm run dist:signed` (instalador final) | ✅ `RESALEVAULT-Setup-0.5.0.exe` (117,67 MB) — SHA-256 `39DE1695…DB7C4B51` (21/10/2026, **con el cliente online**) |
-| Paquete de producción inspeccionado | ✅ extraído el `.asar` del `.exe` **y** del `.appx`: **sin mapas de código**, **sin** `smoke`/`ui-smoke`/`benchmark`, **0 secretos**, y **con** el cliente online (`seats_exhausted`, `online_verified`, `license:refresh`) |
-| `winget validate` (hash nuevo) | ✅ **«Manifest validation succeeded»** con el `InstallerSha256` del instalador real (21/10/2026) |
-| Carpeta de entrega | ✅ `RESALEVAULT_RELEASE` creada en el escritorio real (`C:\Users\16ray\Desktop`); hashes recomputados sobre los ficheros entregados y coincidentes |
-| Diagnóstico del bloqueo de instalación | ✅ causa raíz identificada con evento real `3033` (nivel de firma Enterprise); Defender sin detecciones; kit `verify-install.ps1` preparado (`docs/FIRMA.md` §9–10) |
+| `npm run build` | âœ… los tres procesos compilados |
+| `npm run doctor` | âœ… `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
+| `npm run bench` | âœ… 50.000 artÃ­culos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
+| `npm run dist:signed` | âœ… instalador firmado; `Get-AuthenticodeSignature` â†’ `UnknownError` (raÃ­z no confiable) |
+| `winget validate` (manifiestos v0.5.0, esquema **1.12.0**) | âœ… **Â«Manifest validation succeeded.Â»** con el validador oficial de Windows, **sin avisos** (21/10/2026) |
+| `npm run dist:appx` | âœ… paquete `RESALEVAULT-Store-0.5.0.appx` generado (160,98 MB); manifiesto interior inspeccionado: identidad, versiÃ³n `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propÃ³sito** (lo firma la Store) |
+| `npm run dist:signed` (instalador final) | âœ… `RESALEVAULT-Setup-0.5.0.exe` (117,67 MB) â€” SHA-256 `39DE1695â€¦DB7C4B51` (21/10/2026, **con el cliente online**) |
+| Paquete de producciÃ³n inspeccionado | âœ… extraÃ­do el `.asar` del `.exe` **y** del `.appx`: **sin mapas de cÃ³digo**, **sin** `smoke`/`ui-smoke`/`benchmark`, **0 secretos**, y **con** el cliente online (`seats_exhausted`, `online_verified`, `license:refresh`) |
+| `winget validate` (hash nuevo) | âœ… **Â«Manifest validation succeededÂ»** con el `InstallerSha256` del instalador real (21/10/2026) |
+| Carpeta de entrega | âœ… `RESALEVAULT_RELEASE` creada en el escritorio real (`C:\Users\16ray\Desktop`); hashes recomputados sobre los ficheros entregados y coincidentes |
+| DiagnÃ³stico del bloqueo de instalaciÃ³n | âœ… causa raÃ­z identificada con evento real `3033` (nivel de firma Enterprise); Defender sin detecciones; kit `verify-install.ps1` preparado (`docs/FIRMA.md` Â§9â€“10) |
 | Arranque repetido (3 veces) | migraciones solo la primera vez |
 
-El detalle completo, con las cifras medidas y lo que **no** se ha probado, está
+El detalle completo, con las cifras medidas y lo que **no** se ha probado, estÃ¡
 en [`docs/TEST-REPORT.md`](TEST-REPORT.md).
 
-### Qué cubren las pruebas de humo
+### QuÃ© cubren las pruebas de humo
 
-**Datos (`npm run smoke`)** — dentro de Electron: migraciones, integridad, WAL,
-ubicaciones jerárquicas, SKU único, búsqueda y filtros, edición masiva,
+**Datos (`npm run smoke`)** â€” dentro de Electron: migraciones, integridad, WAL,
+ubicaciones jerÃ¡rquicas, SKU Ãºnico, bÃºsqueda y filtros, ediciÃ³n masiva,
 archivado, **compras con reparto de costes**, **pedidos con beneficio NETO**,
-devoluciones, informes, **códigos de barras y QR**, **inteligencia**,
-**activación de licencia firmada con Ed25519** y persistencia tras cerrar y
+devoluciones, informes, **cÃ³digos de barras y QR**, **inteligencia**,
+**activaciÃ³n de licencia firmada con Ed25519** y persistencia tras cerrar y
 reabrir.
 
-**Interfaz (`npm run smoke:ui`)** — carga el HTML compilado, crea un artículo por
+**Interfaz (`npm run smoke:ui`)** â€” carga el HTML compilado, crea un artÃ­culo por
 el puente IPC, navega de verdad pulsando la barra lateral, crea un pedido y
 verifica que la columna de **beneficio neto** muestra el importe correcto
-(`26,10 €`), cambia de idioma y de tema, y comprueba que no hay errores en la
+(`26,10 â‚¬`), cambia de idioma y de tema, y comprueba que no hay errores en la
 consola del renderer.
 
 ---
 
-## Fase 2 — Inventario ✅
+## Fase 2 â€” Inventario âœ…
 
 | Elemento | Estado |
 |---|---|
-| Ficha completa, SKU único, categorías, atributos, etiquetas | ✅ |
-| Almacén → Estantería → Caja → Compartimento con rutas recalculadas | ✅ |
-| Búsqueda global, 8 ordenaciones, filtros combinables, paginación | ✅ |
-| Selección múltiple y edición masiva con vista previa | ✅ |
-| Archivado, restauración y borrado protegido | ✅ |
-| Historial de cambios por artículo | ✅ |
-| **Fotografías y documentos** | ✅ |
-| **Importación CSV con vista previa y detección de duplicados** | ✅ |
-| **Exportación CSV** (artículos, pedidos, compras, gastos, picking) | ✅ |
-| **Anuncios por plataforma** | ✅ (registro manual; sin APIs) |
+| Ficha completa, SKU Ãºnico, categorÃ­as, atributos, etiquetas | âœ… |
+| AlmacÃ©n â†’ EstanterÃ­a â†’ Caja â†’ Compartimento con rutas recalculadas | âœ… |
+| BÃºsqueda global, 8 ordenaciones, filtros combinables, paginaciÃ³n | âœ… |
+| SelecciÃ³n mÃºltiple y ediciÃ³n masiva con vista previa | âœ… |
+| Archivado, restauraciÃ³n y borrado protegido | âœ… |
+| Historial de cambios por artÃ­culo | âœ… |
+| **FotografÃ­as y documentos** | âœ… |
+| **ImportaciÃ³n CSV con vista previa y detecciÃ³n de duplicados** | âœ… |
+| **ExportaciÃ³n CSV** (artÃ­culos, pedidos, compras, gastos, picking) | âœ… |
+| **Anuncios por plataforma** | âœ… (registro manual; sin APIs) |
 
-### Fotografías y documentos — cómo funciona
+### FotografÃ­as y documentos â€” cÃ³mo funciona
 
 - **Se comprueba el tipo REAL por firma binaria.** Un `.jpg` que sea un
   ejecutable se rechaza (hay prueba).
@@ -176,164 +176,164 @@ consola del renderer.
 - **El original nunca se modifica**; la miniatura es un archivo aparte.
 - Se sirven por el protocolo propio `rv-media:`, que valida cada ruta y rechaza
   cualquier intento de salir de la carpeta de datos.
-- Límites: 25 MB por archivo, 30 fotos y 20 documentos por artículo.
-- Se puede elegir portada, reordenar y abrir documentos con la aplicación del
+- LÃ­mites: 25 MB por archivo, 30 fotos y 20 documentos por artÃ­culo.
+- Se puede elegir portada, reordenar y abrir documentos con la aplicaciÃ³n del
   sistema.
 
 ---
 
-## Fase 3 — Compras, pedidos y finanzas ✅
+## Fase 3 â€” Compras, pedidos y finanzas âœ…
 
 | Elemento | Estado |
 |---|---|
-| Proveedores | ✅ |
-| Compras con envío, otros gastos y descuento | ✅ |
-| **Reparto de costes entre artículos** (proporcional / igual / ninguno) | ✅ |
-| **Materializar lotes**: crear artículos desde una compra | ✅ |
-| Gastos generales con categorías y periodicidad | ✅ |
-| Pedidos con varios artículos, comisiones y envíos | ✅ |
-| **Beneficio NETO** (descuenta comisiones, envíos, cargos y devoluciones) | ✅ |
-| Devoluciones con reembolso y reintroducción en inventario | ✅ |
-| Cancelación de pedidos que devuelve los artículos | ✅ |
-| **Impedir vender dos veces el mismo artículo** | ✅ |
-| Coste de venta **congelado** en el pedido | ✅ |
-| Informes: por plataforma, mes, categoría, estado, artículo | ✅ |
-| Calculadora de rentabilidad **antes de comprar** | ✅ |
+| Proveedores | âœ… |
+| Compras con envÃ­o, otros gastos y descuento | âœ… |
+| **Reparto de costes entre artÃ­culos** (proporcional / igual / ninguno) | âœ… |
+| **Materializar lotes**: crear artÃ­culos desde una compra | âœ… |
+| Gastos generales con categorÃ­as y periodicidad | âœ… |
+| Pedidos con varios artÃ­culos, comisiones y envÃ­os | âœ… |
+| **Beneficio NETO** (descuenta comisiones, envÃ­os, cargos y devoluciones) | âœ… |
+| Devoluciones con reembolso y reintroducciÃ³n en inventario | âœ… |
+| CancelaciÃ³n de pedidos que devuelve los artÃ­culos | âœ… |
+| **Impedir vender dos veces el mismo artÃ­culo** | âœ… |
+| Coste de venta **congelado** en el pedido | âœ… |
+| Informes: por plataforma, mes, categorÃ­a, estado, artÃ­culo | âœ… |
+| Calculadora de rentabilidad **antes de comprar** | âœ… |
 
 ### Contra el doble conteo (importante)
 
 1. El coste de una compra **no** es un gasto general: se reparte entre los
-   artículos y se escribe en ellos. El artículo es la única fuente de su coste.
+   artÃ­culos y se escribe en ellos. El artÃ­culo es la Ãºnica fuente de su coste.
 2. `expenses` es **solo** para gastos generales del negocio.
-3. El envío cobrado al comprador es un **ingreso**; el envío que pagas tú es un
-   **coste**. Son campos distintos a propósito.
-4. El reparto redondea al céntimo y **asigna el residuo a la última línea**, de
+3. El envÃ­o cobrado al comprador es un **ingreso**; el envÃ­o que pagas tÃº es un
+   **coste**. Son campos distintos a propÃ³sito.
+4. El reparto redondea al cÃ©ntimo y **asigna el residuo a la Ãºltima lÃ­nea**, de
    modo que la suma repartida es exactamente el gasto.
 
 ---
 
-## Fase 4 — Productividad de almacén ✅
+## Fase 4 â€” Productividad de almacÃ©n âœ…
 
 | Elemento | Estado |
 |---|---|
-| Códigos de barras (128, 39, EAN-13, DataMatrix) y QR | ✅ |
-| Etiquetas imprimibles con formato configurable | ✅ |
-| Vista previa e impresión real (hoja de estilos de impresión) | ✅ |
-| Etiquetas de artículos y de ubicaciones | ✅ |
-| Preparación de pedidos agrupada por ubicación | ✅ |
-| **Escaneo de comprobación** con lector USB (teclado) | ✅ |
-| Lista de comprobación: recogido / empaquetado | ✅ |
-| Marcar como enviado **solo con confirmación explícita** | ✅ |
+| CÃ³digos de barras (128, 39, EAN-13, DataMatrix) y QR | âœ… |
+| Etiquetas imprimibles con formato configurable | âœ… |
+| Vista previa e impresiÃ³n real (hoja de estilos de impresiÃ³n) | âœ… |
+| Etiquetas de artÃ­culos y de ubicaciones | âœ… |
+| PreparaciÃ³n de pedidos agrupada por ubicaciÃ³n | âœ… |
+| **Escaneo de comprobaciÃ³n** con lector USB (teclado) | âœ… |
+| Lista de comprobaciÃ³n: recogido / empaquetado | âœ… |
+| Marcar como enviado **solo con confirmaciÃ³n explÃ­cita** | âœ… |
 
-El escaneo **no marca** un artículo si el SKU no coincide: avisa del SKU
-esperado. Es justo el error que la función existe para evitar.
+El escaneo **no marca** un artÃ­culo si el SKU no coincide: avisa del SKU
+esperado. Es justo el error que la funciÃ³n existe para evitar.
 
 ---
 
-## Shipping Tracker ✅ (módulo adicional)
+## Shipping Tracker âœ… (mÃ³dulo adicional)
 
 Detalle completo en [`docs/SEGUIMIENTO.md`](SEGUIMIENTO.md).
 
 | Elemento | Estado |
 |---|---|
-| Navegador integrado con `WebContentsView` (no `<webview>`) | ✅ |
-| Aislamiento: sin Node, sin preload, sandbox, sesión separada | ✅ |
-| Solo HTTPS; emergentes y descargas bloqueadas; permisos denegados | ✅ |
-| Directorio de **46 transportistas**, con búsqueda y filtro por región | ✅ |
-| **41 dominios verificados** con una petición real; 5 marcados «sin comprobar» | ✅ |
-| Gestión de códigos: alta, edición, copia, archivado y borrado | ✅ |
-| **Track Now** abre la web oficial dentro de la app | ✅ |
-| Relleno del código en la URL cuando el transportista lo admite | ✅ |
-| Si no lo admite, se copia al portapapeles y se explica | ✅ |
-| Distinción explícita entre estado `manual` y `confirmed` | ✅ |
-| Funciona sin conexión (catálogo y códigos) | ✅ |
-| Sin logotipos de terceros: distintivo propio con color estable | ✅ |
-| Sin APIs de transportista ni seguimiento automático | ⬜ no implementado (deliberado) |
+| Navegador integrado con `WebContentsView` (no `<webview>`) | âœ… |
+| Aislamiento: sin Node, sin preload, sandbox, sesiÃ³n separada | âœ… |
+| Solo HTTPS; emergentes y descargas bloqueadas; permisos denegados | âœ… |
+| Directorio de **46 transportistas**, con bÃºsqueda y filtro por regiÃ³n | âœ… |
+| **41 dominios verificados** con una peticiÃ³n real; 5 marcados Â«sin comprobarÂ» | âœ… |
+| GestiÃ³n de cÃ³digos: alta, ediciÃ³n, copia, archivado y borrado | âœ… |
+| **Track Now** abre la web oficial dentro de la app | âœ… |
+| Relleno del cÃ³digo en la URL cuando el transportista lo admite | âœ… |
+| Si no lo admite, se copia al portapapeles y se explica | âœ… |
+| DistinciÃ³n explÃ­cita entre estado `manual` y `confirmed` | âœ… |
+| Funciona sin conexiÃ³n (catÃ¡logo y cÃ³digos) | âœ… |
+| Sin logotipos de terceros: distintivo propio con color estable | âœ… |
+| Sin APIs de transportista ni seguimiento automÃ¡tico | â¬œ no implementado (deliberado) |
 
 ---
 
-## Fase 5 — Inteligencia e IA ✅
+## Fase 5 â€” Inteligencia e IA âœ…
 
-### Intelligence ✅
+### Intelligence âœ…
 
-12 reglas **locales** (sin IA, sin conexión, sin coste): stock estancado, margen
+12 reglas **locales** (sin IA, sin conexiÃ³n, sin coste): stock estancado, margen
 bajo, margen negativo, datos incompletos, sin anuncios, pendientes de preparar,
-pedidos sin enviar, concentración de capital, tasa de devoluciones, gastos en
-aumento, sin ventas recientes e inventario vacío.
+pedidos sin enviar, concentraciÃ³n de capital, tasa de devoluciones, gastos en
+aumento, sin ventas recientes e inventario vacÃ­o.
 
 - Cada alerta declara los **datos exactos** en los que se basa.
-- Se pueden descartar 7 días, para siempre, o ajustar los umbrales.
-- No se presenta ninguna correlación como causa ni se promete beneficio.
+- Se pueden descartar 7 dÃ­as, para siempre, o ajustar los umbrales.
+- No se presenta ninguna correlaciÃ³n como causa ni se promete beneficio.
 
-### AI Studio ✅ (BYOK)
+### AI Studio âœ… (BYOK)
 
 | Elemento | Estado |
 |---|---|
-| Conexiones con Gemini, OpenAI y Anthropic | ✅ |
-| Clave cifrada con el almacén del sistema (`safeStorage`/DPAPI) | ✅ |
-| La clave nunca se devuelve, ni se registra, ni entra en un error | ✅ |
-| Prueba de conexión real: consulta la lista de modelos del proveedor | ✅ |
-| Modelos **consultados al proveedor** (no listas obsoletas) | ✅ |
-| URL base configurable (proxy propio / endpoint regional) | ✅ |
-| Ruta por tarea (un modelo distinto para cada tarea) | ✅ |
-| 8 tareas: título, descripción, traducción, clasificación, atributos, palabras clave, revisión y sugerencia de precio | ✅ |
-| Imágenes para análisis (hasta 4, con validación de tipo y tamaño) | ✅ |
-| Registro de uso: proveedor, modelo, tokens y **coste estimado** | ✅ |
-| Precio por millón de tokens **configurable por el usuario** | ✅ |
-| Estimación de coste de flujos multi-IA + confirmación obligatoria | ✅ |
-| Límite mensual de llamadas según el plan | ✅ |
+| Conexiones con Gemini, OpenAI y Anthropic | âœ… |
+| Clave cifrada con el almacÃ©n del sistema (`safeStorage`/DPAPI) | âœ… |
+| La clave nunca se devuelve, ni se registra, ni entra en un error | âœ… |
+| Prueba de conexiÃ³n real: consulta la lista de modelos del proveedor | âœ… |
+| Modelos **consultados al proveedor** (no listas obsoletas) | âœ… |
+| URL base configurable (proxy propio / endpoint regional) | âœ… |
+| Ruta por tarea (un modelo distinto para cada tarea) | âœ… |
+| 8 tareas: tÃ­tulo, descripciÃ³n, traducciÃ³n, clasificaciÃ³n, atributos, palabras clave, revisiÃ³n y sugerencia de precio | âœ… |
+| ImÃ¡genes para anÃ¡lisis (hasta 4, con validaciÃ³n de tipo y tamaÃ±o) | âœ… |
+| Registro de uso: proveedor, modelo, tokens y **coste estimado** | âœ… |
+| Precio por millÃ³n de tokens **configurable por el usuario** | âœ… |
+| EstimaciÃ³n de coste de flujos multi-IA + confirmaciÃ³n obligatoria | âœ… |
+| LÃ­mite mensual de llamadas segÃºn el plan | âœ… |
 
-**Aviso de honestidad:** la integración sigue la documentación oficial de cada
-proveedor y su construcción de peticiones está cubierta por pruebas (cabeceras,
-forma del cuerpo, mapeo de errores y cálculo de coste). **No se ha podido
+**Aviso de honestidad:** la integraciÃ³n sigue la documentaciÃ³n oficial de cada
+proveedor y su construcciÃ³n de peticiones estÃ¡ cubierta por pruebas (cabeceras,
+forma del cuerpo, mapeo de errores y cÃ¡lculo de coste). **No se ha podido
 verificar contra el servicio real**, porque eso exige una clave de API. Por eso:
 
 - No hay ninguna lista de modelos escrita a mano que pueda caducar.
-- Los errores se muestran con su código (`invalid_key`, `rate_limited`...).
-- La pantalla no simula ninguna respuesta: sin conexión, se explica cómo
+- Los errores se muestran con su cÃ³digo (`invalid_key`, `rate_limited`...).
+- La pantalla no simula ninguna respuesta: sin conexiÃ³n, se explica cÃ³mo
   configurarla.
 
-Tareas que **no** se hacen: generar imágenes, falsear el estado de un producto o
+Tareas que **no** se hacen: generar imÃ¡genes, falsear el estado de un producto o
 inventar precios de mercado. Las sugerencias de precio se razonan con el coste y
-el margen del usuario, y se etiquetan como estimación.
+el margen del usuario, y se etiquetan como estimaciÃ³n.
 
 ---
 
-## Fase 6 — Licencias 🟡
+## Fase 6 â€” Licencias ðŸŸ¡
 
 | Elemento | Estado |
 |---|---|
-| Tres planes con límites centralizados (`shared/plans.ts`) | ✅ |
-| **Límites aplicados en el proceso principal** (no solo en la interfaz) | ✅ *nuevo* |
-| Firma Ed25519: la app solo lleva la clave **pública** | ✅ |
-| Herramienta administrativa con la clave **privada** (fuera del paquete) | ✅ |
-| Activación, desactivación, historial de eventos | ✅ |
-| Identificador de dispositivo estable | ✅ |
-| Cuotas de fundadores 200 / 200 definidas | ✅ |
-| Registro de emisión de licencias (auditoría + reverificación) | ✅ *nuevo* (`npm run license:list`) |
-| **Backend online en Supabase** (puestos, revocación, `/health`) | ✅ *nuevo* **desplegado y probado en vivo** (20/10/2026) |
-| **Cliente online en la aplicación** (activa puesto, consulta revocaciones) | ✅ *nuevo* (31 pruebas nuevas) |
-| Pasarela de pagos | ⬜ no implementada (sin presupuesto) |
+| Tres planes con lÃ­mites centralizados (`shared/plans.ts`) | âœ… |
+| **LÃ­mites aplicados en el proceso principal** (no solo en la interfaz) | âœ… *nuevo* |
+| Firma Ed25519: la app solo lleva la clave **pÃºblica** | âœ… |
+| Herramienta administrativa con la clave **privada** (fuera del paquete) | âœ… |
+| ActivaciÃ³n, desactivaciÃ³n, historial de eventos | âœ… |
+| Identificador de dispositivo estable | âœ… |
+| Cuotas de fundadores 200 / 200 definidas | âœ… |
+| Registro de emisiÃ³n de licencias (auditorÃ­a + reverificaciÃ³n) | âœ… *nuevo* (`npm run license:list`) |
+| **Backend online en Supabase** (puestos, revocaciÃ³n, `/health`) | âœ… *nuevo* **desplegado y probado en vivo** (20/10/2026) |
+| **Cliente online en la aplicaciÃ³n** (activa puesto, consulta revocaciones) | âœ… *nuevo* (31 pruebas nuevas) |
+| Pasarela de pagos | â¬œ no implementada (sin presupuesto) |
 
 ### Backend online desplegado (20/10/2026)
 
 - **Proveedor: Supabase Free** (elegido por el propietario del proyecto),
-  proyecto `ugfefewrikcghfwqhezi`, coste **0 €**.
+  proyecto `ugfefewrikcghfwqhezi`, coste **0 â‚¬**.
 - **Edge Function `licence`** con las rutas `/activate`, `/deactivate`,
   `/revocations` y `/health`; las tablas `licenses` y `license_activations`
-  tienen RLS **sin políticas**: solo el `service_role` las toca.
-- **La clave privada Ed25519 no está en el servidor**: la emisión sigue siendo
+  tienen RLS **sin polÃ­ticas**: solo el `service_role` las toca.
+- **La clave privada Ed25519 no estÃ¡ en el servidor**: la emisiÃ³n sigue siendo
   local (`npm run license:new`) y la subida del registro (`npm run license:sync`)
   verifica cada firma **antes** de subirla.
-- **Prueba en vivo realizada**: firma falsificada → `403 bad_signature`; dos
-  activaciones ok → tercera `409 seats_exhausted`; liberar un puesto → ok;
-  revocar → `403 revoked` y `/revocations` devuelve el hash. Tabla completa en
+- **Prueba en vivo realizada**: firma falsificada â†’ `403 bad_signature`; dos
+  activaciones ok â†’ tercera `409 seats_exhausted`; liberar un puesto â†’ ok;
+  revocar â†’ `403 revoked` y `/revocations` devuelve el hash. Tabla completa en
   [`docs/TEST-REPORT.md`](TEST-REPORT.md) y [`docs/BACKEND.md`](BACKEND.md).
 - **Offline-first**: el token se valida sin red; el servidor se consulta como
-  mucho cada 7 días. Si Supabase pausa el proyecto por inactividad (~1 semana),
+  mucho cada 7 dÃ­as. Si Supabase pausa el proyecto por inactividad (~1 semana),
   las licencias existentes **siguen funcionando**.
 
-### Cliente online de la aplicación (21/10/2026)
+### Cliente online de la aplicaciÃ³n (21/10/2026)
 
 El cliente de escritorio **ya se conecta** al backend, con estas reglas:
 
@@ -342,52 +342,52 @@ El cliente de escritorio **ya se conecta** al backend, con estas reglas:
   conceder el plan. Si el servidor cae, una licencia ya activada **conserva su
   plan** y la app sigue funcionando.
 - **Nunca borra datos**: un rechazo del servidor solo cambia el estado de la
-  licencia (y, en una revocación, los límites del plan). Inventario, pedidos y
+  licencia (y, en una revocaciÃ³n, los lÃ­mites del plan). Inventario, pedidos y
   fotos quedan intactos. Hay una prueba dedicada que lo comprueba.
-- **Comprobación perezosa**: se refresca como mucho cada 7 días
-  (`ONLINE_RECHECK_DAYS`). Las revocaciones se piden solo desde el último cursor
-  (`/revocations?since=…`) y se guardan sus **hashes** en una caché local
-  (`license_revocations`), de modo que una revocación surte efecto aunque el
-  equipo esté sin conexión al consultar.
-- **Sin secretos**: la app envía la clave **publishable** de Supabase como
-  `Bearer` (pública por diseño, limitada por RLS). La clave `sb_secret_` **nunca**
+- **ComprobaciÃ³n perezosa**: se refresca como mucho cada 7 dÃ­as
+  (`ONLINE_RECHECK_DAYS`). Las revocaciones se piden solo desde el Ãºltimo cursor
+  (`/revocations?since=â€¦`) y se guardan sus **hashes** en una cachÃ© local
+  (`license_revocations`), de modo que una revocaciÃ³n surte efecto aunque el
+  equipo estÃ© sin conexiÃ³n al consultar.
+- **Sin secretos**: la app envÃ­a la clave **publishable** de Supabase como
+  `Bearer` (pÃºblica por diseÃ±o, limitada por RLS). La clave `sb_secret_` **nunca**
   sale del servidor. Verificado sobre el paquete compilado: 0 apariciones.
-- **Un solo canal IPC dedicado** (`license:refresh`), botón «Comprobar ahora» en
-  la pantalla de Licencias y estado visible (verificada / sin conexión /
-  rechazada), traducido a español e inglés.
+- **Un solo canal IPC dedicado** (`license:refresh`), botÃ³n Â«Comprobar ahoraÂ» en
+  la pantalla de Licencias y estado visible (verificada / sin conexiÃ³n /
+  rechazada), traducido a espaÃ±ol e inglÃ©s.
 - **Nuevas piezas**: `src/main/services/licence-online.ts`,
-  `src/shared/licence-backend.ts`, migración `005-license-online.ts`,
+  `src/shared/licence-backend.ts`, migraciÃ³n `005-license-online.ts`,
   `tests/licence-online.test.ts` (31 pruebas, 97 % de cobertura del cliente).
 
-Migración 005 (aditiva, no destructiva): `licenses.online_state`,
+MigraciÃ³n 005 (aditiva, no destructiva): `licenses.online_state`,
 `licenses.online_error`, `licenses.revocation_cursor` y la tabla
 `license_revocations`.
 
-Aviso honesto: el cliente respeta lo que diga el servidor, pero **la instalación
-real en una máquina limpia sigue bloqueada** por este equipo (nivel de firma
-Enterprise), y **la publicación en GitHub/Store sigue pendiente** de las cuentas
+Aviso honesto: el cliente respeta lo que diga el servidor, pero **la instalaciÃ³n
+real en una mÃ¡quina limpia sigue bloqueada** por este equipo (nivel de firma
+Enterprise), y **la publicaciÃ³n en GitHub/Store sigue pendiente** de las cuentas
 del propietario. Nada de eso se puede afirmar como hecho.
 
-### Límites realmente aplicados (corrección importante)
+### LÃ­mites realmente aplicados (correcciÃ³n importante)
 
-Antes de este bloque, los planes existían pero **casi ningún límite se
+Antes de este bloque, los planes existÃ­an pero **casi ningÃºn lÃ­mite se
 comprobaba** en el proceso principal. Ahora se aplican en
 `src/main/ipc/register.ts` y `register-modules.ts`:
 
-| Límite | Canal protegido |
+| LÃ­mite | Canal protegido |
 |---|---|
-| Cuota de artículos | `products:create` |
+| Cuota de artÃ­culos | `products:create` |
 | Cuota de archivos | `media:import` |
-| Importación CSV | `csv:import` |
-| Edición masiva | `products:bulkUpdate` / `bulkPreview` |
-| Analítica | `finance:report` |
+| ImportaciÃ³n CSV | `csv:import` |
+| EdiciÃ³n masiva | `products:bulkUpdate` / `bulkPreview` |
+| AnalÃ­tica | `finance:report` |
 | Inteligencia | `intelligence:report` |
 | AI Studio + cuota mensual | `ai:generate` |
 
-En la interfaz, `PlanGate` explica la función bloqueada con un enlace a
+En la interfaz, `PlanGate` explica la funciÃ³n bloqueada con un enlace a
 Licencias, en lugar de mostrar una pantalla rota.
 
-Generación de licencias:
+GeneraciÃ³n de licencias:
 
 ```powershell
 npm run license:keygen                       # solo la primera vez
@@ -396,8 +396,8 @@ npm run license:verify -- --code <codigo>
 npm run license:list                         # registro de emision + reverificacion
 ```
 
-**No se han generado las 400 licencias fundadoras.** El registro de emisión que
-lo bloqueaba ya está implementado (`tools/keys/issued-licenses.jsonl`, privado y
+**No se han generado las 400 licencias fundadoras.** El registro de emisiÃ³n que
+lo bloqueaba ya estÃ¡ implementado (`tools/keys/issued-licenses.jsonl`, privado y
 excluido de Git); ahora el bloqueo es comercial: se emiten una a una cuando haya
 clientes reales. Detalles en [`docs/LICENCIAS.md`](LICENCIAS.md).
 
@@ -407,17 +407,17 @@ clientes reales. Detalles en [`docs/LICENCIAS.md`](LICENCIAS.md).
 
 | Elemento | Estado |
 |---|---|
-| Icono propio (`build/icon.png`, monograma RV) | ✅ |
-| **Copias de seguridad** (ZIP, verificación, rotación, restauración en dos fases) | ✅ |
-| Instalador NSIS generado | ✅ `RESALEVAULT-Setup-0.5.0.exe` |
-| **Firma de código** (certificado autofirmado, 0 €) | ✅ **firmado y verificado** |
-| **Avisos de terceros** incluidos en el paquete (`resources/`) | ✅ |
-| Instalación probada en este equipo | ❌ bloqueada por política de nivel de **firma Enterprise** (evento CI `3033`; diagnóstico en `docs/FIRMA.md` §9); kit de verificación en máquina limpia listo (§10) |
-| Organizaciones, usuarios, permisos, sincronización | ⬜ local pendiente; online ⛔ sin backend de colaboración |
+| Icono propio (`build/icon.png`, monograma RV) | âœ… |
+| **Copias de seguridad** (ZIP, verificaciÃ³n, rotaciÃ³n, restauraciÃ³n en dos fases) | âœ… |
+| Instalador NSIS generado | âœ… `RESALEVAULT-Setup-0.5.0.exe` |
+| **Firma de cÃ³digo** (certificado autofirmado, 0 â‚¬) | âœ… **firmado y verificado** |
+| **Avisos de terceros** incluidos en el paquete (`resources/`) | âœ… |
+| InstalaciÃ³n probada en este equipo | âŒ bloqueada por polÃ­tica de nivel de **firma Enterprise** (evento CI `3033`; diagnÃ³stico en `docs/FIRMA.md` Â§9); kit de verificaciÃ³n en mÃ¡quina limpia listo (Â§10) |
+| Organizaciones, usuarios, permisos, sincronizaciÃ³n | â¬œ local pendiente; online â›” sin backend de colaboraciÃ³n |
 
 ### Sobre la firma y el bloqueo (importante antes de distribuir)
 
-El instalador **se genera y se firma**. La verificación real:
+El instalador **se genera y se firma**. La verificaciÃ³n real:
 
 ```
 Get-AuthenticodeSignature release\RESALEVAULT-Setup-0.5.0.exe
@@ -426,77 +426,77 @@ Get-AuthenticodeSignature release\RESALEVAULT-Setup-0.5.0.exe
                  certificate which is not trusted by the trust provider.
 ```
 
-Es decir: **la firma es criptográficamente válida, pero la raíz no es de
-confianza pública**, porque el certificado es autofirmado. Eso es exactamente lo
+Es decir: **la firma es criptogrÃ¡ficamente vÃ¡lida, pero la raÃ­z no es de
+confianza pÃºblica**, porque el certificado es autofirmado. Eso es exactamente lo
 esperado. Un certificado autofirmado **no** elimina SmartScreen ni el bloqueo de
 Device Guard.
 
-En este equipo, Windows bloquea la ejecución del instalador con una **política
+En este equipo, Windows bloquea la ejecuciÃ³n del instalador con una **polÃ­tica
 de nivel de firma Enterprise** en modo impuesto (eventos `3033` de Code
 Integrity que citan el nombre del instalador; no es Smart App Control ni
-Defender: ambos comprobados y descartados). **La instalación de extremo a
-extremo no se ha podido verificar aquí y no se afirma lo contrario.** Lo que sí
-está verificado es el contenido: `release\win-unpacked\RESALEVAULT.exe`
-arranca, migra la base de datos y crea la copia automática. Para cerrar el
-pendiente hay un **kit de verificación en máquina limpia** de 0 €
-(`scripts/verify-install.ps1`, instrucciones en `docs/FIRMA.md` §10). **Defender
-no tiene ninguna detección** del proyecto (comprobado 20/10/2026).
+Defender: ambos comprobados y descartados). **La instalaciÃ³n de extremo a
+extremo no se ha podido verificar aquÃ­ y no se afirma lo contrario.** Lo que sÃ­
+estÃ¡ verificado es el contenido: `release\win-unpacked\RESALEVAULT.exe`
+arranca, migra la base de datos y crea la copia automÃ¡tica. Para cerrar el
+pendiente hay un **kit de verificaciÃ³n en mÃ¡quina limpia** de 0 â‚¬
+(`scripts/verify-install.ps1`, instrucciones en `docs/FIRMA.md` Â§10). **Defender
+no tiene ninguna detecciÃ³n** del proyecto (comprobado 20/10/2026).
 
-Procedimiento completo, generación del certificado y verificación de hashes en
-[`docs/FIRMA.md`](FIRMA.md). Para distribución pública hace falta un
-certificado OV/IV de una CA (150–300 €/año). **No se ha comprado ninguno.**
+Procedimiento completo, generaciÃ³n del certificado y verificaciÃ³n de hashes en
+[`docs/FIRMA.md`](FIRMA.md). Para distribuciÃ³n pÃºblica hace falta un
+certificado OV/IV de una CA (150â€“300 â‚¬/aÃ±o). **No se ha comprado ninguno.**
 
 ---
 
 ## Lo que el programa NO hace (y no afirma hacer)
 
-- **No se conecta a Vinted ni a ningún marketplace.** Los anuncios se registran
-  a mano. No hay sincronización automática.
+- **No se conecta a Vinted ni a ningÃºn marketplace.** Los anuncios se registran
+  a mano. No hay sincronizaciÃ³n automÃ¡tica.
 - **Los estados de seguimiento son manuales.** Abrir la web de un transportista
   no confirma nada y no se presenta como si lo hiciera.
 - **AI Studio no se ha verificado contra los proveedores reales** (requiere una
-  clave). Las peticiones están probadas; la respuesta real, no.
-- **No se envía información del negocio a ningún servidor** salvo cuando el
-  usuario lanza explícitamente una tarea de IA, y en ese caso solo van los datos
-  del artículo y el prompt. Para las licencias existe ya un backend en Supabase
-  (solo recibe el código de licencia y el identificador de dispositivo, nunca
-  inventario ni pedidos) y **el cliente de la app está conectado a él**
-  (comprobación de puesto y revocaciones; la firma se verifica siempre en local).
-- **No cambia precios ni anuncios automáticamente.**
+  clave). Las peticiones estÃ¡n probadas; la respuesta real, no.
+- **No se envÃ­a informaciÃ³n del negocio a ningÃºn servidor** salvo cuando el
+  usuario lanza explÃ­citamente una tarea de IA, y en ese caso solo van los datos
+  del artÃ­culo y el prompt. Para las licencias existe ya un backend en Supabase
+  (solo recibe el cÃ³digo de licencia y el identificador de dispositivo, nunca
+  inventario ni pedidos) y **el cliente de la app estÃ¡ conectado a Ã©l**
+  (comprobaciÃ³n de puesto y revocaciones; la firma se verifica siempre en local).
+- **No cambia precios ni anuncios automÃ¡ticamente.**
 - **No hay modo multiusuario.** El esquema lo prepara y el plan Business declara
-  `multiUser`/`sync`, pero **la función no existe**: el backend desplegado es
-  **solo de licencias** y no ofrece colaboración ni sincronización de datos.
-- **No hay actualización automática.** No hay servidor de actualizaciones y no se
-  simula uno. El proceso manual está en `docs/MANUAL-USUARIO.md`.
-- **No genera PDF ni XLSX todavía.** La exportación es CSV.
-- **No hace devoluciones parciales por línea**, ni multi-divisa, ni tipos de
-  cambio automáticos.
-- **No envía correos.** Requeriría un servicio de pago.
-- **No hay integración con marketplaces.** No hay API autorizada y **no se hace
+  `multiUser`/`sync`, pero **la funciÃ³n no existe**: el backend desplegado es
+  **solo de licencias** y no ofrece colaboraciÃ³n ni sincronizaciÃ³n de datos.
+- **No hay actualizaciÃ³n automÃ¡tica.** No hay servidor de actualizaciones y no se
+  simula uno. El proceso manual estÃ¡ en `docs/MANUAL-USUARIO.md`.
+- **No genera PDF ni XLSX todavÃ­a.** La exportaciÃ³n es CSV.
+- **No hace devoluciones parciales por lÃ­nea**, ni multi-divisa, ni tipos de
+  cambio automÃ¡ticos.
+- **No envÃ­a correos.** RequerirÃ­a un servicio de pago.
+- **No hay integraciÃ³n con marketplaces.** No hay API autorizada y **no se hace
   scraping**.
-- **No promete seguridad absoluta** ni inmunidad frente a la piratería.
-- **Los informes por categoría solo publican el resultado directo de la
-  mercancía.** Las comisiones y envíos no se reparten por categoría porque sería
+- **No promete seguridad absoluta** ni inmunidad frente a la piraterÃ­a.
+- **Los informes por categorÃ­a solo publican el resultado directo de la
+  mercancÃ­a.** Las comisiones y envÃ­os no se reparten por categorÃ­a porque serÃ­a
   un reparto inventado.
 
 ---
 
-## Deuda técnica conocida
+## Deuda tÃ©cnica conocida
 
 | Punto | Impacto | Plan |
 |---|---|---|
 | `node:sqlite` es experimental en Node | Bajo: aislado en `database.ts` | Vigilar |
-| Paquete del renderer ~1,07 MB | Bajo en escritorio | División de código si crece |
+| Paquete del renderer ~1,07 MB | Bajo en escritorio | DivisiÃ³n de cÃ³digo si crece |
 | Paquetes de `node_modules` en el asar (`zod`, `bwip-js`) | Bajo | Empaquetar si molesta |
-| Rotación de inventario se calcula sobre el capital actual | Bajo (documentado en la UI) | Histórico de capital |
-| Búsqueda por texto es un barrido lineal (~70 ms a 50.000) | Bajo, medido | Índice FTS5 si se superan 100.000 |
+| RotaciÃ³n de inventario se calcula sobre el capital actual | Bajo (documentado en la UI) | HistÃ³rico de capital |
+| BÃºsqueda por texto es un barrido lineal (~70 ms a 50.000) | Bajo, medido | Ãndice FTS5 si se superan 100.000 |
 | Informe financiero ~180 ms con 1.000 pedidos | Bajo | Cachear agregados si crece |
-| Sin firma de confianza pública | **Alto en distribución** | Certificado OV/IV |
-| Sin actualización automática | Medio | Feed propio o proceso manual documentado |
+| Sin firma de confianza pÃºblica | **Alto en distribuciÃ³n** | Certificado OV/IV |
+| Sin actualizaciÃ³n automÃ¡tica | Medio | Feed propio o proceso manual documentado |
 | `multiUser`/`sync` declarados pero sin implementar | Medio (puede confundir) | Implementar o quitar del plan |
 
 Los puntos ya resueltos (ESLint, selector de Pedidos, firma) se han movido a la
-sección de verificación.
+secciÃ³n de verificaciÃ³n.
 
 ---
 
@@ -504,27 +504,27 @@ sección de verificación.
 
 | Concepto | Importe estimado | Momento |
 |---|---|---|
-| Desarrollo y uso local | **0 €** | ya |
-| Git, ESLint, cobertura, CI (GitHub Actions), electron-builder | **0 €** | ya |
-| Certificado de firma **autofirmado** de desarrollo | **0 €** | ya |
-| Certificado de firma **de confianza pública** (OV/IV) | 150–300 €/año | antes de distribuir |
-| Backend de licencias (Supabase Free) | **0 €** (verificado 20/10/2026) | desplegado; revisar DPA antes de vender |
+| Desarrollo y uso local | **0 â‚¬** | ya |
+| Git, ESLint, cobertura, CI (GitHub Actions), electron-builder | **0 â‚¬** | ya |
+| Certificado de firma **autofirmado** de desarrollo | **0 â‚¬** | ya |
+| Certificado de firma **de confianza pÃºblica** (OV/IV) | 150â€“300 â‚¬/aÃ±o | antes de distribuir |
+| Backend de licencias (Supabase Free) | **0 â‚¬** (verificado 20/10/2026) | desplegado; revisar DPA antes de vender |
 | APIs de IA | **a cargo del cliente** (BYOK) | ya |
-| Pasarela de pago | comisión por transacción | Fase 6 |
+| Pasarela de pago | comisiÃ³n por transacciÃ³n | Fase 6 |
 
-### Gasto real hasta la fecha: **0 €**
+### Gasto real hasta la fecha: **0 â‚¬**
 
-No se ha comprado ningún certificado, ni contratado ningún servidor, dominio,
-API, almacenamiento, correo ni suscripción. No se ha introducido ninguna tarjeta
+No se ha comprado ningÃºn certificado, ni contratado ningÃºn servidor, dominio,
+API, almacenamiento, correo ni suscripciÃ³n. No se ha introducido ninguna tarjeta
 bancaria. No se ha iniciado ninguna prueba gratuita.
 
 ### Lo que **no** se puede prometer gratis para siempre
 
-| Servicio | Situación hoy | Riesgo |
+| Servicio | SituaciÃ³n hoy | Riesgo |
 |---|---|---|
-| GitHub Actions | Plan gratuito para repositorios públicos o con minutos incluidos | Los minutos pueden agotarse |
-| Supabase Free | 0 € hoy: 500 MB de base de datos, 5 GB de tráfico, 500.000 invocaciones/mes | **Pausa el proyecto tras ~1 semana de inactividad** (reactivable gratis); las cuotas y condiciones pueden cambiar |
-| APIs de IA | **Siempre** a cargo del usuario | Es BYOK por diseño |
+| GitHub Actions | Plan gratuito para repositorios pÃºblicos o con minutos incluidos | Los minutos pueden agotarse |
+| Supabase Free | 0 â‚¬ hoy: 500 MB de base de datos, 5 GB de trÃ¡fico, 500.000 invocaciones/mes | **Pausa el proyecto tras ~1 semana de inactividad** (reactivable gratis); las cuotas y condiciones pueden cambiar |
+| APIs de IA | **Siempre** a cargo del usuario | Es BYOK por diseÃ±o |
 
 Ninguna de estas dependencias es necesaria para usar el programa: si desaparecen,
 el inventario, los pedidos y las copias siguen funcionando.

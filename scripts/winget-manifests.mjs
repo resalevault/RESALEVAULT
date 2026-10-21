@@ -1,57 +1,33 @@
-// RESALEVAULT - generador de manifiestos winget (esquema 1.12).
+﻿// RESALEVAULT - Generador de manifiestos de winget.
 //
-// Genera los tres ficheros YAML que exige el repositorio comunitario
-// microsoft/winget-pkgs (version, defaultLocale e installer). No descarga nada
-// ni envia nada: solo escribe los manifiestos en disco para que se validen con
-// `winget validate --manifest <carpeta>` y se manden en un Pull Request.
-//
-// Esquema 1.12 (no 1.6, que esta obsoleto): es el que recomienda la plantilla
-// de Pull Request de microsoft/winget-pkgs. Ademas, cada fichero lleva la
-// cabecera `# yaml-language-server: $schema=...` que la guia de contribucion
-// exige en TODOS los manifiestos.
+// Convierte los datos del release (version, URL del instalador, hash SHA-256) en
+// los tres ficheros YAML que exige el esquema 1.12 de winget, con el encabezado
+// `# yaml-language-server: $schema=...` que el repositorio microsoft/winget-pkgs
+// pide en todos ellos.
 //
 // Uso:
-//   node scripts/winget-manifests.mjs --url <url-del-release> [--sha256 <hex>]
-//        [--id Publisher.Paquete] [--repo propietario/repositorio]
+//   node scripts/winget-manifests.mjs --url <URL> [--repo propietario/repo]
+//                                     [--sha256 <hash>] [--id <ID>]
 //
-// Sin --sha256 se calcula desde release/RESALEVAULT-Setup-<version>.exe.
-// Documentacion del proceso completo: docs/DISTRIBUCION.md
+// Sin --sha256 se calcula del instalador en release/RESALEVAULT-Setup-<version>.exe.
 
+import { readFile, writeFile, mkdir, access } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
-import { mkdir, readFile, writeFile, access } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-export const DEFAULT_ID = 'RESALEVAULT.RESALEVAULT'
-// Version de esquema recomendada por la plantilla de PR de microsoft/winget-pkgs.
 const MANIFEST_VERSION = '1.12.0'
+export const DEFAULT_ID = 'RESALEVAULT.RESALEVAULT'
 const DEFAULT_LOCALE = 'en-US'
 
-// Cabecera obligatoria en el repositorio comunitario (guia de contribucion,
-// requisito 6). El formato exacto que espera el validador es el acortador
-// `https://aka.ms/winget-manifest.<tipo>.<version>.schema.json`.
-const SCHEMA_BASE = 'https://aka.ms/winget-manifest'
-const SCHEMA_HEADERS = {
-  version: `${SCHEMA_BASE}.version.${MANIFEST_VERSION}.schema.json`,
-  defaultLocale: `${SCHEMA_BASE}.defaultLocale.${MANIFEST_VERSION}.schema.json`,
-  installer: `${SCHEMA_BASE}.installer.${MANIFEST_VERSION}.schema.json`,
-}
-
-/** Antepone la cabecera de esquema que exige microsoft/winget-pkgs. */
-function withSchemaHeader(kind, doc) {
-  return `# yaml-language-server: $schema=${SCHEMA_HEADERS[kind]}\n${doc}`
-}
-
-const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9-]*(\.[A-Za-z0-9][A-Za-z0-9-]*)+$/
+const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/
 const SHA256_PATTERN = /^[0-9a-fA-F]{64}$/
 
-/** Escapa un valor escalar para que sea seguro dentro de comillas dobles YAML. */
-function scalar(value) {
-  return '"' + String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"'
+function withSchemaHeader(type, body) {
+  return `# yaml-language-server: $schema=https://aka.ms/winget-manifest.${type}.1.12.0.schema.json\n${body}`
 }
 
-/** Convierte pares clave/valor en lineas YAML (orden fijo, determinista). */
 function yamlBlock(pairs) {
   return (
     pairs
@@ -65,10 +41,12 @@ function yamlBlock(pairs) {
   )
 }
 
-/**
- * Valida las entradas y devuelve el contenido de los tres manifiestos.
- * Lanza Error con mensaje en espanol si algo no cumple el esquema.
- */
+function scalar(value) {
+  return '"' + String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"'
+}
+
+export const DEFAULT_ID_EXPORT = DEFAULT_ID
+
 export function buildManifests(options) {
   const {
     id = DEFAULT_ID,
@@ -82,7 +60,6 @@ export function buildManifests(options) {
     copyright = 'Copyright (c) RESALEVAULT',
     protocols = ['rv-media'],
     locale = DEFAULT_LOCALE,
-    licenseUrl,
   } = options
 
   if (!ID_PATTERN.test(id)) {
@@ -103,13 +80,10 @@ export function buildManifests(options) {
   if (repo !== undefined && !/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
     throw new Error(`Repositorio invalido (se espera propietario/repositorio): ${repo}`)
   }
+
   const hash = sha256.toUpperCase()
 
   const homepage = repo ? `https://github.com/${repo}` : undefined
-  // Los revisores de winget piden un LicenseUrl para paquetes propietarios.
-  // Por defecto apunta a los terminos del propio repositorio, donde vivira
-  // TERMS.md una vez publicado. Se puede sobrescribir con `licenseUrl`.
-  const termsUrl = licenseUrl ?? (repo ? `https://github.com/${repo}/blob/main/TERMS.md` : undefined)
 
   const versionDoc = withSchemaHeader('version', yamlBlock([
     ['PackageIdentifier', id],
@@ -127,9 +101,8 @@ export function buildManifests(options) {
     ['Publisher', publisher],
   ]
   if (homepage) localePairs.push(['PublisherUrl', homepage], ['PackageUrl', homepage])
-  localePairs.push(['License', 'Proprietary'])
-  if (termsUrl) localePairs.push(['LicenseUrl', termsUrl])
   localePairs.push(
+    ['License', 'Proprietary'],
     ['Copyright', copyright],
     ['ShortDescription', description],
     ['ManifestType', 'defaultLocale'],
@@ -166,7 +139,6 @@ export function buildManifests(options) {
   return { versionDoc, defaultLocaleDoc, installerDoc }
 }
 
-/** Calcula el nombre de fichero oficial de cada manifiesto. */
 export function manifestFileNames(id) {
   return {
     versionFile: `${id}.yaml`,
@@ -189,7 +161,6 @@ async function main() {
   const id = get('--id') ?? DEFAULT_ID
   const url = get('--url')
   const repo = get('--repo')
-  const licenseUrl = get('--license-url')
   let sha256 = get('--sha256')
 
   if (!url) {
@@ -219,7 +190,6 @@ async function main() {
     sha256,
     repo,
     description: pkg.description,
-    licenseUrl,
   })
 
   const names = manifestFileNames(id)
