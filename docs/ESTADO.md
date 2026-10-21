@@ -3,7 +3,12 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Material de publicación listo**: los
+Última actualización: **21/10/2026** — **Kit de envío a la Microsoft Store
+listo**: checklist de envío (`ENVIO_STORE.md`) con el comando para verificar el
+`publisher` real dentro del `.appx`, y guía de capturas (`CAPTURAS.md`) con
+resoluciones oficiales y las 6 pantallas concretas, usando los **datos de
+ejemplo** que ya trae la app (reversibles). Bloque anterior: **Material de
+publicación listo**: los
 manifiestos de winget se corrigieron al esquema **1.12.0** (el recomendado por la
 plantilla de PR de `microsoft/winget-pkgs`) y llevan la cabecera
 `yaml-language-server` obligatoria; el validador oficial de Microsoft da

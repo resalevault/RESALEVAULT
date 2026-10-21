@@ -177,7 +177,9 @@ const docFiles = [
   'MACOS_STATUS.md',
   'STORE_LISTING.md',
   'PUBLICACION_RUTA_A.md',
-  'WINGET_PR_BODY.md'
+  'WINGET_PR_BODY.md',
+  'ENVIO_STORE.md',
+  'CAPTURAS.md'
 ]
 for (const name of docFiles) {
   const src = join(root, 'docs', 'release', name)

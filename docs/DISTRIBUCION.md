@@ -115,6 +115,10 @@ Guía detallada con el texto listo para pegar: `docs/release/PUBLICACION_RUTA_A.
 
 ### Pasos pendientes (tu trámite + documentación)
 
+Checklist completo y verificación del `publisher` dentro del `.appx`:
+`docs/release/ENVIO_STORE.md`. Capturas (resoluciones y pantallas concretas):
+`docs/release/CAPTURAS.md`. Textos de la ficha: `docs/release/STORE_LISTING.md`.
+
 1. Crear la cuenta en `storedeveloper.microsoft.com` (gratis, con verificación
    de identidad).
 2. **Anotar el `Publisher` exacto** de la cuenta (formato `CN=...`) y
