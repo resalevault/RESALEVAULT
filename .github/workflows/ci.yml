@@ -67,6 +67,13 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      - name: Comprobar el binario de Electron
+        # npm >= 11.19 bloquea por defecto los scripts de las dependencias, y
+        # Electron 44 ya no trae un "install" que se ejecute solo: el binario lo
+        # descarga el "postinstall" del proyecto (install-electron). Este paso
+        # falla con un mensaje claro si el binario no estuviera.
+        run: npm run preflight
+
       - name: Humo de datos
         run: npm run smoke
 
