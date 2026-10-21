@@ -3,7 +3,16 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Kit de envío a la Microsoft Store
+Última actualización: **21/10/2026** — **README público y publicación
+automatizada**: el `README.md` se reescribió para ser la cara pública del
+repositorio (sin rutas locales, cifras reales: **501 pruebas**, 65/65 interfaz,
+88,66 % de cobertura, esquema v5, **158 canales**); `CHANGELOG` con la entrada
+pública de la 0.5.0; y **`scripts/publish-github.mjs`** (comando
+`npm run publish:github`) que crea el repositorio, sube el código y publica la
+release **simulando por defecto** (solo ejecuta con `--confirm`, exige árbol
+limpio, no sobrescribe releases y nunca imprime el token). Cifras obsoletas
+corregidas en `ARQUITECTURA`, `BUILD-WINDOWS`, `TEST-REPORT` y
+`FREE-VS-PRO-VS-BUSINESS`. Bloque anterior: **Kit de envío a la Microsoft Store
 listo**: checklist de envío (`ENVIO_STORE.md`) con el comando para verificar el
 `publisher` real dentro del `.appx`, y guía de capturas (`CAPTURAS.md`) con
 resoluciones oficiales y las 6 pantallas concretas, usando los **datos de

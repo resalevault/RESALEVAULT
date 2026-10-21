@@ -43,6 +43,7 @@
     "dist:appx": "npm run build && electron-builder --win --config electron-builder.appx.yml",
     "winget:manifests": "node scripts/winget-manifests.mjs",
     "release:folder": "node scripts/build-release-folder.mjs",
+    "publish:github": "node scripts/publish-github.mjs",
     "bench": "node scripts/build-smoke.mjs && node out/benchmark.cjs"
   },
   "dependencies": {

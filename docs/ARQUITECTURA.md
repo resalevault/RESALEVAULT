@@ -51,7 +51,7 @@ líneas. Si algún día hace falta cambiar de controlador, se sustituye ahí.
 
 ```
 main/       Node: datos, archivos, licencias, IA, servicios online
-preload/    Puente: 151 canales concretos. Sin lógica de negocio.
+preload/    Puente: 158 canales concretos. Sin lógica de negocio.
 renderer/   React: presentación. Sin acceso a Node ni al sistema.
 shared/     Tipos, esquemas y utilidades puras (sin Node, sin DOM)
 ```
@@ -166,7 +166,7 @@ Patrón configurable con tokens: `{PREFIX}`, `{CAT}`, `{YYYY}`, `{YY}`, `{MM}`,
 | `nodeIntegration` (y en worker y en subframes) | desactivado |
 | `sandbox` | activado |
 | `webSecurity`, `allowRunningInsecureContent: false` | activado |
-| API IPC restringida | 151 canales concretos, con esquema zod cada uno |
+| API IPC restringida | 158 canales concretos, con esquema zod cada uno |
 | Validación de entrada | en el proceso principal, no en la interfaz |
 | Control del emisor | solo el `webContents` de la ventana principal |
 | CSP | cabecera HTTP **y** `<meta>` inyectada al compilar |
@@ -219,7 +219,7 @@ y modo claro opcional, ambos con los mismos tokens de color.
 
 | Nivel | Herramienta | Qué cubre |
 |---|---|---|
-| Unidad / integración | Vitest (407 pruebas, ~2 s) | Fórmulas, SKU, transacciones, migraciones, repositorios, validación zod, traducciones |
+| Unidad / integración | Vitest (501 pruebas, ~2 s) | Fórmulas, SKU, transacciones, migraciones, repositorios, validación zod, traducciones |
 | Humo de datos | Electron real (43 comprobaciones) | Migraciones, CRUD, filtros, edición masiva, panel, archivado y **persistencia tras cerrar y reabrir** |
 | Humo de interfaz | Electron real (24 comprobaciones) | Carga el HTML compilado, crea datos por el puente, navega, cambia idioma y tema, y verifica que no hay errores en consola |
 

@@ -29,6 +29,30 @@ del acortador `aka.ms`. Todo corregido y cubierto con pruebas.
 
 ## 1. Crear el repositorio y subir el código (tu cuenta)
 
+### Opción A — automática (script incluido)
+
+Hay un script que hace los pasos 1 y 2 de esta guía (crear repo, subir código y
+publicar la release con los adjuntos). **Por defecto solo simula**: no toca nada
+hasta que añadas `--confirm`.
+
+```powershell
+# 1. Token de GitHub con permiso de repositorio (scope "repo"):
+#    se crea en https://github.com/settings/tokens
+$env:GH_TOKEN = "ghp_..."
+
+# 2. Ver QUÉ haría, sin ejecutarlo:
+npm run publish:github -- --repo 16ray/RESALEVAULT
+
+# 3. Publicar de verdad:
+npm run publish:github -- --repo 16ray/RESALEVAULT --confirm
+```
+
+Comprobaciones de seguridad del script: exige el árbol de git limpio, avisa si el
+instalador no existe, **no** crea un remoto si ya hay otro, **no** sobrescribe una
+release existente y **nunca** imprime el token.
+
+### Opción B — manual (sin token)
+
 ```powershell
 # Requiere haber iniciado sesión en GitHub en tu equipo.
 git remote add origin https://github.com/16ray/RESALEVAULT.git

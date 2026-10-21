@@ -3,7 +3,7 @@
 Todas las cifras de este documento se han **ejecutado en este equipo**. No son
 estimaciones ni promesas. Cada bloque indica el comando exacto que las produce.
 
-Fecha de la última ejecución: 2026-10-19/20.
+Fecha de la última ejecución: 2026-10-21.
 Versión: `0.5.0`.
 
 ---
@@ -13,10 +13,10 @@ Versión: `0.5.0`.
 | Comando | Resultado |
 |---|---|
 | `npm run typecheck` | ✅ 0 errores (2 proyectos: `tsconfig.node.json` y `tsconfig.web.json`) |
-| `npm test` | ✅ 35 archivos, **446 pruebas** en verde |
-| `npm run test:coverage` | ✅ 446 pruebas + cobertura medida (apartado 3) |
+| `npm test` | ✅ 38 archivos, **501 pruebas** en verde |
+| `npm run test:coverage` | ✅ 501 pruebas + cobertura medida (apartado 3) |
 | `npm run smoke` | ✅ **70 comprobaciones** correctas, 0 fallidas |
-| `npm run smoke:ui` | ✅ **54 comprobaciones** correctas, 0 fallidas |
+| `npm run smoke:ui` | ✅ **65 comprobaciones** correctas, 0 fallidas |
 | `npm run build` | ✅ proceso principal, preload y renderer generados |
 | `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
 | `npm run lint` | ✅ **0 errores, 0 avisos** (ESLint 9, flat config) |
@@ -29,7 +29,7 @@ resultados.**
 
 ## 2. Qué comprueba cada suite
 
-### 2.1 `npm test` — pruebas unitarias y de integración (446)
+### 2.1 `npm test` — pruebas unitarias y de integración (501)
 
 Cubren la lógica de negocio sobre una base de datos real (no un doble):
 
@@ -76,7 +76,7 @@ navega por la aplicación con DOM nativo:
 
 > Nota conocida y cosmética: al final, el borrado del directorio temporal a
 > veces devuelve `EPERM` porque Windows aún tiene un fichero abierto. **No
-> afecta al resultado**: las 54 comprobaciones ya se han ejecutado.
+> afecta al resultado**: las 65 comprobaciones ya se han ejecutado.
 
 ---
 

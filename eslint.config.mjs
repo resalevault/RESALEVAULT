@@ -99,5 +99,15 @@ export default tseslint.config(
       // Un catch vacio oculta errores: aqui se permite solo si se comenta.
       'no-empty': ['error', { allowEmptyCatch: false }]
     }
+  },
+
+  // Herramientas de linea de comandos: su salida por consola ES el resultado
+  // que lee el usuario, asi que aqui `console` esta permitido. Va despues del
+  // bloque global de reglas para que no lo sobrescriba.
+  {
+    files: ['scripts/**/*.mjs', 'scripts/**/*.cjs'],
+    rules: {
+      'no-console': 'off'
+    }
   }
 )

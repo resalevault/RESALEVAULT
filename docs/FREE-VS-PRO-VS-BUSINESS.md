@@ -35,7 +35,7 @@ seguiría recibiendo el rechazo.
 
 | Función | Estado |
 |---|---|
-| Inventario persistente (SQLite, WAL, claves foráneas) | ✅ 407 pruebas + humo |
+| Inventario persistente (SQLite, WAL, claves foráneas) | ✅ 501 pruebas + humo |
 | Productos, campos, categorías, etiquetas | ✅ |
 | Fotos por artículo con miniaturas (hasta 5) | ✅ |
 | SKU con dígito de control EAN-13 | ✅ |

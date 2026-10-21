@@ -8,70 +8,73 @@
 
 ---
 
-## 0.5.0 — 20/10/2026
+## 0.5.0 — 21/10/2026
+
+Primera versión pública. Resumen de lo que incluye y de lo que se ha verificado
+de verdad. Detalle técnico completo en `docs/ESTADO.md`.
 
 ### Añadido
 
+- **Cliente de licencias en línea (offline-first)**: confirma el puesto y
+  consulta revocaciones contra una Edge Function (Supabase), **verificando
+  siempre la firma en local**. Sin conexión, la licencia sigue validándose; el
+  servidor nunca bloquea la app ni borra datos. 31 pruebas nuevas.
 - **Shipping Tracker completo**: navegador integrado (`WebContentsView`, no
-  `<webview>`), directorio de 46 transportistas con búsqueda y filtro por
-  región, gestión de códigos de seguimiento y acción «Seguir ahora».
-- **`THIRD-PARTY-NOTICES.md`** generado automáticamente con `npm run notices`
-  (447 paquetes analizados, 6 distribuidos con su texto de licencia).
-- **Pantalla «Acerca de» completa**: botón para leer los avisos de terceros sin
-  conexión (desde `THIRD-PARTY-NOTICES.md`), enlace directo a Licencias y
-  cálculo del hash SHA-256 del paquete `app.asar` en uso (en desarrollo no
-  existe y se indica, en lugar de inventarlo).
-- **Firma de código con certificado autofirmado** (`npm run sign:setup`,
-  `npm run dist:signed`): instalador, ejecutable y desinstalador firmados, con
-  verificación automática y SHA-256.
-- **ESLint 9** (configuración plana) integrado en el flujo: 0 errores y 0 avisos.
-- **Cobertura de pruebas** (`npm run test:coverage`): 88,1 % de líneas,
-  umbrales configurados.
-- **Pruebas de la lógica de dinero y de archivos**: nuevas suites para la
-  importación y exportación CSV (`csv-io`, antes sin ninguna prueba), etiquetas y
-  códigos de barras, ajustes, códigos de error, pedidos (listado, estados,
-  comisiones, devoluciones y preparación), almacenamiento multimedia y los
-  repositorios de proveedores, compras, gastos, plataformas, atributos y
-  anuncios, el servicio de AI Studio, los límites de plan y las utilidades de
-  datos. La cobertura pasa del 72,0 % al 88,1 % de líneas.
-- **Banco de pruebas de rendimiento** (`npm run bench`): 50.000 artículos y
-  1.000 pedidos, con medición de apertura, búsqueda, paginación, escritura,
-  informes, exportación y copias.
-- **Integración continua** (`.github/workflows/ci.yml`): tipos, pruebas, humo,
-  build y auditoría de dependencias.
-- Documentación: `docs/FIRMA.md`, `docs/LICENCIAS.md`, `docs/BUILD-WINDOWS.md`,
-  `docs/PRIVACIDAD.md`, `docs/MANUAL-USUARIO.md`,
-  `docs/FREE-VS-PRO-VS-BUSINESS.md`, `docs/TEST-REPORT.md`.
+  `<webview>`), directorio de transportistas con búsqueda y filtro por región,
+  códigos de seguimiento y acción «Seguir ahora». Sin *scraping*.
+- **Botón «Comprar licencia» / «Buy license»** con canal IPC dedicado y lista
+  blanca de enlaces.
+- **Preparación para macOS**: objetivos `dmg`/`zip` (x64 + arm64), permisos
+  mínimos y barra nativa `hiddenInset`. Sin binario publicado todavía.
+- **Distribución gratuita (0 €)** por dos rutas: **GitHub Releases + winget** y
+  **Microsoft Store** (paquete AppX/MSIX).
+- **`THIRD-PARTY-NOTICES.md`** generado automáticamente.
+- **Pantalla «Acerca de»**: lectura de avisos de terceros sin conexión y hash
+  SHA-256 del `app.asar` en uso.
+- **Firma de código con certificado autofirmado** (gratuito).
+- **Integración continua**: tipos, pruebas, humo, build y auditoría.
 
 ### Cambiado
 
-- **Los límites de plan ahora se aplican en el proceso principal**, no solo en la
-  interfaz: cuota de artículos, cuota de archivos, importación CSV, edición
-  masiva, analítica, inteligencia y AI Studio. Antes de este cambio, casi ningún
-  límite estaba realmente aplicado.
-- **La interfaz explica las funciones bloqueadas** con una pantalla clara
-  («requiere Vault Pro o Vault Business») en vez de fallar con un error técnico.
-- **El selector de artículos de Pedidos ya no carga 300 registros de golpe**:
-  ahora busca en el proceso principal con retardo de 250 ms y trae 40.
-- **SQL de totales de compras reescrito**: se eliminó la reescritura de la
-  consulta con expresiones regulares, que era frágil.
-- **`as never` eliminado** en la importación CSV y en el `preload`, sustituido
-  por tipos reales.
+- **Los límites de plan se aplican en el proceso principal**, no solo ocultando
+  botones: cuota de artículos y archivos, importación CSV, edición masiva,
+  analítica, inteligencia y AI Studio.
+- **Higiene de producción**: los paquetes de prueba (`smoke`, `ui-smoke`,
+  `benchmark`) y los mapas de código **ya no viajan** al usuario. Verificado
+  extrayendo el `app.asar` del instalador y del `.appx`.
+- **Manifiestos de winget al esquema 1.12** con la cabecera
+  `yaml-language-server` obligatoria; validados con el validador oficial.
 
 ### Corregido
 
-- `doctor.cjs`: `require` duplicado que rompía el propio informe de diagnóstico.
-- `setup-signing.ps1`: la comprobación pedía la contraseña por consola y dejaba
-  el script colgado.
+- Errores de esquema en los manifiestos de winget detectados por el validador
+  oficial de Microsoft (esquema obsoleto, cabecera ausente e `Installers` mal
+  anidado).
+- `doctor.cjs`: `require` duplicado.
+- `setup-signing.ps1`: la comprobación dejaba el script colgado.
 - `benchmark`: calculaba el tamaño del CSV antes de exportarlo.
 
 ### Verificado
 
-- `typecheck` 0 errores · **407** pruebas · **70** de humo · **54** de interfaz ·
-  ESLint 0 problemas · `doctor` correcto.
-- Instalador `RESALEVAULT-Setup-0.5.0.exe` (118,43 MB) firmado.
-- **La instalación real sigue bloqueada** por la política Device Guard de este
-  equipo (ver `docs/FIRMA.md`, apartado 3). No se afirma lo contrario.
+- **501 / 501** pruebas (38 archivos) · **70 / 70** de humo · **65 / 65** de
+  interfaz · ESLint 0 problemas · cobertura **88,66 %** de líneas.
+- Instalador `RESALEVAULT-Setup-0.5.0.exe` firmado (autofirmado) y paquete
+  `RESALEVAULT-Store-0.5.0.appx` generados e inspeccionados.
+- **Sin secretos**: `sb_secret_`, claves privadas y certificados no entran en el
+  paquete (comprobado extrayendo el `app.asar`).
+
+### Pendiente (no se afirma lo contrario)
+
+- **Instalación de extremo a extremo en equipo limpio**: el equipo de desarrollo
+  la bloquea por política de firma.
+- **Publicación en la Microsoft Store**: paquete listo, sin enviar.
+- **macOS**: sin binario (requiere un Mac).
+
+### Histórico anterior a Git
+
+> El proyecto se desarrolló **sin control de versiones** hasta el 20/10/2026. Las
+> versiones 0.1.0–0.4.0 se reconstruyen a partir de la documentación, no de
+> etiquetas reales.
 
 ---
 
