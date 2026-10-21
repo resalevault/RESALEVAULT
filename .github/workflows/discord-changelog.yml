@@ -1,0 +1,62 @@
+
+name: RESALEVAULT Discord Changelog
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Publish changelog to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          RELEASE_NAME: ${{ github.event.release.name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          DESCRIPTION="${RELEASE_BODY:-No changelog provided.}"
+
+          PAYLOAD=$(jq -n \
+            --arg title "${RELEASE_NAME:-$RELEASE_TAG}" \
+            --arg version "$RELEASE_TAG" \
+            --arg description "$DESCRIPTION" \
+            --arg url "$RELEASE_URL" \
+            --arg repo "$REPO_NAME" \
+            '{
+              username: "RESALEVAULT",
+              embeds: [{
+                title: ("🚀 " + $title),
+                url: $url,
+                description: ($description | .[0:4000]),
+                color: 5793266,
+                fields: [
+                  {
+                    name: "Version",
+                    value: $version,
+                    inline: true
+                  },
+                  {
+                    name: "Repository",
+                    value: $repo,
+                    inline: true
+                  }
+                ],
+                footer: {
+                  text: "RESALEVAULT • Official Changelog"
+                },
+                timestamp: (now | todate)
+              }]
+            }')
+
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK_URL"
