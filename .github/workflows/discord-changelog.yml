@@ -2,6 +2,7 @@
 name: ResaleVault Discord Changelog
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
@@ -13,9 +14,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send release to Discord
+      - name: Send test message to Discord
+        if: github.event_name == 'workflow_dispatch'
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_SECRET_URL }}
+        run: |
+          PAYLOAD=$(jq -n '{
+            username: "ResaleVault",
+            embeds: [{
+              title: "Webhook Connection Test",
+              description: "Discord integration is working. GitHub Actions can send messages to ResaleVault Discord.",
+              color: 5793266,
+              fields: [{
+                name: "Status",
+                value: "Connection test successful",
+                inline: true
+              }],
+              footer: {
+                text: "ResaleVault | Integration Test"
+              },
+              timestamp: (now | todate)
+            }]
+          }')
+
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK_URL"
+
+      - name: Send release changelog to Discord
+        if: github.event_name == 'release'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_SECRET_URL }}
           RELEASE_NAME: ${{ github.event.release.name }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           RELEASE_BODY: ${{ github.event.release.body }}
