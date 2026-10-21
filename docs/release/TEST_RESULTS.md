@@ -162,13 +162,15 @@ winget validate --manifest .\dist-winget\RESALEVAULT\RESALEVAULT\0.5.0
 ```
 
 Validador **oficial** de Microsoft. El `InstallerSha256` generado coincide con el
-hash del instalador real.
+hash del instalador real (`39de1695…`, compilación del 21/10/2026 con el cliente
+online).
 
 ---
 
 ## 7. Verificación de seguridad del paquete
 
-Se extrajo el contenido real del paquete (`app.asar` y `AppX`):
+Se extrajo el contenido real del paquete (`app.asar` dentro del instalador NSIS
+`win-unpacked` y dentro del `.appx`):
 
 | Comprobación | Resultado |
 |---|---|
@@ -177,6 +179,12 @@ Se extrajo el contenido real del paquete (`app.asar` y `AppX`):
 | `sb_secret_` / `service_role` / clave privada | **0** |
 | `password =` con valor real | **0** (solo etiquetas de interfaz) |
 | Ficheros propios en el paquete | 5 (`main`, `preload`, 2 assets, `index.html`) |
+| Cliente online presente (`seats_exhausted`, `online_verified`, `license:refresh`) | **sí** en el `.exe` y en el `.appx` |
+| Clave **publishable** de Supabase (pública por diseño) | presente (necesaria) |
+| Manifiesto del `.appx` (`rv-media`, x64, versión 0.5.0.0) | correcto |
+
+El `app.asar` del instalador y el del `.appx` pesan lo mismo (25.521.688 bytes):
+son el mismo código.
 
 ---
 

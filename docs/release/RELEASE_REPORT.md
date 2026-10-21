@@ -109,19 +109,19 @@ Carpeta: `RESALEVAULT_RELEASE\`
 
 | Artefacto | Tamaño | SHA-256 |
 |---|---|---|
-| `RESALEVAULT-Setup-0.5.0.exe` (NSIS, x64) | 117,64 MB | `2CB281A7042802AB160D7AD830707A0033F64B07C8F91CFF092B1E5729E2883F` |
-| `RESALEVAULT-Store-0.5.0.appx` (Store, x64) | 160,98 MB | `CA2E1A847AE52B5548D018633A09D8C1A1D0A06C9A9EF0EEE4BDEF62876524D9` |
+| `RESALEVAULT-Setup-0.5.0.exe` (NSIS, x64) | 117,67 MB | `39de1695e34c7b0d262864a6f8b545a0e6955239a381e30d97083999db7c4b51` |
+| `RESALEVAULT-Store-0.5.0.appx` (Store, x64) | 160,98 MB | `448e7bc8ac42d6b2c9e15ef0c3518d4da3741bc4c53e9e08d257c2bca3e893d3` |
 
 > Los hashes se calculan sobre **este** artefacto concreto. El instalador NSIS
 > **no es reproducible byte a byte** (incrusta marcas de tiempo): una nueva
 > compilación da un hash distinto aunque el código sea idéntico.
 
-> **Aviso de vigencia (21/10/2026):** los artefactos de la tabla se compilaron
-> **antes** de añadir el cliente online de licencias. El código ha cambiado desde
-> entonces, así que **hay que regenerar instalador y `.appx` y recalcular los
-> hashes** antes de publicar nada. Los hashes de arriba corresponden a la
-> compilación anterior y quedan como referencia histórica; no se presentan como
-> válidos para el código actual.
+> **Vigencia (21/10/2026):** estos artefactos **ya incluyen el cliente online de
+> licencias** y se comprobaron extrayendo el `app.asar` del instalador y del
+> `.appx`: contienen la lógica del cliente (`seats_exhausted`, `online_verified`,
+> el canal `license:refresh`), la clave **publishable** y **ningún** `sb_secret_`.
+> Los manifiestos de winget se regeneraron con el hash nuevo y **volvieron a pasar
+> el validador oficial de Microsoft**.
 
 - **Formato y arquitectura**: NSIS x64 y AppX x64.
 - **Estado de firma**: **sin firmar**. No hay certificado de CA. El `.appx` se deja

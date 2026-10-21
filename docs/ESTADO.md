@@ -3,8 +3,14 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Cliente online de licencias**: la
-aplicación de escritorio ya **confirma el puesto y consulta revocaciones** contra
+Última actualización: **21/10/2026** — **Artefactos regenerados con el cliente
+online**: instalador NSIS firmado (autofirmado) y paquete AppX reconstruidos y
+**verificados extrayendo el `app.asar`** (contienen el cliente, 0 secretos);
+manifiestos de winget regenerados con el hash nuevo y **validados con el
+validador oficial de Microsoft**; carpeta de entrega `RESALEVAULT_RELEASE`
+reconstruida en el escritorio real. Bloque anterior: **cliente online de
+licencias** — la aplicación de escritorio ya **confirma el puesto y consulta
+revocaciones** contra
 la Edge Function, con reglas offline-first (nunca borra datos, nunca corta el
 trabajo sin conexión) y sin exponer ningún secreto. 31 pruebas nuevas, 97 % de
 cobertura del cliente, **65/65 comprobaciones** de interfaz y **500/500** pruebas
@@ -72,8 +78,8 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
 | `winget validate` (manifiestos v0.5.0) | ✅ **«Manifest validation succeeded»** con el validador oficial de Windows (20/10/2026) |
 | `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (161,0 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
-| `npm run dist` (instalador final) | ✅ `RESALEVAULT-Setup-0.5.0.exe` (117,6 MB) — SHA-256 `2CB281A7…E2883F` |
-| Paquete de producción inspeccionado | ✅ extraído el `.asar`: **sin mapas de código**, **sin** `smoke`/`ui-smoke`/`benchmark` y **0 secretos** (salidas de prueba ya no viajan al usuario) |
+| `npm run dist:signed` (instalador final) | ✅ `RESALEVAULT-Setup-0.5.0.exe` (117,67 MB) — SHA-256 `39DE1695…DB7C4B51` (21/10/2026, **con el cliente online**) |
+| Paquete de producción inspeccionado | ✅ extraído el `.asar` del `.exe` **y** del `.appx`: **sin mapas de código**, **sin** `smoke`/`ui-smoke`/`benchmark`, **0 secretos**, y **con** el cliente online (`seats_exhausted`, `online_verified`, `license:refresh`) |
 | `winget validate` (hash nuevo) | ✅ **«Manifest validation succeeded»** con el `InstallerSha256` del instalador real (21/10/2026) |
 | Carpeta de entrega | ✅ `RESALEVAULT_RELEASE` creada en el escritorio real (`C:\Users\16ray\Desktop`); hashes recomputados sobre los ficheros entregados y coincidentes |
 | Diagnóstico del bloqueo de instalación | ✅ causa raíz identificada con evento real `3033` (nivel de firma Enterprise); Defender sin detecciones; kit `verify-install.ps1` preparado (`docs/FIRMA.md` §9–10) |
