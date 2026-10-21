@@ -1,9 +1,14 @@
-// RESALEVAULT - generador de manifiestos winget (esquema 1.6).
+// RESALEVAULT - generador de manifiestos winget (esquema 1.12).
 //
 // Genera los tres ficheros YAML que exige el repositorio comunitario
 // microsoft/winget-pkgs (version, defaultLocale e installer). No descarga nada
 // ni envia nada: solo escribe los manifiestos en disco para que se validen con
 // `winget validate --manifest <carpeta>` y se manden en un Pull Request.
+//
+// Esquema 1.12 (no 1.6, que esta obsoleto): es el que recomienda la plantilla
+// de Pull Request de microsoft/winget-pkgs. Ademas, cada fichero lleva la
+// cabecera `# yaml-language-server: $schema=...` que la guia de contribucion
+// exige en TODOS los manifiestos.
 //
 // Uso:
 //   node scripts/winget-manifests.mjs --url <url-del-release> [--sha256 <hex>]
@@ -18,8 +23,24 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const DEFAULT_ID = 'RESALEVAULT.RESALEVAULT'
-const MANIFEST_VERSION = '1.6.0'
+// Version de esquema recomendada por la plantilla de PR de microsoft/winget-pkgs.
+const MANIFEST_VERSION = '1.12.0'
 const DEFAULT_LOCALE = 'en-US'
+
+// Cabecera obligatoria en el repositorio comunitario (guia de contribucion,
+// requisito 6). El formato exacto que espera el validador es el acortador
+// `https://aka.ms/winget-manifest.<tipo>.<version>.schema.json`.
+const SCHEMA_BASE = 'https://aka.ms/winget-manifest'
+const SCHEMA_HEADERS = {
+  version: `${SCHEMA_BASE}.version.${MANIFEST_VERSION}.schema.json`,
+  defaultLocale: `${SCHEMA_BASE}.defaultLocale.${MANIFEST_VERSION}.schema.json`,
+  installer: `${SCHEMA_BASE}.installer.${MANIFEST_VERSION}.schema.json`,
+}
+
+/** Antepone la cabecera de esquema que exige microsoft/winget-pkgs. */
+function withSchemaHeader(kind, doc) {
+  return `# yaml-language-server: $schema=${SCHEMA_HEADERS[kind]}\n${doc}`
+}
 
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9-]*(\.[A-Za-z0-9][A-Za-z0-9-]*)+$/
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/
@@ -85,13 +106,13 @@ export function buildManifests(options) {
 
   const homepage = repo ? `https://github.com/${repo}` : undefined
 
-  const versionDoc = yamlBlock([
+  const versionDoc = withSchemaHeader('version', yamlBlock([
     ['PackageIdentifier', id],
     ['PackageVersion', version],
     ['DefaultLocale', locale],
     ['ManifestType', 'version'],
     ['ManifestVersion', MANIFEST_VERSION],
-  ])
+  ]))
 
   const localePairs = [
     ['PackageIdentifier', id],
@@ -108,7 +129,7 @@ export function buildManifests(options) {
     ['ManifestType', 'defaultLocale'],
     ['ManifestVersion', MANIFEST_VERSION],
   )
-  const defaultLocaleDoc = yamlBlock(localePairs)
+  const defaultLocaleDoc = withSchemaHeader('defaultLocale', yamlBlock(localePairs))
 
   const installerPairs = [
     ['PackageIdentifier', id],
@@ -121,18 +142,20 @@ export function buildManifests(options) {
   if (protocols.length > 0) {
     installerPairs.push(['Protocols', protocols])
   }
-  // La lista `Installers` (obligatoria en el esquema 1.6) lleva la URL y el
-  // hash de cada binario, anidados con sangria de dos espacios por nivel.
+  // La lista `Installers` (obligatoria) lleva la URL y el hash de cada binario,
+  // anidados con sangria de dos espacios por nivel.
   const installerHead = yamlBlock(installerPairs)
-  const installerDoc =
+  const installerDoc = withSchemaHeader(
+    'installer',
     `${installerHead}Installers:\n` +
-    `  - Architecture: "x64"\n` +
-    `    InstallerUrl: ${scalar(url)}\n` +
-    `    InstallerSha256: ${scalar(hash)}\n` +
-    yamlBlock([
-      ['ManifestType', 'installer'],
-      ['ManifestVersion', MANIFEST_VERSION],
-    ])
+      `  - Architecture: "x64"\n` +
+      `    InstallerUrl: ${scalar(url)}\n` +
+      `    InstallerSha256: ${scalar(hash)}\n` +
+      yamlBlock([
+        ['ManifestType', 'installer'],
+        ['ManifestVersion', MANIFEST_VERSION],
+      ]),
+  )
 
   return { versionDoc, defaultLocaleDoc, installerDoc }
 }

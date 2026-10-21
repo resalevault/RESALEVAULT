@@ -9,14 +9,31 @@ const VALID = {
 }
 
 describe('buildManifests', () => {
-  it('genera los tres manifiestos del esquema 1.6', () => {
+  it('genera los tres manifiestos del esquema 1.12 (el recomendado por la plantilla de PR)', () => {
     const { versionDoc, defaultLocaleDoc, installerDoc } = buildManifests(VALID)
 
     expect(versionDoc).toContain('ManifestType: "version"')
-    expect(versionDoc).toContain('ManifestVersion: "1.6.0"')
+    expect(versionDoc).toContain('ManifestVersion: "1.12.0"')
     expect(defaultLocaleDoc).toContain('ManifestType: "defaultLocale"')
     expect(installerDoc).toContain('ManifestType: "installer"')
-    expect(installerDoc).toContain('ManifestVersion: "1.6.0"')
+    expect(installerDoc).toContain('ManifestVersion: "1.12.0"')
+    // El esquema 1.6 esta obsoleto: no debe aparecer en ningun fichero.
+    for (const doc of [versionDoc, defaultLocaleDoc, installerDoc]) {
+      expect(doc).not.toContain('1.6.0')
+    }
+  })
+
+  it('antepone la cabecera yaml-language-server que exige el repositorio', () => {
+    const { versionDoc, defaultLocaleDoc, installerDoc } = buildManifests(VALID)
+    const cases = [
+      [versionDoc, 'winget-manifest.version.1.12.0.schema.json'],
+      [defaultLocaleDoc, 'winget-manifest.defaultLocale.1.12.0.schema.json'],
+      [installerDoc, 'winget-manifest.installer.1.12.0.schema.json'],
+    ]
+    for (const [doc, schema] of cases) {
+      expect(doc.startsWith('# yaml-language-server: $schema=')).toBe(true)
+      expect(doc.split('\n')[0]).toContain(schema)
+    }
   })
 
   it('usa el mismo identificador y version en los tres ficheros', () => {
@@ -40,7 +57,7 @@ describe('buildManifests', () => {
     expect(installerDoc).toContain('Protocols:\n  - "rv-media"')
   })
 
-  it('incluye PackageName en el locale (obligatorio en el esquema 1.6)', () => {
+  it('incluye PackageName en el locale (obligatorio)', () => {
     const { defaultLocaleDoc } = buildManifests(VALID)
     expect(defaultLocaleDoc).toContain('PackageName: "RESALEVAULT"')
   })

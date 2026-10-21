@@ -43,15 +43,19 @@ real, **ambas rutas caben en 0 €**.
 
 | Paso | Estado | Evidencia |
 |---|---|---|
-| Generador de manifiestos (`scripts/winget-manifests.mjs`) | ✅ verificado | 11 pruebas unitarias (`tests/winget-manifests.test.ts`) |
+| Generador de manifiestos (`scripts/winget-manifests.mjs`), esquema **1.12.0** | ✅ verificado | 13 pruebas unitarias (`tests/winget-manifests.test.ts`) |
+| Cabecera `# yaml-language-server: $schema=…` (obligatoria en el repositorio) | ✅ verificado | formato `https://aka.ms/winget-manifest.<tipo>.1.12.0.schema.json` |
 | Manifiestos para v0.5.0 generados | ✅ verificado | `dist-winget/RESALEVAULT/RESALEVAULT/0.5.0/` |
-| SHA-256 del manifiesto = hash publicado | ✅ verificado | `D75A7B23…BE8141` coincide con `docs/FIRMA.md` |
-| Validación con el validador oficial | ✅ verificado | `winget validate` → **«Manifest validation succeeded»** (20/10/2026) |
+| SHA-256 del manifiesto = hash publicado | ✅ verificado | `39DE1695…DB7C4B51` coincide con el instalador real |
+| Validación con el validador oficial | ✅ verificado | `winget validate` → **«Manifest validation succeeded.»** (21/10/2026, sin avisos) |
+| Material de publicación listo | ✅ verificado | `docs/release/PUBLICACION_RUTA_A.md`, `WINGET_PR_BODY.md`, `STORE_LISTING.md` |
 
-Nota de honestidad: la primera versión del generador contenía **dos errores de
-esquema reales** (faltaba `PackageName`; URL y hash iban en la raíz en lugar de
-dentro de `Installers`). Los cazó el validador oficial de Microsoft y están
-corregidos con pruebas que impiden la regresión.
+Nota de honestidad: el generador tuvo **varios errores de esquema reales** a lo
+largo del desarrollo (faltaba `PackageName`; URL y hash iban en la raíz en lugar
+de dentro de `Installers`; usaba el esquema **obsoleto 1.6.0**; faltaba la
+cabecera `yaml-language-server`; y esa cabecera usaba el formato largo en vez
+del acortador `aka.ms` exigido). Los cazó el validador oficial de Microsoft y
+están corregidos con pruebas que impiden la regresión.
 
 ### Pasos pendientes (requieren tu cuenta de GitHub, gratis)
 
@@ -67,9 +71,12 @@ corregidos con pruebas que impiden la regresión.
    `https://github.com/16ray/RESALEVAULT/releases/download/v0.5.0/RESALEVAULT-Setup-0.5.0.exe`
 4. Regenerar manifiestos apuntando a esa URL (ya hecha arriba) y abrir el PR:
    1. Hacer fork de `microsoft/winget-pkgs`.
-   2. Copiar los tres YAML a `manifests/r/RESALEVAULT/0.5.0/` del fork.
+   2. Copiar los tres YAML a `manifests/r/RESALEVAULT/RESALEVAULT/0.5.0/` del fork.
    3. Abrir Pull Request; los robots validan y **prueban la instalación
       silenciosa** en sus máquinas.
+
+Guía detallada con el texto listo para pegar: `docs/release/PUBLICACION_RUTA_A.md`
+(pasos) y `docs/release/WINGET_PR_BODY.md` (cuerpo del PR).
 
 ### Límites honestos de winget
 

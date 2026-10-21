@@ -3,12 +3,17 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Artefactos regenerados con el cliente
+Última actualización: **21/10/2026** — **Material de publicación listo**: los
+manifiestos de winget se corrigieron al esquema **1.12.0** (el recomendado por la
+plantilla de PR de `microsoft/winget-pkgs`) y llevan la cabecera
+`yaml-language-server` obligatoria; el validador oficial de Microsoft da
+**«Manifest validation succeeded.»** **sin avisos**. Añadidos el texto del
+release, el cuerpo del PR, la ficha de la Store y una **`PRIVACY.md` pública**
+(la exige la Store). Bloque anterior: **Artefactos regenerados con el cliente
 online**: instalador NSIS firmado (autofirmado) y paquete AppX reconstruidos y
 **verificados extrayendo el `app.asar`** (contienen el cliente, 0 secretos);
-manifiestos de winget regenerados con el hash nuevo y **validados con el
-validador oficial de Microsoft**; carpeta de entrega `RESALEVAULT_RELEASE`
-reconstruida en el escritorio real. Bloque anterior: **cliente online de
+carpeta de entrega `RESALEVAULT_RELEASE` reconstruida en el escritorio real.
+Bloque anterior: **cliente online de
 licencias** — la aplicación de escritorio ya **confirma el puesto y consulta
 revocaciones** contra
 la Edge Function, con reglas offline-first (nunca borra datos, nunca corta el
@@ -24,7 +29,7 @@ AppX regenerados y **carpeta de entrega `RESALEVAULT_RELEASE` creada en el
 escritorio real** con documentación y hashes verificados. Informe completo en
 [`docs/AUDITORIA.md`](AUDITORIA.md) y `RESALEVAULT_RELEASE/Documentation/`.
 Bloque anterior: **distribución gratuita**: rutas GitHub+winget y Microsoft Store
-preparadas a 0 €. Generador de manifiestos winget con 11 pruebas y **validado con
+preparadas a 0 €. Generador de manifiestos winget y **validado con
 el validador oficial de Microsoft** (`winget validate` → correcto); paquete
 **AppX/MSIX generado e inspeccionado** (protocolo `rv-media` declarado, versión 4
 componentes, sin firmar a propósito para que lo firme la Store). Guía completa en
@@ -76,7 +81,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | `npm run doctor` | ✅ `TODO CORRECTO` (Electron 44.9, Node 24.22, SQLite 3.53.4) |
 | `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
 | `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
-| `winget validate` (manifiestos v0.5.0) | ✅ **«Manifest validation succeeded»** con el validador oficial de Windows (20/10/2026) |
+| `winget validate` (manifiestos v0.5.0, esquema **1.12.0**) | ✅ **«Manifest validation succeeded.»** con el validador oficial de Windows, **sin avisos** (21/10/2026) |
 | `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (161,0 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
 | `npm run dist:signed` (instalador final) | ✅ `RESALEVAULT-Setup-0.5.0.exe` (117,67 MB) — SHA-256 `39DE1695…DB7C4B51` (21/10/2026, **con el cliente online**) |
 | Paquete de producción inspeccionado | ✅ extraído el `.asar` del `.exe` **y** del `.appx`: **sin mapas de código**, **sin** `smoke`/`ui-smoke`/`benchmark`, **0 secretos**, y **con** el cliente online (`seats_exhausted`, `online_verified`, `license:refresh`) |
