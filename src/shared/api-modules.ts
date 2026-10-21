@@ -51,6 +51,7 @@ import type {
   Supplier
 } from './types-modules'
 import type { CsvColumnMapping } from './types-modules'
+import type { LinkTarget } from './links'
 import type {
   BackupConfig,
   BackupCreateResult,
@@ -157,6 +158,10 @@ export const CH_MODULES = {
   licenseActivate: 'license:activate',
   licenseDeactivate: 'license:deactivate',
   licenseEvents: 'license:events',
+  /** Enlaces externos permitidos (compra de licencia). Solo https de la lista. */
+  linksTargets: 'links:targets',
+  linksOpen: 'links:open',
+  linksCopy: 'links:copy',
 
   // AI Studio
   aiConnections: 'ai:connections',
@@ -411,6 +416,20 @@ export interface LicenseApi {
   events(): Promise<Result<Array<{ at: string; event: string; detail: string }>>>
 }
 
+/**
+ * Enlaces externos. El proceso principal SOLO acepta los destinos de una lista
+ * blanca (`@shared/links`); el renderer no puede abrir ni copiar una URL
+ * arbitraria.
+ */
+export interface LinksApi {
+  /** Constantes de destino, para que la interfaz no las escriba a mano. */
+  targets(): Promise<Result<{ discordInvite: string }>>
+  /** Abre el enlace en el navegador predeterminado del sistema. */
+  open(target: LinkTarget): Promise<Result<{ opened: boolean }>>
+  /** Copia el enlace al portapapeles (alternativa si no se puede abrir). */
+  copy(target: LinkTarget): Promise<Result<{ copied: boolean; url: string }>>
+}
+
 export interface AiStudioApi {
   connections(): Promise<Result<AiConnection[]>>
   createConnection(input: {
@@ -557,6 +576,7 @@ export interface ResaleVaultModuleApi {
   csv: CsvApi
   intelligence: IntelligenceApi
   license: LicenseApi
+  links: LinksApi
   ai: AiStudioApi
   backups: BackupsApi
   tracking: TrackingApi

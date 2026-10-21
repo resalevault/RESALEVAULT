@@ -230,6 +230,12 @@ const api: ResaleVaultApi = {
     events: () => invoke(CH_MODULES.licenseEvents)
   },
 
+  links: {
+    targets: () => invoke(CH_MODULES.linksTargets),
+    open: (target) => invoke(CH_MODULES.linksOpen, target),
+    copy: (target) => invoke(CH_MODULES.linksCopy, target)
+  },
+
   ai: {
     connections: () => invoke(CH_MODULES.aiConnections),    createConnection: (input) => invoke(CH_MODULES.aiConnectionCreate, input),
     updateConnection: (id, patch) => invoke(CH_MODULES.aiConnectionUpdate, { id, patch }),

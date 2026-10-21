@@ -18,14 +18,22 @@ export interface MainWindowResult {
 }
 
 export function createMainWindow(logger: Logger): MainWindowResult {
+  // En macOS conviene conservar los botones nativos (cerrar/minimizar/zoom) en
+  // la barra: por eso se usa `hiddenInset`, que mantiene el semaforo del sistema
+  // sobre una barra de titulo propia. En Windows/Linux se usa una ventana sin
+  // marco con los controles dibujados por la aplicacion.
+  const isMac = process.platform === 'darwin'
+
   const window = new BrowserWindow({
     width: 1480,
     height: 940,
     minWidth: 1080,
     minHeight: 680,
     show: false,
-    frame: false,
-    titleBarStyle: 'hidden',
+    frame: isMac,
+    titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
+    // Espacio para el semaforo de macOS en la barra de titulo propia.
+    trafficLightPosition: isMac ? { x: 14, y: 18 } : undefined,
     backgroundColor: '#0B0B0C',
     title: 'RESALEVAULT',
     autoHideMenuBar: true,

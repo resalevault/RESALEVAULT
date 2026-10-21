@@ -17,8 +17,14 @@ directories:
   buildResources: build
 
 files:
-  - out/**/*
+  - out/main/**/*
+  - out/preload/**/*
+  - out/renderer/**/*
   - package.json
+  # Los paquetes de prueba no se distribuyen (ver electron-builder.yml).
+  - '!out/smoke.cjs'
+  - '!out/ui-smoke.cjs'
+  - '!out/benchmark.cjs'
   - '!**/*.map'
   - '!**/*.ts'
 

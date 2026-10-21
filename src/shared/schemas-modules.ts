@@ -398,6 +398,12 @@ export const zLicenseActivate = z.object({
   holder: z.string().trim().max(120).optional()
 })
 
+/**
+ * Destino de un enlace externo. Es una enumeracion cerrada: un valor fuera de
+ * la lista se rechaza ANTES de llegar al proceso principal.
+ */
+export const zLinkTarget = z.enum(['discord_invite'])
+
 export const zIntelligenceThresholds = z.object({
   staleDays: z.number().int().min(1).max(3650).optional(),
   lowMarginPercent: z.number().min(0).max(100).optional(),

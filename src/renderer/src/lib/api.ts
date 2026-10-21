@@ -309,6 +309,12 @@ export const api = {
     events: bind(() => bridge.license.events())
   },
 
+  links: {
+    targets: bind(() => bridge.links.targets()),
+    open: bind((target: Parameters<typeof bridge.links.open>[0]) => bridge.links.open(target)),
+    copy: bind((target: Parameters<typeof bridge.links.copy>[0]) => bridge.links.copy(target))
+  },
+
   ai: {
     connections: bind(() => bridge.ai.connections()),
     createConnection: bind((input: Parameters<typeof bridge.ai.createConnection>[0]) =>

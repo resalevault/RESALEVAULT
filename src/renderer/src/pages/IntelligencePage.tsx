@@ -9,14 +9,14 @@
  * generan con la herramienta administrativa y se entregan manualmente.
  */
 
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { PLAN_DISPLAY_ORDER, PLAN_FEATURE_KEYS, FOUNDER_QUOTA } from '@shared/plans'
 import type { Insight, LicensePlan } from '@shared/types-modules'
 import { api, AppError } from '../lib/api'
 import { useApp } from '../lib/app-context'
 import { useAsyncData } from '../lib/hooks'
 import { Button, Card, EmptyState, Field, Modal, TextArea, TextInput } from '../components/ui'
-import { IconAlert, IconCheck, IconIntelligence, IconLicense } from '../components/Icons'
+import { IconAlert, IconCheck, IconExternal, IconIntelligence, IconLicense } from '../components/Icons'
 import { PlanGate } from '../components/PlanGate'
 
 // ===========================================================================
@@ -311,6 +311,26 @@ export function LicensePage(): ReactNode {
   const state = useAsyncData(() => api.license.state(), [dataVersion])
   const [code, setCode] = useState('')
   const [activating, setActivating] = useState(false)
+  const [buyBusy, setBuyBusy] = useState(false)
+  const [discordUrl, setDiscordUrl] = useState<string>('https://discord.gg/9bMhnGvjrx')
+
+  // Se pregunta al proceso principal el destino real (lista blanca). Si la
+  // llamada fallara, se conserva la constante por defecto: el boton sigue
+  // funcionando y el usuario ve el enlace.
+  useEffect(() => {
+    let cancelled = false
+    void api.links
+      .targets()
+      .then((targets) => {
+        if (!cancelled) setDiscordUrl(targets.discordInvite)
+      })
+      .catch(() => {
+        // Se mantiene la constante por defecto: no es un fallo bloqueante.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const reportError = (error: unknown): void =>
     notify(
@@ -319,6 +339,28 @@ export function LicensePage(): ReactNode {
         : t('errors.internal_error', { id: '-' }),
       'error'
     )
+
+  const openDiscord = (): void => {
+    setBuyBusy(true)
+    void api.links
+      .open('discord_invite')
+      .then((result) => {
+        notify(result.opened ? t('plan.buyOpened') : t('plan.buyOpenFailed'), result.opened ? 'success' : 'error')
+      })
+      .catch(() => notify(t('plan.buyOpenFailed'), 'error'))
+      .finally(() => setBuyBusy(false))
+  }
+
+  const copyDiscord = (): void => {
+    setBuyBusy(true)
+    void api.links
+      .copy('discord_invite')
+      .then((result) => {
+        notify(result.copied ? t('plan.buyCopied') : t('plan.buyOpenFailed'), result.copied ? 'success' : 'error')
+      })
+      .catch(reportError)
+      .finally(() => setBuyBusy(false))
+  }
 
   const data = state.data
 
@@ -424,6 +466,47 @@ export function LicensePage(): ReactNode {
               >
                 {t('plan.activate')}
               </Button>
+            </div>
+          </Card>
+
+          <Card title={t('plan.buyTitle')}>
+            <p className="dim" style={{ marginTop: 0 }}>
+              {t('plan.buyDescription')}
+            </p>
+
+            <div className="row" style={{ gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Button
+                variant="primary"
+                disabled={buyBusy}
+                onClick={openDiscord}
+                icon={<IconExternal size={15} />}
+              >
+                {t('plan.buyButton')}
+              </Button>
+              <Button disabled={buyBusy} onClick={copyDiscord} icon={<IconLicense size={15} />}>
+                {t('plan.buyCopy')}
+              </Button>
+              {/* El propio enlace es un objetivo accesible: se puede abrir con
+                  el teclado (Enter) y con el raton, y funciona si el boton
+                  principal no responde. */}
+              <a
+                className="mono"
+                href={discordUrl}
+                onClick={(event) => {
+                  event.preventDefault()
+                  openDiscord()
+                }}
+                style={{ fontSize: 11.5, marginLeft: 'auto' }}
+              >
+                {discordUrl}
+              </a>
+            </div>
+
+            <p className="faint" style={{ marginBottom: 0, marginTop: 10 }}>
+              {t('plan.buyCopyHint')}
+            </p>
+            <div className="notice notice--warn" style={{ marginTop: 10 }}>
+              {t('plan.buyNoPayment')}
             </div>
           </Card>
 

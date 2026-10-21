@@ -29,6 +29,7 @@ import { CsvService } from '@main/services/csv-io'
 import { IntelligenceService } from '@main/services/intelligence'
 import { LabelService } from '@main/services/labels'
 import { LicenseService } from '@main/services/license'
+import { LinkService } from '@main/services/links'
 import { MediaService } from '@main/services/media'
 import { AiService } from '@main/services/ai/service'
 import { createOsSecretStore } from '@main/services/ai/os-secret-store'
@@ -149,6 +150,7 @@ async function main(): Promise<void> {
     csv: new CsvService(opened.repos, finance, () => settings.get().locale),
     intelligence: new IntelligenceService(opened.db),
     license: new LicenseService(opened.db),
+    links: new LinkService(),
     ai: new AiService(opened.db, opened.repos.products, { secrets: createOsSecretStore() }),
     backups: new BackupService(opened.db, {
       appVersion: '0.0.0-smoke',
@@ -553,6 +555,59 @@ async function main(): Promise<void> {
   )
 
   // -------------------------------------------------------------------------
+  process.stdout.write('\nCompra de licencia por Discord\n------------------------------\n')
+  // -------------------------------------------------------------------------
+  await evaluate<null>(
+    `(() => { const items = [...document.querySelectorAll('.navitem')];
+       const target = items.find((el) => el.textContent.includes('Licencia'));
+       if (target) target.click(); return null })()`
+  )
+  await sleep(700)
+
+  const licenseTitle = await evaluate<string>("document.querySelector('.page-title')?.textContent ?? ''")
+  check('se abre la pantalla de licencia', licenseTitle === 'Licencia y plan', `titulo: ${licenseTitle}`)
+
+  // El boton de compra debe existir con el texto EXACTO en espanol.
+  const buyButtonEs = await evaluate<boolean>(
+    `(() => [...document.querySelectorAll('button')].some((el) => el.textContent.trim() === 'Comprar licencia'))()`
+  )
+  check('el boton "Comprar licencia" esta presente (es)', buyButtonEs)
+
+  // El enlace visible debe ser EXACTAMENTE el Discord oficial.
+  const shownLink = await evaluate<string>(
+    `(() => { const a = [...document.querySelectorAll('a')].find((el) => el.textContent.includes('discord.gg'));
+       return a ? a.getAttribute('href') : '' })()`
+  )
+  check('se muestra la URL oficial de Discord', shownLink === 'https://discord.gg/9bMhnGvjrx', shownLink)
+
+  // El puente de enlaces solo acepta destinos de la lista blanca.
+  const badTarget = await evaluate<string>(
+    `window.resalevault.links.open('sitio_pirata').then((r) => JSON.stringify(r))`
+  )
+  check(
+    'el puente rechaza un destino fuera de la lista blanca',
+    (JSON.parse(badTarget) as { ok: boolean }).ok === false,
+    badTarget.slice(0, 120)
+  )
+
+  // El destino real se resuelve desde el proceso principal.
+  const targets = await evaluate<string>(
+    `window.resalevault.links.targets().then((r) => JSON.stringify(r))`
+  )
+  const resolvedTargets = JSON.parse(targets) as { ok: boolean; data?: { discordInvite: string } }
+  check(
+    'el proceso principal declara el Discord oficial',
+    resolvedTargets.ok === true && resolvedTargets.data?.discordInvite === 'https://discord.gg/9bMhnGvjrx',
+    targets.slice(0, 140)
+  )
+
+  // No se afirma que se haya comprado/activado nada: el aviso debe existir.
+  check(
+    'la pantalla aclara que NO se compra desde la app',
+    await evaluate<boolean>("document.body.innerText.toLowerCase().includes('no se piden datos de pago')")
+  )
+
+  // -------------------------------------------------------------------------
   process.stdout.write('\nCambio de idioma en caliente\n----------------------------\n')
   // -------------------------------------------------------------------------
   await evaluate<null>(
@@ -571,6 +626,12 @@ async function main(): Promise<void> {
     "document.querySelectorAll('.navitem')[0].textContent.toLowerCase().includes('dashboard') ? 1 : 0"
   )
   check('la navegacion tambien se traduce', englishNav === 1)
+
+  // El boton de compra tambien se traduce al ingles (misma pantalla de licencia).
+  const buyButtonEn = await evaluate<boolean>(
+    `(() => [...document.querySelectorAll('button')].some((el) => el.textContent.trim() === 'Buy license'))()`
+  )
+  check('el boton dice "Buy license" en ingles', buyButtonEn)
 
   // -------------------------------------------------------------------------
   process.stdout.write('\nSelector de tema\n----------------\n')

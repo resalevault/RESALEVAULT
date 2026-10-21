@@ -8,6 +8,7 @@
 
 import { BrowserWindow, app, dialog, shell } from 'electron'
 import { ALLOWED_MEDIA_MIME } from '@shared/types-modules'
+import { ALLOWED_LINKS } from '@shared/links'
 import { CH_MODULES } from '@shared/api-modules'
 import { appError } from '../errors'
 import { createHandle, type IpcBaseContext } from './guard'
@@ -19,6 +20,7 @@ import type { FinanceService } from '../services/finance'
 import type { CsvService } from '../services/csv-io'
 import type { IntelligenceService } from '../services/intelligence'
 import type { LicenseService } from '../services/license'
+import type { LinkService } from '../services/links'
 import type { AiService } from '../services/ai/service'
 import type { BackupService } from '../services/backup/service'
 import {
@@ -43,6 +45,7 @@ import {
   zLabelLocations,
   zLabelProducts,
   zLicenseActivate,
+  zLinkTarget,
   zMediaImport,
   zMediaRemove,
   zMediaReorder,
@@ -90,6 +93,7 @@ export interface ModuleContext extends IpcBaseContext {
   csv: CsvService
   intelligence: IntelligenceService
   license: LicenseService
+  links: LinkService
   ai: AiService
   backups: BackupService
 }
@@ -397,6 +401,16 @@ export function registerModuleHandlers(ctx: ModuleContext): void {
     entity: 'license'
   })
   handle(CH_MODULES.licenseEvents, null, () => ctx.license.events())
+
+  // -------------------------------------------------------------------------
+  // Enlaces externos (lista blanca)
+  // -------------------------------------------------------------------------
+
+  handle(CH_MODULES.linksTargets, null, () => ({
+    discordInvite: ALLOWED_LINKS.discord_invite.url
+  }))
+  handle(CH_MODULES.linksOpen, zLinkTarget, (target) => ctx.links.open(target))
+  handle(CH_MODULES.linksCopy, zLinkTarget, (target) => ctx.links.copy(target))
 
   // -------------------------------------------------------------------------
   // AI Studio (BYOK)

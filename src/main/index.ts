@@ -29,6 +29,7 @@ import { FinanceService } from './services/finance'
 import { CsvService } from './services/csv-io'
 import { IntelligenceService } from './services/intelligence'
 import { LicenseService } from './services/license'
+import { LinkService } from './services/links'
 import { AiService } from './services/ai/service'
 import { createOsSecretStore } from './services/ai/os-secret-store'
 import { BackupService, applyPendingRestoreToPaths } from './services/backup/service'
@@ -141,6 +142,9 @@ async function bootstrap(): Promise<void> {
   const csv = new CsvService(opened.repos, finance, () => settings.get().locale)
   const intelligence = new IntelligenceService(opened.db)
   const license = new LicenseService(opened.db)
+  // Enlaces externos permitidos (compra de licencia por Discord). El destino
+  // real vive en la lista blanca compartida: la interfaz solo pide un nombre.
+  const links = new LinkService()
   const ai = new AiService(opened.db, opened.repos.products, { secrets: createOsSecretStore() })
   const backups = new BackupService(opened.db, {
     appVersion: app.getVersion(),
@@ -200,7 +204,7 @@ async function bootstrap(): Promise<void> {
   }
 
   registerIpcHandlers({ ...ipcContext, license })
-  registerModuleHandlers({ ...ipcContext, media, labels, finance, csv, intelligence, license, ai, backups })
+  registerModuleHandlers({ ...ipcContext, media, labels, finance, csv, intelligence, license, links, ai, backups })
   registerTrackingHandlers({ ...ipcContext, browser })
 
   // 5. Ventana.

@@ -958,7 +958,18 @@ export const es = {
     planLimitsApplied: 'Los limites de tu plan ya se aplican en todo el programa.',
     requiresPro: 'Esta funcion requiere Vault Pro o Vault Business',
     requiresProHint:
-      'El plan gratuito incluye inventario, compras, pedidos, ubicaciones, codigos y copias de seguridad. La analitica, la inteligencia, la importacion CSV y AI Studio forman parte de Pro.'
+      'El plan gratuito incluye inventario, compras, pedidos, ubicaciones, codigos y copias de seguridad. La analitica, la inteligencia, la importacion CSV y AI Studio forman parte de Pro.',
+    buyTitle: 'Comprar o solicitar una licencia',
+    buyDescription:
+      'Las licencias se gestionan en el servidor oficial de Discord de RESALEVAULT. Desde alli se explica como comprar, se resuelven dudas y se entrega el codigo.',
+    buyButton: 'Comprar licencia',
+    buyCopy: 'Copiar enlace',
+    buyCopyHint: 'Si el enlace no se abre, copialo y peguelo en tu navegador.',
+    buyOpened: 'Se ha abierto el enlace en tu navegador.',
+    buyCopied: 'Enlace copiado al portapapeles.',
+    buyOpenFailed: 'No se pudo abrir el enlace. Copia el enlace y abrelo a mano.',
+    buyNoPayment:
+      'La compra NO se hace desde esta aplicacion: no se piden datos de pago ni se activa ninguna licencia al pulsar el boton.'
   },
 
   ai: {

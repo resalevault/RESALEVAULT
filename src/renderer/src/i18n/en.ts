@@ -954,7 +954,18 @@ export const en: DictionaryShape<typeof es> = {
     planLimitsApplied: 'Your plan limits are already applied throughout the program.',
     requiresPro: 'This feature requires Vault Pro or Vault Business',
     requiresProHint:
-      'The free plan includes inventory, purchases, orders, locations, codes and backups. Analytics, intelligence, CSV import and AI Studio are part of Pro.'
+      'The free plan includes inventory, purchases, orders, locations, codes and backups. Analytics, intelligence, CSV import and AI Studio are part of Pro.',
+    buyTitle: 'Buy or request a license',
+    buyDescription:
+      'Licenses are handled on the official RESALEVAULT Discord server. There you can buy, ask questions and receive your code.',
+    buyButton: 'Buy license',
+    buyCopy: 'Copy link',
+    buyCopyHint: 'If the link does not open, copy it and paste it into your browser.',
+    buyOpened: 'The link has been opened in your browser.',
+    buyCopied: 'Link copied to the clipboard.',
+    buyOpenFailed: 'The link could not be opened. Copy it and open it manually.',
+    buyNoPayment:
+      'The purchase is NOT made from this application: no payment details are requested and no license is activated by pressing the button.'
   },
 
   ai: {

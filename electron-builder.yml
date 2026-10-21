@@ -13,9 +13,16 @@ directories:
   buildResources: build
 
 files:
-  - out/**/*
+  - out/main/**/*
+  - out/preload/**/*
+  - out/renderer/**/*
   - package.json
   # Todo lo que no sea imprescindible para ejecutar se queda fuera del paquete.
+  # Importante: los paquetes de PRUEBA (smoke, ui-smoke, benchmark) NO viajan al
+  # usuario. Solo se ejecutan desde el repositorio durante la verificacion.
+  - '!out/smoke.cjs'
+  - '!out/ui-smoke.cjs'
+  - '!out/benchmark.cjs'
   - '!**/*.map'
   - '!**/*.ts'
 
@@ -47,3 +54,43 @@ nsis:
   # La desinstalacion conserva la carpeta de datos del usuario a proposito.
   deleteAppDataOnUninstall: false
   artifactName: RESALEVAULT-Setup-${version}.${ext}
+
+# ---------------------------------------------------------------------------
+# macOS
+# ---------------------------------------------------------------------------
+# IMPORTANTE: esta seccion NO se puede construir desde Windows. `codesign` y
+# `notarytool` existen unicamente en macOS, y electron-builder necesita ademas
+# una maquina Apple para empaquetar el .app. Se deja configurada para que en un
+# Mac la compilacion sea un solo comando:
+#
+#   npm run build && npx electron-builder --mac --config electron-builder.yml
+#
+# Sin certificado de desarrollador de Apple (99 EUR/ano) el resultado NO queda
+# firmado ni notarizado: macOS mostrara el aviso de "desarrollador no
+# identificado" y Gatekeeper pedira abrirlo con clic derecho > Abrir. Ver
+# docs/DISTRIBUCION.md para las opciones gratuitas y las limitaciones.
+mac:
+  category: public.app-category.business
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+    - target: zip
+      arch:
+        - x64
+        - arm64
+  icon: build/icon.png
+  # Se exige el "entitlements" minimo: sin el, el sandbox de macOS y la propia
+  # firma fallan al abrir el navegador integrado o al escribir en userData.
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  artifactName: RESALEVAULT-${version}-${arch}.${ext}
+
+dmg:
+  title: RESALEVAULT ${version}
+  artifactName: RESALEVAULT-${version}-${arch}.${ext}
+  # El fondo y el diseno por defecto son suficientes; no se incrustan recursos
+  # propietarios para mantener el paquete pequeno.

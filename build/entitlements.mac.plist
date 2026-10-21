@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  RESALEVAULT - Permisos (entitlements) para macOS.
+
+  Se concede lo MINIMO que Electron necesita de verdad. No se pide acceso a
+  contactos, camara, microfono, ubicacion ni al disco completo: la aplicacion
+  solo escribe en su propia carpeta de datos (userData) y ejecuta su propio
+  codigo. Cualquier permiso de mas seria una superficie de ataque innecesaria.
+
+  Se aplica al firmar en un Mac con `hardenedRuntime: true`. Sin un certificado
+  de Apple el binario queda sin firmar y este archivo no se usa: ver
+  docs/DISTRIBUCION.md.
+-->
+<plist version="1.0">
+  <dict>
+    <!-- Electron compila JavaScript en tiempo de ejecucion (V8). Sin esto, la
+         aplicacion no arranca bajo el runtime endurecido. -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+
+    <!-- Algunas partes de Electron (y el motor de SQLite integrado) reservan
+         memoria ejecutable sin firma de codigo; es necesario para `node:sqlite`. -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+
+    <!-- La aplicacion abre el navegador del sistema para el enlace de compra y
+         para los seguimientos: no lanza procesos, solo delega en el sistema. -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+
+    <!-- Lee y escribe UNICAMENTE en su carpeta de datos del usuario. macOS lo
+         permite sin entitlement especial, pero se declara explicitamente para
+         dejar constancia de que no se sale de ahi. -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+  </dict>
+</plist>
