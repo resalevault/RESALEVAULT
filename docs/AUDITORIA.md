@@ -55,7 +55,10 @@ navegador aislado.
   probada (cabeceras, forma del cuerpo, mapeo de errores, coste), pero no se ha
   llamado a Gemini/OpenAI/Anthropic de verdad (requiere clave).
 - **Cliente online de licencias**: el backend Supabase está desplegado y probado
-  en vivo, pero **la app todavía no se conecta a él**. Se valida solo offline.
+  en vivo, **y la app se conecta a él** (canal `license:refresh`, verificado al
+  arrancar y bajo demanda desde la pantalla de Licencia), con reglas
+  *offline-first*: la firma se verifica siempre en local y un fallo de red nunca
+  bloquea la app ni borra datos.
 - **Firma con CA de confianza pública**: no existe (0 €). Instalación local
   bloqueada por política de nivel de firma Enterprise.
 

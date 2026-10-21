@@ -224,7 +224,7 @@ en la tabla y se comprobó que la Edge Function la rechaza. El detalle está en
 | Pendiente | Motivo real |
 |---|---|
 | Instalación en un Windows limpio | Este equipo bloquea el instalador por **Device Guard** (política de la organización). No hay otra máquina disponible. **No se afirma que la instalación esté probada.** |
-| Activación de licencias *online* **desde la aplicación** | El backend está desplegado y probado en vivo por HTTP (apartado 5), pero **el cliente de la app aún no lo llama**: falta el bloque de integración. |
+| Activación de licencias *online* en condiciones de red reales y sostenidas | El cliente **sí está integrado** en la app (canal `license:refresh`) y la verificación en vivo pasó. Lo que **no** se prueba de forma determinista es la red real: el arranque en frío supera a veces el tiempo de espera y el cliente devuelve `offline`, que es el comportamiento **correcto por diseño**. Por eso las aserciones sobre red en vivo **no** forman parte de la batería determinista. |
 | API de DHL u otros transportistas | Requieren registro de desarrollador (cuenta y aprobación). Sin credenciales, no se puede probar. |
 | Conectores de marketplaces | Ninguna plataforma ha autorizado el acceso. Solo existe la arquitectura abstracta, **sin integración real**. |
 | Sincronización multiusuario | El backend de licencias **no** sirve para sincronizar datos. No existe un backend multiusuario. |
