@@ -6,10 +6,9 @@ AplicaciÃ³n de escritorio para Windows pensada para quien **compra y revende**
 inventario, compras, pedidos, mÃ¡rgenes reales, etiquetas e informes. Funciona
 **sin conexiÃ³n** y tus datos se quedan en tu equipo.
 
-- **VersiÃ³n:** 0.5.0
-- **Plataforma:** Windows 10 / 11 (x64). macOS: preparado, sin binario todavÃ­a.
-- **Idiomas:** espaÃ±ol e inglÃ©s.
-- **Coste del proyecto: 0 â‚¬.** NingÃºn servicio de pago contratado.
+- **Version:** 0.5.0
+- **Plataforma:** Windows 10 / 11 (x64). macOS: preparado, sin binario todavi­a.
+- **Idiomas:** español e ingles.
 
 ---
 
