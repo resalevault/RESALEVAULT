@@ -28,9 +28,9 @@ npm run dev     # arranca en modo desarrollo con recarga
 
 ```powershell
 npm run typecheck     # 0 errores
-npm test              # 501 pruebas
+npm test              # 509 pruebas
 npm run lint          # ESLint, 0 problemas
-npm run smoke         # 70 comprobaciones de datos
+npm run smoke         # 66 comprobaciones de datos (70 en la maquina de emision)
 npm run smoke:ui      # 65 comprobaciones con Electron real
 npm run doctor        # entorno y node:sqlite
 npm run build         # compilación de los tres procesos
@@ -38,6 +38,11 @@ npm run build         # compilación de los tres procesos
 
 `npm run bench` genera el banco de pruebas con 50.000 artículos
 (ver `docs/TEST-REPORT.md`).
+
+> **Nota sobre el número del humo.** `npm run smoke` da **66** comprobaciones en
+> un clon limpio. Da **70** solo si existe la clave privada de emisión
+> (`tools/keys/license-private.pem`, que **no se versiona**): sus 4 comprobaciones
+> extra firman y validan una licencia de prueba. Si te salen 66, es lo correcto.
 
 ---
 

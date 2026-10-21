@@ -18,7 +18,7 @@ Leyenda de responsable:
 
 | Elemento | Estado |
 |---|---|
-| Código, pruebas (501/501) y documentación | ✅ listo |
+| Código, pruebas (509/509) y documentación | ✅ listo |
 | Instalador `RESALEVAULT-Setup-0.5.0.exe` (117,67 MB) | ✅ generado y firmado (autofirmado) |
 | Paquete `RESALEVAULT-Store-0.5.0.appx` (160,98 MB) | ✅ generado (sin firmar a propósito) |
 | Manifiestos de winget (esquema 1.12) | ✅ validados con `winget validate`, sin avisos |

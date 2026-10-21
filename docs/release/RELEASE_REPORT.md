@@ -52,11 +52,14 @@ dentro de Electron real):
 
 ### Problemas que siguen pendientes
 
-- **Cliente online de licencias en la app**: el backend está desplegado y probado
-  en vivo, pero la app todavía **valida la licencia solo offline**. La integración
-  online (activación de puesto, consulta de revocaciones) **no está hecha**.
+- **Cliente online de licencias**: la app **sí** se conecta al backend (canal
+  `license:refresh`, verificado al arrancar y bajo demanda). Es *offline-first*:
+  la firma se verifica siempre en local y la red solo controla puestos y
+  revocaciones; un fallo de red nunca bloquea la app ni borra datos.
 - **Firma con CA de confianza pública**: no existe (presupuesto 0 €).
 - **Verificación en equipo limpio**: pendiente (ver `KNOWN_ISSUES.md`).
+- **Actualización automática**: no existe todavía; la actualización es manual
+  (ver `KNOWN_ISSUES.md` §7).
 
 ---
 
@@ -64,7 +67,7 @@ dentro de Electron real):
 
 | Nivel | Ejecutadas | Superadas | Fallidas | Bloqueadas |
 |---|---|---|---|---|
-| Unitarias / integración (Vitest) | 500 | 500 | 0 | 0 |
+| Unitarias / integración (Vitest) | 509 | 509 | 0 | 0 |
 | Humo del proceso principal (`npm run smoke`) | 70 | 70 | 0 | 0 |
 | Humo de la interfaz en Electron (`npm run smoke:ui`) | 65 | 65 | 0 | 0 |
 | Validación de manifiestos winget (validador oficial) | 1 | 1 | 0 | 0 |
@@ -72,6 +75,11 @@ dentro de Electron real):
 
 - **Cobertura**: 88.66 % de líneas · 86.00 % de sentencias · 90.75 % de funciones
   · 78.40 % de ramas.
+- **Matiz del humo (70 vs 66)**: en esta máquina salen **70** comprobaciones porque
+  existe la clave privada de emisión (`tools/keys/license-private.pem`, no
+  versionada); 4 de ellas firman y validan una licencia de prueba. En un **clon
+  limpio** sin esa clave salen **66** (esas 4 se omiten por diseño, no fallan).
+  El número esperado en CI es **66**.
 - **Pruebas de seguridad**: el paquete de producción se extrajo y se buscó
   `sb_secret_`, `service_role`, claves privadas y mapas de código → **0 hallazgos**.
 - **Pruebas negativas incluidas**: firma de licencia falsificada → 403; puestos

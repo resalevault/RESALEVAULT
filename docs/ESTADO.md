@@ -3,7 +3,19 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **Guion de publicación único**: nuevo
+Última actualización: **21/10/2026** — **Arreglado un fallo real de instalación de
+dependencias en CI**: a partir de **npm 11.19** los scripts de ciclo de vida de
+las **dependencias** están **bloqueados por defecto** (`allowScripts`), y Electron
+44 ya **no declara** un `install` que se ejecute solo. Resultado: en un clon limpio,
+`npm ci` **no descargaba el binario de Electron** y los trabajos `smoke`/`smoke:ui`
+de CI habrían **fallado**. Reproducido y verificado: `npm ci` en un clon limpio
+dejaba `node_modules/electron/dist/electron.exe` ausente; con el arreglo
+(`"postinstall": "install-electron"`), el mismo `npm ci` produce un Electron
+funcional (`v44.9.0`, humo **66/66**). Añadido además **`npm run preflight`**
+(`scripts/preflight.mjs`, 8 pruebas), que detecta el binario ausente y explica la
+causa y la solución en lugar de fallar de forma críptica; se ejecuta antes de
+`dev`, `smoke`, `smoke:ui`, `doctor` y `bench`. Total de pruebas: **509** (39
+archivos). Bloque anterior: **Guion de publicación único**: nuevo
 `docs/release/GUION_PUBLICACION.md`, el documento que une las dos rutas
 (GitHub+winget y Microsoft Store) en **un solo orden de ejecución**, marcando en
 cada paso si es **TÚ** (requiere tu cuenta/equipo) o **YO** (comando ya probado).
@@ -93,7 +105,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **501 / 501** correctas (38 archivos) |
+| `npm test` | **509 / 509** correctas (39 archivos) |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run test:coverage` | **88,66 % líneas** · 86,00 % sentencias · 90,75 % funciones · 78,40 % ramas |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |

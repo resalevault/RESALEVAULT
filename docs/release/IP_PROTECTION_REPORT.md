@@ -109,7 +109,7 @@ se ofuscó). Tras los cambios de este bloque se volvió a ejecutar toda la bater
 |---|---|
 | `npm run typecheck` | 0 errores |
 | `npm run lint` | 0 errores, 0 avisos |
-| `npm test` | 501/501 |
+| `npm test` | 509/509 |
 | `npm run smoke` | 70/70 |
 | `npm run smoke:ui` | 65/65 |
 | `winget validate` | correcto |

@@ -27,7 +27,7 @@ npm run lint   →  0 errores, 0 avisos
 ## 3. Pruebas unitarias y de integración
 
 ```
-npm test   →  38 archivos, 500 pruebas, 500 superadas, 0 fallidas
+npm test   →  39 archivos, 509 pruebas, 509 superadas, 0 fallidas
 ```
 
 Cobertura (Vitest + V8):
@@ -116,6 +116,17 @@ npm run smoke   →  70 comprobaciones, 70 correctas, 0 fallidas
 
 Incluye: persistencia real al cerrar y reabrir (datos, SKU, historial, actividad),
 creación por el puente seguro y comprobación de la base de datos real.
+
+> **Matiz honesto (70 frente a 66).** Cuatro de esas comprobaciones firman una
+> licencia de prueba con la clave **privada** del proyecto y la validan con la
+> pública que lleva la app. La clave privada (`tools/keys/license-private.pem`)
+> **no se versiona** (es un secreto). Por eso:
+> - En esta máquina de desarrollo (con la clave) salen **70**.
+> - En un **clon limpio del repositorio** (sin la clave) salen **66**, y las 4
+>   comprobaciones de firma se omiten por diseño, no fallan.
+>
+> Es decir, el número **66** es el esperado en CI y en cualquier equipo donde no
+> se tenga el secreto de emisión. Documentado para que la cifra no se malinterprete.
 
 ---
 

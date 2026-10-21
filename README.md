@@ -101,9 +101,9 @@ Todo lo que se afirma aquí se ha **ejecutado**, no se ha supuesto:
 
 | Comprobación | Resultado |
 |---|---|
-| Pruebas unitarias (`npm test`) | **501 / 501** (38 archivos) |
+| Pruebas unitarias (`npm test`) | **509 / 509** (39 archivos) |
 | Cobertura de líneas | **88,66 %** |
-| Prueba de humo de datos en Electron real | **70 / 70** |
+| Prueba de humo de datos en Electron real | **70 / 70** (66 en un clon limpio, ver nota) |
 | Prueba de humo de interfaz en Electron real | **65 / 65** |
 | `typecheck` / `lint` | 0 errores · 0 avisos |
 | Banco de pruebas (`npm run bench`) | 50.000 artículos + 1.000 pedidos |
@@ -167,7 +167,7 @@ npm run dev      # abre la aplicación con recarga en caliente
 |---|---|
 | `npm run build` | Compila proceso principal, preload e interfaz en `out/`. |
 | `npm run typecheck` | Comprueba los tipos (Node y navegador). |
-| `npm test` | Batería de pruebas (**501**). |
+| `npm test` | Batería de pruebas (**509**). |
 | `npm run test:coverage` | Pruebas + cobertura (88,66 % de líneas). |
 | `npm run lint` | ESLint sobre todo el proyecto. |
 | `npm run verify` | `typecheck` + `test`. |
@@ -192,7 +192,7 @@ src/
 ├── preload/index.ts       Puente contextBridge (158 canales concretos)
 ├── shared/                Tipos, esquemas zod, CSP, SKU, planes, formatos
 └── renderer/src/          Interfaz React (español / inglés)
-tests/                     501 pruebas automatizadas
+tests/                     509 pruebas automatizadas
 scripts/                   doctor, humo, banco, empaquetado, licencias, winget
 docs/                      estado, manual, pruebas, firma, licencias, privacidad
 ```
