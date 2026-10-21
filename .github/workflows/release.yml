@@ -53,7 +53,7 @@ jobs:
         run: npm run build
 
       - name: Generar instalador
-        run: npx electron-builder --win --config electron-builder.yml
+        run: npx electron-builder --win --config electron-builder.yml --publish never
 
       - name: Generar SHA256SUMS.txt
         shell: pwsh
