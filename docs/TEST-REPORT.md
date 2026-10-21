@@ -62,7 +62,7 @@ flujos completos reales: crear producto → comprar → vender → devolver →
 cancelar → comprobar stock → importar CSV → exportar → crear y verificar
 copia → restaurar → recalcular panel.
 
-### 2.3 `npm run smoke:ui` — humo de interfaz (54)
+### 2.3 `npm run smoke:ui` — humo de interfaz (65)
 
 Lanza **Electron real** (no jsdom) con una carpeta de usuario temporal y
 navega por la aplicación con DOM nativo:

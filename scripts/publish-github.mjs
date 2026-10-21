@@ -144,14 +144,79 @@ function parseArgs(argv) {
     repo: get('--repo'),
     confirm: argv.includes('--confirm'),
     tag: get('--tag'),
+    printNotes: argv.includes('--print-notes'),
   }
 }
 
+/**
+ * Construye el texto de la release a partir de la seccion de la version en
+ * docs/CHANGELOG.md, para que la release publicada diga lo mismo que el
+ * changelog (una sola fuente de verdad). Si no se encuentra la seccion, se
+ * avisa y se usa un texto minimo honesto en lugar de inventar contenido.
+ */
+function buildReleaseNotes(version, tag, installerHash) {
+  const changelogPath = join(ROOT, 'docs', 'CHANGELOG.md')
+  let section = ''
+  if (existsSync(changelogPath)) {
+    const md = readFileSync(changelogPath, 'utf8')
+    const startRe = new RegExp(`^##\\s+${version.replace(/\./g, '\\.')}\\b.*$`, 'm')
+    const start = md.match(startRe)
+    if (start && start.index !== undefined) {
+      const rest = md.slice(start.index + start[0].length)
+      const endIdx = rest.search(/^##\s/m)
+      section = (endIdx === -1 ? rest : rest.slice(0, endIdx)).trim()
+      // Quita un separador horizontal final (evita un "---" colgando).
+      section = section.replace(/\n+-{3,}\s*$/, '').trim()
+    }
+  }
+
+  if (!section) {
+    console.warn(`  AVISO: no hay una seccion "${version}" en docs/CHANGELOG.md; se usa un texto minimo.`)
+    section = `Version ${version}. Consulta docs/CHANGELOG.md para el detalle.`
+  }
+
+  return [
+    `# RESALEVAULT ${tag}`,
+    '',
+    'Instalador para **Windows 10 / 11 (x64)**. Los datos se guardan en tu equipo y',
+    'la aplicacion funciona sin conexion.',
+    '',
+    `**SHA-256 del instalador:** \`${installerHash}\``,
+    '',
+    'Comprueba la integridad con el fichero `SHA256SUMS.txt` adjunto:',
+    '',
+    '```powershell',
+    `Get-FileHash .\\RESALEVAULT-Setup-${version}.exe -Algorithm SHA256`,
+    '```',
+    '',
+    '---',
+    '',
+    section,
+    '',
+    '---',
+    '',
+    '> **Aviso honesto:** el instalador no esta firmado por una autoridad de',
+    '> certificacion de confianza, asi que Windows puede mostrar un aviso de',
+    '> SmartScreen o "editor desconocido". **No hay que desactivar ninguna',
+    '> proteccion de Windows** para instalarlo. Tambien esta previsto publicarlo',
+    '> en la Microsoft Store (paquete `.appx` listo).',
+  ].join('\n')
+}
+
 async function main() {
-  const { repo, confirm, tag: tagArg } = parseArgs(process.argv.slice(2))
+  const { repo, confirm, tag: tagArg, printNotes } = parseArgs(process.argv.slice(2))
   const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
   const version = pkg.version
   const tag = tagArg ?? `v${version}`
+
+  // Modo de solo lectura: imprime el texto de la release y termina. No toca
+  // nada. Calcula el hash del instalador si existe; si no, usa un marcador.
+  if (printNotes) {
+    const installerPath = join(ROOT, 'release', `RESALEVAULT-Setup-${version}.exe`)
+    const hash = existsSync(installerPath) ? sha256(installerPath) : '(instalador no encontrado)'
+    console.log(buildReleaseNotes(version, tag, hash))
+    return
+  }
 
   console.log('RESALEVAULT - publicacion en GitHub')
   console.log(`  version : ${version}`)
@@ -276,7 +341,7 @@ async function main() {
   if (!confirm) {
     console.log('')
     console.log('  [SIMULACION] se crearia la release con:')
-    console.log(`    - cuerpo: docs/release/PUBLICACION_RUTA_A.md (texto del release)`)
+    console.log(`    - cuerpo: seccion ${version} de docs/CHANGELOG.md + aviso de firma`)
     console.log(`    - asset : RESALEVAULT-Setup-${version}.exe`)
     if (existsSync(sums)) console.log('    - asset : SHA256SUMS.txt')
     console.log('')
@@ -284,7 +349,7 @@ async function main() {
     return
   }
 
-  const notes = `RESALEVAULT ${tag}\n\nInstalador para Windows 10/11 (x64). Verifica el hash SHA-256 con el fichero SHA256SUMS.txt adjunto.\n\nAviso: el instalador no esta firmado por una autoridad de confianza; Windows puede mostrar un aviso. No hay que desactivar ninguna proteccion del sistema.`
+  const notes = buildReleaseNotes(version, tag, hash)
   const rel = api(token, 'POST', `/repos/${repo}/releases`, {
     body: { tag_name: tag, name: `RESALEVAULT ${tag}`, body: notes, draft: false, prerelease: false },
   })

@@ -177,7 +177,7 @@ npm run dev      # abre la aplicación con recarga en caliente
 | `npm run dist` / `npm run dist:signed` | Instalador NSIS (opcionalmente firmado). |
 | `npm run dist:appx` | Paquete AppX/MSIX para la Store. |
 | `npm run winget:manifests` | Manifiestos de winget para el repositorio comunitario. |
-| `npm run publish:github` | Publica la release en GitHub (simula por defecto; `--confirm` para ejecutar). |
+| `npm run publish:github` | Publica la release en GitHub (simula por defecto; `--print-notes` muestra el texto; `--confirm` ejecuta). |
 
 ---
 

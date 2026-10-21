@@ -3,21 +3,30 @@
 Documento de transparencia: qué funciona **de verdad** (verificado ejecutándolo),
 qué falta y qué costes implicará. No se marca nada como terminado sin pruebas.
 
-Última actualización: **21/10/2026** — **README público y publicación
-automatizada**: el `README.md` se reescribió para ser la cara pública del
-repositorio (sin rutas locales, cifras reales: **501 pruebas**, 65/65 interfaz,
-88,66 % de cobertura, esquema v5, **158 canales**); `CHANGELOG` con la entrada
-pública de la 0.5.0; y **`scripts/publish-github.mjs`** (comando
-`npm run publish:github`) que crea el repositorio, sube el código y publica la
-release **simulando por defecto** (solo ejecuta con `--confirm`, exige árbol
-limpio, no sobrescribe releases y nunca imprime el token). Cifras obsoletas
-corregidas en `ARQUITECTURA`, `BUILD-WINDOWS`, `TEST-REPORT` y
-`FREE-VS-PRO-VS-BUSINESS`. Bloque anterior: **Kit de envío a la Microsoft Store
-listo**: checklist de envío (`ENVIO_STORE.md`) con el comando para verificar el
-`publisher` real dentro del `.appx`, y guía de capturas (`CAPTURAS.md`) con
-resoluciones oficiales y las 6 pantallas concretas, usando los **datos de
-ejemplo** que ya trae la app (reversibles). Bloque anterior: **Material de
-publicación listo**: los
+Última actualización: **21/10/2026** — **Coherencia documental + texto de release
+automático**: auditoría cruzada de las cifras de todos los documentos. Se
+corrigieron contradicciones reales (`ESTADO` e `IP_PROTECTION_REPORT` decían
+**500/500** pruebas teniendo 501; `TEST-REPORT` titulara la sección de interfaz
+con **(54)** y el cuerpo con 65; `ESTADO` decía 161,0 MB del `.appx` siendo
+160,98). Ahora **158 canales**, **37 tablas**, esquema **v5**, **501/501**, 70/70
+y 65/65 salen idénticos en todas partes (comprobado por barrido). Además,
+`npm run publish:github --print-notes` genera el **cuerpo de la release a partir
+de la sección 0.5.0 de `docs/CHANGELOG.md`** (una sola fuente de verdad) con el
+SHA-256 real y el aviso honesto de firma; el script sigue **simulando por
+defecto**. Bloque anterior: **README público y publicación automatizada**: el
+`README.md` se reescribió para ser la cara pública del repositorio (sin rutas
+locales, cifras reales: **501 pruebas**, 65/65 interfaz, 88,66 % de cobertura,
+esquema v5, **158 canales**); `CHANGELOG` con la entrada pública de la 0.5.0; y
+**`scripts/publish-github.mjs`** (comando `npm run publish:github`) que crea el
+repositorio, sube el código y publica la release **simulando por defecto** (solo
+ejecuta con `--confirm`, exige árbol limpio, no sobrescribe releases y nunca
+imprime el token). Cifras obsoletas corregidas en `ARQUITECTURA`,
+`BUILD-WINDOWS`, `TEST-REPORT` y `FREE-VS-PRO-VS-BUSINESS`. Bloque anterior:
+**Kit de envío a la Microsoft Store listo**: checklist de envío
+(`ENVIO_STORE.md`) con el comando para verificar el `publisher` real dentro del
+`.appx`, y guía de capturas (`CAPTURAS.md`) con resoluciones oficiales y las 6
+pantallas concretas, usando los **datos de ejemplo** que ya trae la app
+(reversibles). Bloque anterior: **Material de publicación listo**: los
 manifiestos de winget se corrigieron al esquema **1.12.0** (el recomendado por la
 plantilla de PR de `microsoft/winget-pkgs`) y llevan la cabecera
 `yaml-language-server` obligatoria; el validador oficial de Microsoft da
@@ -32,7 +41,7 @@ licencias** — la aplicación de escritorio ya **confirma el puesto y consulta
 revocaciones** contra
 la Edge Function, con reglas offline-first (nunca borra datos, nunca corta el
 trabajo sin conexión) y sin exponer ningún secreto. 31 pruebas nuevas, 97 % de
-cobertura del cliente, **65/65 comprobaciones** de interfaz y **500/500** pruebas
+cobertura del cliente, **65/65 comprobaciones** de interfaz y **501/501** pruebas
 totales. Bloque anterior: botón obligatorio **«Comprar licencia» / «Buy license»** que abre el Discord oficial
 (canal IPC dedicado con lista blanca, 12 pruebas nuevas y **61/61 comprobaciones**
 de interfaz en Electron real); **soporte macOS preparado** (objetivo `dmg`/`zip`
@@ -86,7 +95,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **500 / 500** correctas (38 archivos) |
+| `npm test` | **501 / 501** correctas (38 archivos) |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run test:coverage` | **88,66 % líneas** · 86,00 % sentencias · 90,75 % funciones · 78,40 % ramas |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
@@ -96,7 +105,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | `npm run bench` | ✅ 50.000 artículos + 1.000 pedidos (ver `docs/TEST-REPORT.md`) |
 | `npm run dist:signed` | ✅ instalador firmado; `Get-AuthenticodeSignature` → `UnknownError` (raíz no confiable) |
 | `winget validate` (manifiestos v0.5.0, esquema **1.12.0**) | ✅ **«Manifest validation succeeded.»** con el validador oficial de Windows, **sin avisos** (21/10/2026) |
-| `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (161,0 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
+| `npm run dist:appx` | ✅ paquete `RESALEVAULT-Store-0.5.0.appx` generado (160,98 MB); manifiesto interior inspeccionado: identidad, versión `0.5.0.0`, protocolo `rv-media` con `uap:Protocol`, en-US + es-ES, `runFullTrust`; **sin firmar a propósito** (lo firma la Store) |
 | `npm run dist:signed` (instalador final) | ✅ `RESALEVAULT-Setup-0.5.0.exe` (117,67 MB) — SHA-256 `39DE1695…DB7C4B51` (21/10/2026, **con el cliente online**) |
 | Paquete de producción inspeccionado | ✅ extraído el `.asar` del `.exe` **y** del `.appx`: **sin mapas de código**, **sin** `smoke`/`ui-smoke`/`benchmark`, **0 secretos**, y **con** el cliente online (`seats_exhausted`, `online_verified`, `license:refresh`) |
 | `winget validate` (hash nuevo) | ✅ **«Manifest validation succeeded»** con el `InstallerSha256` del instalador real (21/10/2026) |

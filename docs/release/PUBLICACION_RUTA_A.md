@@ -43,13 +43,21 @@ $env:GH_TOKEN = "ghp_..."
 # 2. Ver QUÉ haría, sin ejecutarlo:
 npm run publish:github -- --repo 16ray/RESALEVAULT
 
-# 3. Publicar de verdad:
+# 3. Ver el TEXTO EXACTO de la release que se publicaría (solo lectura):
+npm run publish:github -- --print-notes
+
+# 4. Publicar de verdad:
 npm run publish:github -- --repo 16ray/RESALEVAULT --confirm
 ```
 
 Comprobaciones de seguridad del script: exige el árbol de git limpio, avisa si el
 instalador no existe, **no** crea un remoto si ya hay otro, **no** sobrescribe una
 release existente y **nunca** imprime el token.
+
+El **cuerpo de la release se genera a partir de la sección `0.5.0` de
+`docs/CHANGELOG.md`** (una sola fuente de verdad: la release y el changelog dicen
+lo mismo) más un encabezado con el SHA-256 real del instalador y el aviso honesto
+de firma. Puedes revisarlo antes con `--print-notes`.
 
 ### Opción B — manual (sin token)
 
@@ -66,12 +74,15 @@ git push -u origin master
 ## 2. Publicar la Release v0.5.0 (tu cuenta)
 
 1. Adjunta **`release/RESALEVAULT-Setup-0.5.0.exe`**.
-2. Adjunta un fichero **`SHA256SUMS.txt`** con esta línea:
+2. Adjunta el fichero **`release/SHA256SUMS.txt`** (ya generado; contiene el hash
+   del instalador y el del paquete de la Store):
    ```
+   # RESALEVAULT 0.5.0 - Windows
    39de1695e34c7b0d262864a6f8b545a0e6955239a381e30d97083999db7c4b51  RESALEVAULT-Setup-0.5.0.exe
+   448e7bc8ac42d6b2c9e15ef0c3518d4da3741bc4c53e9e08d257c2bca3e893d3  RESALEVAULT-Store-0.5.0.appx
    ```
-   (La copia de la carpeta de entrega ya lo tiene.)
-3. Pega el cuerpo del release desde `docs/release/STORE_LISTING.md` §2.
+3. Pega el cuerpo del release: **usa `npm run publish:github -- --print-notes`**
+   para obtenerlo ya montado (o cópialo de `docs/release/STORE_LISTING.md` §2).
 
 La URL resultante debe ser exactamente:
 
