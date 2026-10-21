@@ -4,7 +4,9 @@ node_modules/
 # Artefactos de compilacion
 out/
 dist/
-release/
+# Solo la carpeta `release/` de la RAIZ (salida de electron-builder). Anclada
+# con `/` para no excluir por error `docs/release/` (documentacion de entrega).
+/release/
 .vite/
 coverage/
 coverage-json/
