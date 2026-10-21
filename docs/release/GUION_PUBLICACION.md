@@ -23,7 +23,7 @@ Leyenda de responsable:
 | Paquete `RESALEVAULT-Store-0.5.0.appx` (160,98 MB) | ✅ generado (sin firmar a propósito) |
 | Manifiestos de winget (esquema 1.12) | ✅ validados con `winget validate`, sin avisos |
 | Ficha de la Store, PR de winget, privacidad, capturas | ✅ redactados |
-| Carpeta `RESALEVAULT_RELEASE` en tu escritorio | ✅ 17 ficheros con hashes comprobados |
+| Carpeta `RESALEVAULT_RELEASE` en tu escritorio | ✅ 19 ficheros con hashes comprobados |
 | **Repositorio de GitHub** | ❌ **no existe todavía** |
 | **Cuenta de la Microsoft Store** | ❌ **no creada todavía** |
 | **Instalación probada en equipo limpio** | ❌ **pendiente** |

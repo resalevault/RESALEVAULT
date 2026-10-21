@@ -15,7 +15,8 @@ funcional (`v44.9.0`, humo **66/66**). Añadido además **`npm run preflight`**
 (`scripts/preflight.mjs`, 8 pruebas), que detecta el binario ausente y explica la
 causa y la solución en lugar de fallar de forma críptica; se ejecuta antes de
 `dev`, `smoke`, `smoke:ui`, `doctor` y `bench`. Total de pruebas: **509** (39
-archivos). Bloque anterior: **Guion de publicación único**: nuevo
+archivos). Además, la carpeta de entrega incluye ya la **política de privacidad**
+(`PRIVACY.md`, la exige la Store): **19 ficheros**. Bloque anterior: **Guion de publicación único**: nuevo
 `docs/release/GUION_PUBLICACION.md`, el documento que une las dos rutas
 (GitHub+winget y Microsoft Store) en **un solo orden de ejecución**, marcando en
 cada paso si es **TÚ** (requiere tu cuenta/equipo) o **YO** (comando ya probado).

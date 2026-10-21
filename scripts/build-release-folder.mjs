@@ -191,6 +191,16 @@ for (const name of docFiles) {
   }
 }
 
+// Politica de privacidad publica: vive en la raiz del repositorio (no en
+// docs/release) porque GitHub y la Microsoft Store la enlazan desde ahi.
+// Se incluye en la entrega porque la Store la exige y el usuario la necesita.
+const privacySrc = join(root, 'PRIVACY.md')
+if (existsSync(privacySrc)) {
+  copyVerified(privacySrc, join(docsDir, 'PRIVACY.md'), 'Politica de privacidad')
+} else {
+  log('  [OMITIDO] Falta PRIVACY.md en la raiz')
+}
+
 // =========================================================================
 // Comprobacion final: nada de secretos ni temporales en la entrega
 // =========================================================================

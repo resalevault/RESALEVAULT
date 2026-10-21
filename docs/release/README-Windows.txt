@@ -83,3 +83,6 @@ RECURSOS
   Licencias y compra: https://discord.gg/9bMhnGvjrx
   (la compra se gestiona en el servidor oficial de Discord;
    la aplicación no cobra ni pide datos de pago)
+
+  Política de privacidad: Documentation\PRIVACY.md
+  (incluida en esta entrega; también publicada en el repositorio)
