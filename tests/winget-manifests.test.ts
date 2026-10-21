@@ -94,6 +94,20 @@ describe('buildManifests', () => {
     expect(sinRepo.defaultLocaleDoc).not.toContain('github.com')
   })
 
+  it('anade LicenseUrl (lo piden los revisores para paquetes propietarios)', () => {
+    // Con repositorio: se deriva a los terminos publicados en el repo.
+    const conRepo = buildManifests({ ...VALID, repo: 'usuario/RESALEVAULT' })
+    expect(conRepo.defaultLocaleDoc).toContain(
+      'LicenseUrl: "https://github.com/usuario/RESALEVAULT/blob/main/TERMS.md"'
+    )
+    // Se puede sobrescribir explicitamente.
+    const propio = buildManifests({ ...VALID, licenseUrl: 'https://ejemplo.test/terminos' })
+    expect(propio.defaultLocaleDoc).toContain('LicenseUrl: "https://ejemplo.test/terminos"')
+    // Sin repositorio ni licenseUrl no se inventa ninguna URL.
+    const sinNada = buildManifests(VALID)
+    expect(sinNada.defaultLocaleDoc).not.toContain('LicenseUrl')
+  })
+
   it('rechaza entradas invalidas con mensaje claro', () => {
     expect(() => buildManifests({ ...VALID, id: 'mal id' })).toThrow(/Identificador/)
     expect(() => buildManifests({ ...VALID, version: '1.0' })).toThrow(/Version/)

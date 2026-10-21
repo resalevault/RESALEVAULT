@@ -10,10 +10,13 @@ Electron-builder firma con el mismo certificado:
 
 | Artefacto | Ruta |
 |---|---|
-| Ejecutable principal | `release\win-unpacked\RESALEVAULT.exe` |
-| Instalador | `release\RESALEVAULT-Setup-<version>.exe` |
-| Desinstalador | `release\RESALEVAULT-Setup-<version>.__uninstaller.exe` |
-| Utilidad de elevación | `resources\elevate.exe` (dentro del paquete) |
+| Ejecutable principal | `release\win-unpacked\RESALEVAULT.exe` (queda `NotSigned`; ver §5) |
+| Instalador | `release\RESALEVAULT-Setup-<version>.exe` (este es el que se firma) |
+| Desinstalador | `RESALEVAULT-Setup-<version>.__uninstaller.exe` (se genera al **instalar**, no está en `release/`) |
+| Paquete de la Store | `release\RESALEVAULT-Store-<version>.appx` (sin firmar a propósito; lo firma Microsoft) |
+
+> En esta configuración (`perMachine: false`, instalación por usuario) **no** hay
+> `elevate.exe`: no se necesita elevación.
 
 ---
 
@@ -62,8 +65,12 @@ StatusMessage: A certificate chain processed, but terminated in a root
 de confianza pública.** Esto es exactamente lo que cabe esperar de un
 certificado autofirmado. No es un fallo del empaquetado.
 
-También están firmados `win-unpacked\RESALEVAULT.exe` (el ejecutable interno) y
-`RESALEVAULT-Setup-0.5.0.__uninstaller.exe`, con el mismo estado.
+Por defecto, **solo el instalador** (`RESALEVAULT-Setup-0.5.0.exe`) queda firmado
+con el certificado autofirmado. El ejecutable interno
+`win-unpacked\RESALEVAULT.exe` queda **`NotSigned`** (comprobado con
+`Get-AuthenticodeSignature`): el instalador firma el contenedor, no cada binario
+de dentro. Las herramientas de código abierto (por ejemplo, un futuro winget)
+deben usar el **hash del instalador**, no la firma del exe interno.
 
 > **El instalador NO es reproducible byte a byte.** NSIS incluye marcas de tiempo,
 > así que dos compilaciones del mismo código dan hashes distintos. Por eso hay que
@@ -187,9 +194,11 @@ igual.
 
 ```
 release\win-unpacked\resources\
-  app.asar                  29.898 KB
-  elevate.exe                  120 KB
-  THIRD-PARTY-NOTICES.md      23,4 KB   ← avisos de terceros incluidos
+  app.asar                  24.923 KB   ← codigo de la app (sin mapas ni tests)
+  THIRD-PARTY-NOTICES.md     23,4 KB   ← avisos de terceros incluidos
+
+Nota: en esta version **no** hay `elevate.exe`. La instalacion es por usuario
+(`perMachine: false`), asi que no se necesita elevacion.
 
 Búsqueda de *.pem, *.pfx, *.key, *.password, license-private*  → ninguna
 Búsqueda de *.sqlite, *.sqlite-wal                             → ninguno

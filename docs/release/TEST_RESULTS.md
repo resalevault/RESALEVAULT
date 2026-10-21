@@ -27,7 +27,7 @@ npm run lint   →  0 errores, 0 avisos
 ## 3. Pruebas unitarias y de integración
 
 ```
-npm test   →  39 archivos, 509 pruebas, 509 superadas, 0 fallidas
+npm test   →  39 archivos, 510 pruebas, 510 superadas, 0 fallidas
 ```
 
 Cobertura (Vitest + V8):

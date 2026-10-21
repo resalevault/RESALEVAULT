@@ -67,7 +67,7 @@ dentro de Electron real):
 
 | Nivel | Ejecutadas | Superadas | Fallidas | Bloqueadas |
 |---|---|---|---|---|
-| Unitarias / integración (Vitest) | 509 | 509 | 0 | 0 |
+| Unitarias / integración (Vitest) | 510 | 510 | 0 | 0 |
 | Humo del proceso principal (`npm run smoke`) | 70 | 70 | 0 | 0 |
 | Humo de la interfaz en Electron (`npm run smoke:ui`) | 65 | 65 | 0 | 0 |
 | Validación de manifiestos winget (validador oficial) | 1 | 1 | 0 | 0 |
@@ -132,8 +132,11 @@ Carpeta: `RESALEVAULT_RELEASE\`
 > el validador oficial de Microsoft**.
 
 - **Formato y arquitectura**: NSIS x64 y AppX x64.
-- **Estado de firma**: **sin firmar**. No hay certificado de CA. El `.appx` se deja
-  sin firmar a propósito para que lo firme Microsoft al publicarlo en la Store.
+- **Estado de firma**: el **instalador** está firmado con un certificado
+  **autofirmado** (`Get-AuthenticodeSignature` → `UnknownError`: la firma es
+  válida, la raíz no es de confianza pública). No hay certificado de CA, así que
+  lo previsible es un aviso de SmartScreen. El `.appx` se deja **sin firmar** a
+  propósito para que lo firme Microsoft al publicarlo en la Store.
 - **Compatibilidad comprobada**: arranque, datos y desinstalación probados en el
   propio PC de desarrollo. **Instalación desde cero en equipo limpio: pendiente.**
 

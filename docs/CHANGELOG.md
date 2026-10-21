@@ -56,7 +56,7 @@ de verdad. Detalle técnico completo en `docs/ESTADO.md`.
 
 ### Verificado
 
-- **509 / 509** pruebas (39 archivos) · **70 / 70** de humo · **65 / 65** de
+- **510 / 510** pruebas (39 archivos) · **70 / 70** de humo · **65 / 65** de
   interfaz · ESLint 0 problemas · cobertura **88,66 %** de líneas.
   *(El humo da 70 en la máquina de emisión —con la clave privada— y 66 en un
   clon limpio, donde 4 comprobaciones de firma se omiten por diseño.)*

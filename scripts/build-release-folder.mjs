@@ -201,6 +201,15 @@ if (existsSync(privacySrc)) {
   log('  [OMITIDO] Falta PRIVACY.md en la raiz')
 }
 
+// Terminos de servicio: mismo caso que la privacidad. Ademas, el manifiesto de
+// winget los enlaza como LicenseUrl.
+const termsSrc = join(root, 'TERMS.md')
+if (existsSync(termsSrc)) {
+  copyVerified(termsSrc, join(docsDir, 'TERMS.md'), 'Terminos de servicio')
+} else {
+  log('  [OMITIDO] Falta TERMS.md en la raiz')
+}
+
 // =========================================================================
 // Comprobacion final: nada de secretos ni temporales en la entrega
 // =========================================================================

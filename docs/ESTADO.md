@@ -14,9 +14,18 @@ dejaba `node_modules/electron/dist/electron.exe` ausente; con el arreglo
 funcional (`v44.9.0`, humo **66/66**). Añadido además **`npm run preflight`**
 (`scripts/preflight.mjs`, 8 pruebas), que detecta el binario ausente y explica la
 causa y la solución en lugar de fallar de forma críptica; se ejecuta antes de
-`dev`, `smoke`, `smoke:ui`, `doctor` y `bench`. Total de pruebas: **509** (39
+`dev`, `smoke`, `smoke:ui`, `doctor` y `bench`. Total de pruebas: **510** (39
 archivos). Además, la carpeta de entrega incluye ya la **política de privacidad**
-(`PRIVACY.md`, la exige la Store): **19 ficheros**. Bloque anterior: **Guion de publicación único**: nuevo
+(`PRIVACY.md`) y los **términos de servicio** (`TERMS.md`, borrador): **20
+ficheros**. Bloque anterior: **Términos de
+servicio y auditoría de coherencia**: nuevo **borrador** `TERMS.md` (es/en) con los
+hechos reales del programa (planes, puestos, caducidad, revocación, nunca se borran
+datos), pendiente de tu revisión; el manifiesto de winget añade **`LicenseUrl`**
+(lo piden los revisores para paquetes propietarios) y `winget validate` sigue
+pasando. Además, una **auditoría de coherencia** encontró y corrigió **13
+afirmaciones falsas u obsoletas** de la documentación (cobertura, pruebas del
+backend, códigos de error, límite de fotos, «no hay backend», firma del exe,
+tamaños, migraciones). Bloque anterior: **Guion de publicación único**: nuevo
 `docs/release/GUION_PUBLICACION.md`, el documento que une las dos rutas
 (GitHub+winget y Microsoft Store) en **un solo orden de ejecución**, marcando en
 cada paso si es **TÚ** (requiere tu cuenta/equipo) o **YO** (comando ya probado).
@@ -71,7 +80,7 @@ componentes, sin firmar a propósito para que lo firme la Store). Guía completa
 Bloque anterior: **backend de licencias (Supabase)**: Edge Function desplegada
 con control de **puestos**, **revocación** y consulta de revocaciones; migración
 aplicada en el proyecto real; script de sincronización con verificación previa
-de firmas; **43 pruebas nuevas** del backend y **prueba de extremo a extremo en
+de firmas; **39 pruebas nuevas** del backend y **prueba de extremo a extremo en
 vivo contra el proyecto desplegado** (firma falsificada → 403, puestos agotados →
 409, revocada → 403; ver `docs/BACKEND.md`). Detalle en
 [`docs/TEST-REPORT.md`](TEST-REPORT.md). Bloques anteriores: control de
@@ -92,7 +101,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | **4. Productividad de almacén** | ✅ **Completada** (códigos, etiquetas, preparación) |
 | **5. Inteligencia e IA** | ✅ **Completada** (AI Studio BYOK) |
 | 6. Licencias y comercialización | 🟡 Límites aplicados + **backend online desplegado y probado**; falta el cliente en la app |
-| 7. Business y expansión | 🟡 Local sí; multiusuario real ⛔ sin backend |
+| 7. Business y expansión | 🟡 Local sí; multiusuario real ⛔ sin backend de colaboración |
 | 8. Lanzamiento | 🟡 Copias ✅; instalador NSIS **firmado (autofirmado)**; **distribución gratuita preparada** (winget validado + paquete Store generado, ver [`docs/DISTRIBUCION.md`](DISTRIBUCION.md)); **carpeta de entrega `RESALEVAULT_RELEASE` creada**; instalación local bloqueada por Device Guard |
 | **Shipping Tracker** | ✅ **Completado** (navegador integrado + 46 transportistas) |
 | **Calidad (ESLint, cobertura, CI, benchmark)** | ✅ **Completado** |
@@ -106,7 +115,7 @@ pruebas con 50.000 artículos, **aplicación real de los límites de plan**,
 | Prueba | Resultado |
 |---|---|
 | `npm run typecheck` | **0 errores** (Node y navegador) |
-| `npm test` | **509 / 509** correctas (39 archivos) |
+| `npm test` | **510 / 510** correctas (39 archivos) |
 | `npm run lint` | **0 errores, 0 avisos** (ESLint 9) |
 | `npm run test:coverage` | **88,66 % líneas** · 86,00 % sentencias · 90,75 % funciones · 78,40 % ramas |
 | `npm run smoke` | **70 / 70** comprobaciones en Electron real |
@@ -404,7 +413,7 @@ clientes reales. Detalles en [`docs/LICENCIAS.md`](LICENCIAS.md).
 | **Firma de código** (certificado autofirmado, 0 €) | ✅ **firmado y verificado** |
 | **Avisos de terceros** incluidos en el paquete (`resources/`) | ✅ |
 | Instalación probada en este equipo | ❌ bloqueada por política de nivel de **firma Enterprise** (evento CI `3033`; diagnóstico en `docs/FIRMA.md` §9); kit de verificación en máquina limpia listo (§10) |
-| Organizaciones, usuarios, permisos, sincronización | ⬜ local pendiente; online ⛔ sin backend |
+| Organizaciones, usuarios, permisos, sincronización | ⬜ local pendiente; online ⛔ sin backend de colaboración |
 
 ### Sobre la firma y el bloqueo (importante antes de distribuir)
 
@@ -451,10 +460,12 @@ certificado OV/IV de una CA (150–300 €/año). **No se ha comprado ninguno.**
   usuario lanza explícitamente una tarea de IA, y en ese caso solo van los datos
   del artículo y el prompt. Para las licencias existe ya un backend en Supabase
   (solo recibe el código de licencia y el identificador de dispositivo, nunca
-  inventario ni pedidos) y **el cliente de la app aún no está conectado a él**.
+  inventario ni pedidos) y **el cliente de la app está conectado a él**
+  (comprobación de puesto y revocaciones; la firma se verifica siempre en local).
 - **No cambia precios ni anuncios automáticamente.**
 - **No hay modo multiusuario.** El esquema lo prepara y el plan Business declara
-  `multiUser`/`sync`, pero **la función no existe**: no hay backend.
+  `multiUser`/`sync`, pero **la función no existe**: el backend desplegado es
+  **solo de licencias** y no ofrece colaboración ni sincronización de datos.
 - **No hay actualización automática.** No hay servidor de actualizaciones y no se
   simula uno. El proceso manual está en `docs/MANUAL-USUARIO.md`.
 - **No genera PDF ni XLSX todavía.** La exportación es CSV.

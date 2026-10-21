@@ -101,7 +101,7 @@ Todo lo que se afirma aquí se ha **ejecutado**, no se ha supuesto:
 
 | Comprobación | Resultado |
 |---|---|
-| Pruebas unitarias (`npm test`) | **509 / 509** (39 archivos) |
+| Pruebas unitarias (`npm test`) | **510 / 510** (39 archivos) |
 | Cobertura de líneas | **88,66 %** |
 | Prueba de humo de datos en Electron real | **70 / 70** (66 en un clon limpio, ver nota) |
 | Prueba de humo de interfaz en Electron real | **65 / 65** |
@@ -167,7 +167,7 @@ npm run dev      # abre la aplicación con recarga en caliente
 |---|---|
 | `npm run build` | Compila proceso principal, preload e interfaz en `out/`. |
 | `npm run typecheck` | Comprueba los tipos (Node y navegador). |
-| `npm test` | Batería de pruebas (**509**). |
+| `npm test` | Batería de pruebas (**510**). |
 | `npm run test:coverage` | Pruebas + cobertura (88,66 % de líneas). |
 | `npm run lint` | ESLint sobre todo el proyecto. |
 | `npm run verify` | `typecheck` + `test`. |
@@ -192,7 +192,7 @@ src/
 ├── preload/index.ts       Puente contextBridge (158 canales concretos)
 ├── shared/                Tipos, esquemas zod, CSP, SKU, planes, formatos
 └── renderer/src/          Interfaz React (español / inglés)
-tests/                     509 pruebas automatizadas
+tests/                     510 pruebas automatizadas
 scripts/                   doctor, humo, banco, empaquetado, licencias, winget
 docs/                      estado, manual, pruebas, firma, licencias, privacidad
 ```
@@ -214,6 +214,7 @@ Todo el dinero en **céntimos enteros**, fechas en ISO-8601 y ids UUID v4.
 | [`docs/DISTRIBUCION.md`](docs/DISTRIBUCION.md) | Distribución gratuita (winget y Store) |
 | [`docs/LICENCIAS.md`](docs/LICENCIAS.md) | Sistema de licencias |
 | [`PRIVACY.md`](PRIVACY.md) | Política de privacidad pública |
+| [`TERMS.md`](TERMS.md) | Términos de servicio / EULA (borrador, revísalo) |
 | [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Historial de versiones |
 | [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) | Licencias de terceros (generado) |
 

@@ -141,6 +141,14 @@ Usa **literalmente** los textos de `docs/release/STORE_LISTING.md`:
    https://github.com/16ray/RESALEVAULT/blob/master/PRIVACY.md
    `
 3. Pégala en el campo **Privacy policy URL**.
+4. **Términos de servicio (EULA)**: la Store tiene un campo para el acuerdo de
+   licencia. `TERMS.md` (raíz del repositorio) es un **borrador**; revísalo,
+   rellena las partes entre `⟨corchetes⟩` (nombre fiscal, contacto, reembolsos,
+   ley aplicable) y publica la URL:
+   `
+   https://github.com/16ray/RESALEVAULT/blob/master/TERMS.md
+   `
+   El mismo documento es el `LicenseUrl` de los manifiestos de winget.
 
 > Nota MSIX: dentro de un paquete de la Store, `%APPDATA%` queda
 > **virtualizado** en el contenedor de la app. Los datos siguen siendo del

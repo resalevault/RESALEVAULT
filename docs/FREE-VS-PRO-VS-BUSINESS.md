@@ -35,9 +35,9 @@ seguiría recibiendo el rechazo.
 
 | Función | Estado |
 |---|---|
-| Inventario persistente (SQLite, WAL, claves foráneas) | ✅ 509 pruebas + humo |
+| Inventario persistente (SQLite, WAL, claves foráneas) | ✅ 510 pruebas + humo |
 | Productos, campos, categorías, etiquetas | ✅ |
-| Fotos por artículo con miniaturas (hasta 5) | ✅ |
+| Fotos por artículo con miniaturas (hasta 30; 25 MB por archivo) | ✅ |
 | SKU con dígito de control EAN-13 | ✅ |
 | Búsqueda, filtros, orden, paginación (50/pág.) | ✅ medido con 50.000 artículos |
 | Compras y costes (gastos de envío, otros, descuento) | ✅ |
@@ -57,13 +57,17 @@ seguiría recibiendo el rechazo.
 
 ⛔ **Límites del plan gratuito (aplicados en el proceso principal):**
 
-- ❌ Más de 150 artículos → `PRODUCT_QUOTA_EXCEEDED`
-- ❌ Más de 200 archivos → `UPLOAD_QUOTA_EXCEEDED`
-- ❌ Importación de CSV → `PLAN_FEATURE_REQUIRED`
-- ❌ Edición masiva → `PLAN_FEATURE_REQUIRED`
-- ❌ Analítica / informe financiero → `PLAN_FEATURE_REQUIRED`
-- ❌ Inteligencia (12 reglas) → `PLAN_FEATURE_REQUIRED`
-- ❌ AI Studio → `PLAN_FEATURE_REQUIRED`
+Los códigos de error reales son dos: `plan_limit_reached` (límite de cantidad) y
+`license_required` (función reservada a un plan de pago). Fuente:
+`src/shared/types.ts`.
+
+- ❌ Más de 150 artículos → `plan_limit_reached`
+- ❌ Más de 200 archivos → `plan_limit_reached`
+- ❌ Importación de CSV → `license_required`
+- ❌ Edición masiva → `license_required`
+- ❌ Analítica / informe financiero → `license_required`
+- ❌ Inteligencia (12 reglas) → `license_required`
+- ❌ AI Studio → `license_required`
 
 Cuando el usuario intenta una función bloqueada, la pantalla muestra una
 explicación con enlace a la pestaña **Licencias** (`PlanGate`), no un error
@@ -121,12 +125,14 @@ técnico ni una pantalla rota.
 El plan Business **está declarado** en `src/shared/plans.ts` y se puede activar
 con una licencia válida, pero **la colaboración multiusuario NO funciona**:
 
-- No hay backend desplegado.
+- **No hay backend de colaboración.** (Sí existe un backend, pero es **solo para
+  licencias**: confirma puestos y revoca licencias. No aloja ni sincroniza
+  inventario, ni usuarios, ni pedidos.)
 - No existe sesión de usuario, ni invitaciones, ni roles aplicados.
-- **No se ha desplegado ningún servidor** porque cualquier opción gratuita
-  tendría límites que no se pueden prometer a largo plazo, y subir una base de
-  datos de clientes a un servicio de terceros sin haber revisado sus condiciones
-  sería imprudente.
+- Un backend de colaboración exigiría subir datos de clientes (inventario,
+  pedidos) a un tercero y garantizar disponibilidad a largo plazo; con
+  presupuesto **0 €** no se puede prometer eso, y el multiusuario local ya está
+  pendiente en la hoja de ruta.
 
 **Lo que sí hace Business hoy:** mismas capacidades que Pro sin límites de
 volumen. Nada más. Esto se indica también en la propia pantalla de licencias.
@@ -151,7 +157,7 @@ por escrito para que nadie las dé por hechas:
 |---|---|
 | Publicación automática en Vinted / eBay / Wallapop | 🔶 sin API autorizada, **sin scraping** |
 | Seguimiento automático de envíos | 🔶 solo manual/confirmado; ver `docs/SEGUIMIENTO.md` |
-| Actualizaciones automáticas | 🔶 ver `docs/FIRMA.md` y Fase 5 |
+| Actualizaciones automáticas | 🔶 no existen todavía; la actualización es manual. Ver `docs/release/KNOWN_ISSUES.md` §7 |
 | Envío de emails de aviso | 🔶 requeriría un servicio de pago |
 | Informes PDF y exportación XLSX | 🔶 |
 | Devoluciones parciales por línea | 🔶 |

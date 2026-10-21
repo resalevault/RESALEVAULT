@@ -135,42 +135,57 @@ cuando haya clientes reales, para no repartir códigos sin contrapartida.
 
 Pestaña **Licencias** → pegar el código → **Activar**.
 
-La activación es **local y offline**: no se envía nada a ningún servidor. Se
-guarda en la base de datos y se asocia a una identidad de dispositivo generada
-aleatoriamente (UUID v4 guardado localmente, no es un identificador del
-hardware).
+La verificación de la firma es **siempre local**: el código va firmado con
+Ed25519 y la aplicación lo comprueba con la clave **pública** que lleva dentro.
+La activación se guarda en la base de datos y se asocia a una identidad de
+dispositivo generada aleatoriamente (UUID v4 guardado localmente, no es un
+identificador del hardware).
+
+Además, si hay conexión, la app **confirma el puesto** y consulta la lista de
+revocaciones contra el backend (ver §6). Ese paso **no concede el plan**: el
+plan siempre sale de la firma verificada en local.
 
 ---
 
 ## 6. Activación online — estado real
 
-**No existe.** No hay backend de licencias desplegado, y no se ha fingido uno.
+**Existe y está desplegada.** El backend de licencias (una Edge Function sobre
+Supabase, plan gratuito) está en producción y probado en vivo. La app se
+conecta a él.
+
+Qué controla el servidor y qué no:
+
+- **Sí controla**: cuántos **puestos** (equipos) tiene usada cada licencia y la
+  **lista de revocaciones**.
+- **No controla**: el **plan**. El plan siempre procede de la firma verificada
+  en local. El servidor **nunca** puede ascender un plan.
+
+Diseño **offline-first** (deliberado):
+
+- Si **no hay conexión**, la licencia **sigue validándose en local**. Un usuario
+  sin internet puede trabajar con normalidad.
+- Un **fallo de red nunca bloquea** la app ni **borra datos**.
+- La app llama a la Edge Function (`/activate`, `/deactivate`, `/revocations`,
+  `/health`), **nunca** a las tablas. La clave de servicio no sale del equipo
+  emisor.
+
+### Consecuencia honesta para el usuario
+
+- **No hay pérdida de datos** en ningún caso: ni al caducar, ni al revocar, ni al
+  cambiar de plan, ni sin conexión. El plan se rebaja a Free, pero tu inventario
+  y tu trabajo siguen ahí.
+- Revocar una licencia surte efecto cuando el equipo **conecta y refresca** (al
+  arrancar o al pulsar «Comprobar ahora»). Un equipo permanentemente sin conexión
+  no recibe la revocación hasta que conecte.
+- Ningún plan gratuito se promete como permanente.
 
 Opciones evaluadas con presupuesto **0 €**:
 
-| Opción | Coste | Problema |
+| Opción | Coste | Estado |
 |---|---|---|
-| Cloudflare Workers + D1 | Plan gratuito (límites ~100k req/día) | Requiere cuenta y dominio propio; los límites **no están garantizados a largo plazo** |
-| Supabase | Plan gratuito (500 MB base) | Requiere cuenta; condiciones que revisar antes de subir datos de clientes |
-| VPS propio | 4–10 €/mes | **No es gratuito.** No se ha contratado nada. |
-
-Decisión: **no se ha desplegado ningún backend**, porque:
-
-1. Subir datos de clientes a un servicio de terceros exige antes leer sus
-   condiciones y su política de privacidad. No se ha hecho.
-2. Ningún plan gratuito puede prometerse indefinidamente.
-3. El sistema local funciona y no necesita red.
-
-### Consecuencia para el usuario
-
-- No hay **periodo de gracia** porque no hay servidor que pueda caerse: las
-  licencias son offline y no caducan por comprobación.
-- No hay **revocación remota**, ni **límite de dispositivos** verificado en un
-  servidor, ni **transferencia** gestionada.
-
-Cuando exista backend se añadirán. La arquitectura está preparada: la
-comprobación de plan pasa por `LicenseService`, un único punto que se puede
-ampliar sin tocar el resto del programa.
+| **Supabase (Edge Function)** | Plan gratuito (500 MB base) | **Elegida y desplegada.** Los límites del plan gratuito no se prometen como permanentes |
+| Cloudflare Workers + D1 | Plan gratuito (~100k req/día) | Descartada: requiere cuenta y dominio propio |
+| VPS propio | 4–10 €/mes | **No es gratuito.** No se ha contratado. |
 
 ---
 

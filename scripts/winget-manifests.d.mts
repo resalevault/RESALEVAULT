@@ -13,6 +13,7 @@ export interface WingetManifestOptions {
   copyright?: string
   protocols?: string[]
   locale?: string
+  licenseUrl?: string
 }
 
 export interface WingetManifests {

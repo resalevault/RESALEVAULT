@@ -219,7 +219,7 @@ y modo claro opcional, ambos con los mismos tokens de color.
 
 | Nivel | Herramienta | Qué cubre |
 |---|---|---|
-| Unidad / integración | Vitest (509 pruebas, ~2 s) | Fórmulas, SKU, transacciones, migraciones, repositorios, validación zod, traducciones |
+| Unidad / integración | Vitest (510 pruebas, ~2 s) | Fórmulas, SKU, transacciones, migraciones, repositorios, validación zod, traducciones |
 | Humo de datos | Electron real (43 comprobaciones) | Migraciones, CRUD, filtros, edición masiva, panel, archivado y **persistencia tras cerrar y reabrir** |
 | Humo de interfaz | Electron real (24 comprobaciones) | Carga el HTML compilado, crea datos por el puente, navega, cambia idioma y tema, y verifica que no hay errores en consola |
 

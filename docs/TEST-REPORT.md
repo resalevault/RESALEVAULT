@@ -13,8 +13,8 @@ Versión: `0.5.0`.
 | Comando | Resultado |
 |---|---|
 | `npm run typecheck` | ✅ 0 errores (2 proyectos: `tsconfig.node.json` y `tsconfig.web.json`) |
-| `npm test` | ✅ 39 archivos, **509 pruebas** en verde |
-| `npm run test:coverage` | ✅ 509 pruebas + cobertura medida (apartado 3) |
+| `npm test` | ✅ 39 archivos, **510 pruebas** en verde |
+| `npm run test:coverage` | ✅ 510 pruebas + cobertura medida (apartado 3) |
 | `npm run smoke` | ✅ **70 comprobaciones** correctas, 0 fallidas (**66** en un clon limpio: 4 dependen de la clave privada, no versionada) |
 | `npm run smoke:ui` | ✅ **65 comprobaciones** correctas, 0 fallidas |
 | `npm run build` | ✅ proceso principal, preload y renderer generados |
@@ -29,7 +29,7 @@ resultados.**
 
 ## 2. Qué comprueba cada suite
 
-### 2.1 `npm test` — pruebas unitarias y de integración (509)
+### 2.1 `npm test` — pruebas unitarias y de integración (510)
 
 Cubren la lógica de negocio sobre una base de datos real (no un doble):
 
@@ -43,7 +43,7 @@ Cubren la lógica de negocio sobre una base de datos real (no un doble):
 - Métodos de pago y cuadre de caja (con y sin escudos).
 - Reglas de inteligencia (12 reglas) y sus avisos.
 - Estados de licencia, planes, límites y eventos.
-- **Backend de licencias (43 pruebas)**: verificación de firmas y códigos
+- **Backend de licencias (39 pruebas)**: verificación de firmas y códigos
   (pruebas de alteración, vectores SHA-256, límites de plan/tipo/versión), las
   reglas de la Edge Function (puestos, caducidad, revocación, mapeo de errores
   HTTP) y una guarda impide que las constantes duplicadas de
@@ -88,10 +88,10 @@ el adaptador de Deno `index.ts` y las constantes `keys.ts`):
 
 | Métrica | Valor | Umbral configurado |
 |---|---|---|
-| Líneas | **88,32 %** | 50 % |
-| Sentencias | **85,72 %** | 50 % |
-| Funciones | **90,77 %** | 50 % |
-| Ramas | **77,92 %** | 40 % |
+| Líneas | **88,66 %** | 50 % |
+| Sentencias | **86,00 %** | 50 % |
+| Funciones | **90,75 %** | 50 % |
+| Ramas | **78,40 %** | 40 % |
 
 Los umbrales son **bajos a propósito**: se prefiere un número honesto que subir
 con pruebas de valor, no rellenar porcentajes con tests triviales. Se excluyen
@@ -204,7 +204,7 @@ en la tabla y se comprobó que la Edge Function la rechaza. El detalle está en
 | Licencia válida funciona | ✅ | `tests/license.test.ts` |
 | Licencia manipulada se rechaza | ✅ | firma Ed25519, test de alteración |
 | Copias se pueden restauran | ✅ | 8 pruebas + humo de datos |
-| Las migraciones no destruyen datos | ✅ | humo aplica 000→004 sobre datos reales |
+| Las migraciones no destruyen datos | ✅ | humo aplica 001→005 sobre datos reales (esquema v5) |
 | Importes financieros correctos | ✅ | céntimos enteros, tests de redondeo |
 | Ventas/devoluciones mantienen stock | ✅ | tests de reserva y reemplazo |
 | Integraciones no inventan datos | ✅ | sin scraping; estados solo manuales o confirmados |

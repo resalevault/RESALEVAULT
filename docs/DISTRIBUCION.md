@@ -97,7 +97,7 @@ Guía detallada con el texto listo para pegar: `docs/release/PUBLICACION_RUTA_A.
 | Paso | Estado | Evidencia |
 |---|---|---|
 | Configuración Store (`electron-builder.appx.yml`) | ✅ verificado | No modifica el instalador NSIS |
-| Paquete generado | ✅ verificado | `release/RESALEVAULT-Store-0.5.0.appx` (169.846.702 bytes, 20/10/2026) |
+| Paquete generado | ✅ verificado | `release/RESALEVAULT-Store-0.5.0.appx` (168.801.405 bytes, 21/10/2026) |
 | Paquete **sin firmar a propósito** | ✅ verificado | electron-builder: `AppX is not signed, reason=Windows Store only build` (lo firma la Store) |
 | Manifiesto interior | ✅ verificado | Inspeccionado del `.appx`: identidad `RESALEVAULT` / `CN=RESALEVAULT`, versión `0.5.0.0` (4 componentes, requisito MSIX), protocolo **`rv-media` declarado con `uap:Protocol`**, idiomas en-US + es-ES, capacidad `runFullTrust` |
 

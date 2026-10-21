@@ -82,6 +82,7 @@ export function buildManifests(options) {
     copyright = 'Copyright (c) RESALEVAULT',
     protocols = ['rv-media'],
     locale = DEFAULT_LOCALE,
+    licenseUrl,
   } = options
 
   if (!ID_PATTERN.test(id)) {
@@ -105,6 +106,10 @@ export function buildManifests(options) {
   const hash = sha256.toUpperCase()
 
   const homepage = repo ? `https://github.com/${repo}` : undefined
+  // Los revisores de winget piden un LicenseUrl para paquetes propietarios.
+  // Por defecto apunta a los terminos del propio repositorio, donde vivira
+  // TERMS.md una vez publicado. Se puede sobrescribir con `licenseUrl`.
+  const termsUrl = licenseUrl ?? (repo ? `https://github.com/${repo}/blob/main/TERMS.md` : undefined)
 
   const versionDoc = withSchemaHeader('version', yamlBlock([
     ['PackageIdentifier', id],
@@ -122,8 +127,9 @@ export function buildManifests(options) {
     ['Publisher', publisher],
   ]
   if (homepage) localePairs.push(['PublisherUrl', homepage], ['PackageUrl', homepage])
+  localePairs.push(['License', 'Proprietary'])
+  if (termsUrl) localePairs.push(['LicenseUrl', termsUrl])
   localePairs.push(
-    ['License', 'Proprietary'],
     ['Copyright', copyright],
     ['ShortDescription', description],
     ['ManifestType', 'defaultLocale'],
@@ -183,6 +189,7 @@ async function main() {
   const id = get('--id') ?? DEFAULT_ID
   const url = get('--url')
   const repo = get('--repo')
+  const licenseUrl = get('--license-url')
   let sha256 = get('--sha256')
 
   if (!url) {
@@ -212,6 +219,7 @@ async function main() {
     sha256,
     repo,
     description: pkg.description,
+    licenseUrl,
   })
 
   const names = manifestFileNames(id)

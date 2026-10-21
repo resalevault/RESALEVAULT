@@ -73,7 +73,7 @@ Reglas de seguridad:
 | Subida del registro | `scripts/license-sync.mjs` (`npm run license:sync`) |
 | Clave pública de la app | `src/shared/license-keys.ts` |
 | Verificador local | `src/main/services/license.ts` |
-| Pruebas | `tests/licence-{code,endpoint,keys-sync}.test.ts` (43 pruebas) |
+| Pruebas | `tests/licence-{code,endpoint,keys-sync}.test.ts` (39 pruebas) |
 
 Rutas de la Edge Function (`verify_jwt` activo, sin CORS: solo la app de
 escritorio la llama desde el proceso principal):

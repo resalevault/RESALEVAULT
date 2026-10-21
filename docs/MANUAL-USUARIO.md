@@ -48,7 +48,8 @@ redondeo con decimales. Las fórmulas exactas están en `docs/FORMULAS.md`.
 
 En el artículo, arrastra o selecciona imágenes. Se aceptan JPG, PNG, WebP y GIF.
 Se genera una **miniatura** automáticamente para que las listas vayan rápidas.
-Hasta 5 fotos por artículo en el plan gratuito.
+Hasta 30 fotos por artículo (25 MB por archivo). El límite es el mismo en todos
+los planes; lo que cambia por plan es el total de archivos (200 en Free).
 
 ### 3.3 Muchos artículos a la vez (importar CSV)
 
@@ -201,7 +202,10 @@ Más detalles en `docs/RECUPERACION.md`.
 
 **Licencias**: pega el código que se te haya entregado y pulsa **Activar**.
 
-- La activación es **local**: no se envía nada a internet.
+- La firma de la licencia se verifica **siempre en local**. Además, si hay
+  conexión, la app confirma tu puesto y consulta revocaciones contra el servicio
+  de licencias (ver `docs/LICENCIAS.md` §6). Ese paso no concede el plan.
+- **Sin conexión la licencia sigue funcionando**: es *offline-first*.
 - Cambiar de plan **nunca borra datos**.
 - Si tu licencia de suscripción caduca, el inventario sigue ahí; solo se
   bloquean las funciones de pago (y **no se borra nada** de lo que ya existe
