@@ -80,15 +80,34 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: RESALEVAULT ${{ steps.tag.outputs.tag }}
           body: |
-            Instalador para **Windows 10 / 11 (x64)**. Los datos se guardan en tu
-            equipo y la aplicacion funciona sin conexion.
+            # ResaleVault ${{ steps.tag.outputs.tag }}
+
+            Welcome to **ResaleVault ${{ steps.tag.outputs.tag }}**, an ongoing development release of our all-in-one reseller management software.
+
+            ResaleVault is designed to help resellers organize their inventory, track transactions, and manage their business more efficiently — all from one place.
+
+            ### What's New
+            - Continued development of the ResaleVault desktop application.
+            - Improvements and refinements to the user experience.
+            - Ongoing stability enhancements and bug fixes where applicable.
+
+            ### About ResaleVault
+            **Every Item. Every Profit.**
+
+            Our mission is to make reselling simpler, more organized, and more efficient through powerful tools built for modern resellers.
+
+            ### Release Information
+            - **Version:** ${{ steps.tag.outputs.tag }}
+            - **Release type:** Development release
+            - **Status:** Work in progress
+
+            More updates and improvements are coming soon.
+
+            Thank you for being part of the ResaleVault journey.
+
+            ---
 
             **SHA-256 del instalador:** ver `SHA256SUMS.txt` adjunto.
-
-            Comprueba la integridad con:
-            ```powershell
-            Get-FileHash .\RESALEVAULT-Setup-*.exe -Algorithm SHA256
-            ```
 
             > El instalador no esta firmado por una autoridad de certificacion de
             > confianza, asi que Windows puede mostrar un aviso de SmartScreen.
