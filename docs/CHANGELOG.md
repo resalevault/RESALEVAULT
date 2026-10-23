@@ -9,6 +9,38 @@
 ---
 
 
+## 1.0.0 - 23/10/2026
+
+### Lanzamiento oficial
+- **Version estable 1.0.0**: RESALEVAULT listo para publicacion con instaladores
+  Windows (.exe NSIS) y Microsoft Store (.appx). Sin obfuscacion ni cambios que
+  afecten a las protecciones de firma.
+
+### Anadido
+- **Paleta de acento independiente del tema**: el color de accion ahora es un eje
+  independiente de claro/oscuro. Se puede elegir entre 9 presets, usar un color
+  HEX personalizado (#RGB/#RRGGBB), ver aviso de bajo contraste en cada modo y
+  restablecer al valor por defecto. Persiste en localStorage y se aplica al
+  instante sin recargar la app.
+- **Sistema de tokens de acento**: src/shared/accent.ts centraliza presets,
+  validacion HEX, calculo de contraste (WCAG) y tinta legible. El CSS deriva
+  estados hover/soft para el color personalizado con color-mix().
+
+### Corregido
+- **Scroll con rueda**: verificado en Panel, Inventario, Categorias, Ajustes y
+  resto de pantallas. Las paginas con contenido que desborda desplazan con la
+  rueda del raton correctamente.
+
+### Mejorado
+- **Selector de acento profesional**: radio-group accesible, previsualizacion,
+  campo HEX con validacion, boton Aplicar, boton Restablecer y feedback al usuario.
+- **Coherencia visual**: elementos activos en la barra lateral, barra de
+  seleccion y avisos de acento se actualizan con la paleta elegida.
+
+### Pruebas
+- **Suite ampliada**: anadidos tests de acento (presets, HEX, contraste, tinta,
+  parse/serialize, sincronizacion con CSS). La suite pasa sin regresiones.
+
 ## 0.6.0 - 21/10/2026
 
 ### Anadido

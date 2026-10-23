@@ -29,6 +29,17 @@ import type {
 } from '@shared/types'
 import type { RouteName } from '@shared/api'
 import type { CarrierBrowserState } from '@shared/types-tracking'
+import {
+  ACCENT_CUSTOM,
+  DEFAULT_ACCENT_STATE,
+  accentInk,
+  isAccentPreset,
+  normalizeHex,
+  parseAccentState,
+  serializeAccentState,
+  type AccentChoice,
+  type AccentState
+} from '@shared/accent'
 import { api, AppError, isBridgeAvailable } from './api'
 import { createTranslator, type MessageKey, type TranslateParams, type Translator } from '../i18n'
 
@@ -58,7 +69,8 @@ export interface AppContextValue {
   t: Translator
   locale: LocaleCode
   theme: ThemeMode
-  accentColor: string
+  accentColor: AccentChoice
+  accentCustomHex: string
   currency: string
 
   money: (cents: number) => string
@@ -79,6 +91,8 @@ export interface AppContextValue {
 
   updateSettings: (patch: Partial<AppSettings>) => Promise<void>
   updateAccentColor: (color: string) => void
+  updateAccentCustomHex: (hex: string) => boolean
+  resetAccent: () => void
   reloadHealth: () => Promise<void>
   refreshData: () => void
   notify: (message: string, tone?: ToastTone) => void
@@ -210,19 +224,60 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
 
   // Tema, color de acento e idioma se reflejan en el documento para que el CSS
   // y los lectores de pantalla usen el valor correcto.
-  const [accentColor, setAccentColor] = useState<string>(() => {
-    try { return localStorage.getItem('rv-accent-color') || 'green' } catch { return 'green' }
+  const [accent, setAccent] = useState<AccentState>(() => {
+    try {
+      return parseAccentState(localStorage.getItem('rv-accent-color'))
+    } catch {
+      return { ...DEFAULT_ACCENT_STATE }
+    }
   })
   useEffect(() => {
     document.documentElement.dataset.theme = settings.theme
-    document.documentElement.dataset.accent = accentColor
+    document.documentElement.dataset.accent = accent.choice
     document.documentElement.lang = settings.locale
-  }, [settings.theme, settings.locale, accentColor])
+    if (accent.choice === ACCENT_CUSTOM) {
+      // El CSS deriva hover/fondo suave a partir de estas dos variables.
+      document.documentElement.style.setProperty('--accent-custom', accent.customHex)
+      document.documentElement.style.setProperty('--accent-custom-ink', accentInk(accent.customHex))
+    } else {
+      document.documentElement.style.removeProperty('--accent-custom')
+      document.documentElement.style.removeProperty('--accent-custom-ink')
+    }
+  }, [settings.theme, settings.locale, accent])
 
-  // Funcion para cambiar el color de acento (persiste en localStorage).
+  // El guardado se hace en un efecto (no dentro de los manejadores) para que
+  // haya una sola escritura por cambio y para tolerar el doble render de
+  // StrictMode sin efectos secundarios duplicados.
+  useEffect(() => {
+    try {
+      localStorage.setItem('rv-accent-color', serializeAccentState(accent))
+    } catch {
+      /* almacenamiento no disponible: se mantiene en memoria */
+    }
+  }, [accent])
+
+  /** Cambia a un preset (o a "personalizado" conservando el HEX elegido). */
   const updateAccentColor = useCallback((color: string) => {
-    setAccentColor(color)
-    try { localStorage.setItem('rv-accent-color', color) } catch { /* ignorar */ }
+    if (color === ACCENT_CUSTOM) {
+      setAccent((current) => ({ choice: ACCENT_CUSTOM, customHex: current.customHex }))
+      return
+    }
+    if (isAccentPreset(color)) {
+      setAccent((current) => ({ choice: color, customHex: current.customHex }))
+    }
+  }, [])
+
+  /** Fija el HEX del color personalizado (activa el modo "personalizado"). */
+  const updateAccentCustomHex = useCallback((hex: string) => {
+    const normalized = normalizeHex(hex)
+    if (!normalized) return false
+    setAccent({ choice: ACCENT_CUSTOM, customHex: normalized })
+    return true
+  }, [])
+
+  /** Vuelve al acento de fabrica (verde RESALEVAULT). */
+  const resetAccent = useCallback(() => {
+    setAccent({ ...DEFAULT_ACCENT_STATE })
   }, [])
 
   const t = useMemo(() => createTranslator(settings.locale), [settings.locale])
@@ -334,7 +389,8 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       t,
       locale: settings.locale,
       theme: settings.theme,
-      accentColor,
+      accentColor: accent.choice,
+      accentCustomHex: accent.customHex,
       currency: settings.currency,
       money,
       moneyCompact,
@@ -349,6 +405,8 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       browserAction,
       updateSettings,
       updateAccentColor,
+      updateAccentCustomHex,
+      resetAccent,
       reloadHealth,
       refreshData,
       notify,
@@ -359,7 +417,7 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       fatalError,
       info,
       settings,
-      accentColor,
+      accent,
       health,
       route,
       dataVersion,
@@ -378,6 +436,8 @@ export function AppProvider({ children }: { children: ReactNode }): ReactNode {
       browserAction,
       updateSettings,
       updateAccentColor,
+      updateAccentCustomHex,
+      resetAccent,
       reloadHealth,
       refreshData,
       notify,

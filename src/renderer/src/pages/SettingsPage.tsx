@@ -8,6 +8,16 @@
  */
 
 import { useEffect, useState, type ReactNode } from 'react'
+import {
+  ACCENT_CUSTOM,
+  ACCENT_PRESETS,
+  ACCENT_SWATCH,
+  DEFAULT_CUSTOM_HEX,
+  isLowContrastOnDark,
+  isLowContrastOnLight,
+  isValidHex,
+  normalizeHex
+} from '@shared/accent'
 import { DEFAULT_SKU_PATTERN, renderSkuPattern, validateSkuPattern } from '@shared/sku'
 import { ATTRIBUTE_TYPES, type AppHashInfo, type AttributeType, type ThirdPartyNoticesInfo } from '@shared/types'
 import { api, AppError } from '../lib/api'
@@ -27,13 +37,31 @@ import { IconExternal, IconPlus, IconTrash } from '../components/Icons'
 import { BackupsCard } from './BackupsCard'
 
 export function SettingsPage(): ReactNode {
-  const { t, notify, settings, updateSettings, accentColor, updateAccentColor, health, reloadHealth, info, dataVersion, refreshData, number, navigate } =
-    useApp()
+  const {
+    t,
+    notify,
+    settings,
+    updateSettings,
+    theme,
+    accentColor,
+    accentCustomHex,
+    updateAccentColor,
+    updateAccentCustomHex,
+    resetAccent,
+    health,
+    reloadHealth,
+    info,
+    dataVersion,
+    refreshData,
+    number,
+    navigate
+  } = useApp()
 
   const [currency, setCurrency] = useState(settings.currency)
   const [skuPrefix, setSkuPrefix] = useState(settings.skuPrefix)
   const [skuPattern, setSkuPattern] = useState(settings.skuPattern)
   const [thresholds, setThresholds] = useState(settings.staleThresholds.join(', '))
+  const [hexDraft, setHexDraft] = useState(accentCustomHex)
   const [busy, setBusy] = useState(false)
 
   const [attributeKey, setAttributeKey] = useState('')
@@ -57,6 +85,30 @@ export function SettingsPage(): ReactNode {
     setSkuPattern(settings.skuPattern)
     setThresholds(settings.staleThresholds.join(', '))
   }, [settings])
+
+  // El campo HEX sigue al color guardado (por ejemplo al restablecer).
+  useEffect(() => {
+    setHexDraft(accentCustomHex)
+  }, [accentCustomHex])
+
+  const hexValid = isValidHex(hexDraft)
+  const lowContrast =
+    accentColor === ACCENT_CUSTOM &&
+    (theme === 'light' ? isLowContrastOnLight(accentCustomHex) : isLowContrastOnDark(accentCustomHex))
+
+  const applyCustomHex = (): void => {
+    const normalized = normalizeHex(hexDraft)
+    if (!normalized) return
+    setHexDraft(normalized)
+    updateAccentCustomHex(normalized)
+    notify(t('settings.accentApplied'), 'success')
+  }
+
+  const handleResetAccent = (): void => {
+    resetAccent()
+    setHexDraft(DEFAULT_CUSTOM_HEX)
+    notify(t('settings.accentResetDone'), 'success')
+  }
 
   const patternValidation = validateSkuPattern(skuPattern)
   const patternPreview = patternValidation.ok
@@ -203,34 +255,69 @@ export function SettingsPage(): ReactNode {
               </Select>
             </Field>
 
-            <Field label="Color de acento">
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {[
-                  { id: 'green', color: '#c8ff3d', label: 'Verde' },
-                  { id: 'blue', color: '#3b82f6', label: 'Azul' },
-                  { id: 'purple', color: '#a855f7', label: 'Morado' },
-                  { id: 'orange', color: '#f97316', label: 'Naranja' },
-                  { id: 'red', color: '#ef4444', label: 'Rojo' },
-                  { id: 'pink', color: '#ec4899', label: 'Rosa' },
-                  { id: 'teal', color: '#14b8a6', label: 'Teal' },
-                  { id: 'amber', color: '#f59e0b', label: 'Ambar' },
-                ].map((preset) => (
+            <Field label={t('settings.accent')} hint={t('settings.accentHint')}>
+              <div className="accent-picker">
+                <div className="accent-grid" role="radiogroup" aria-label={t('settings.accent')}>
+                  {ACCENT_PRESETS.map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      role="radio"
+                      aria-checked={accentColor === preset}
+                      aria-label={t(`settings.accentPresets.${preset}`)}
+                      title={t(`settings.accentPresets.${preset}`)}
+                      className="accent-swatch"
+                      style={{ background: ACCENT_SWATCH[preset] }}
+                      onClick={() => updateAccentColor(preset)}
+                    />
+                  ))}
                   <button
-                    key={preset.id}
                     type="button"
-                    title={preset.label}
-                    onClick={() => updateAccentColor(preset.id)}
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: '50%',
-                      border: accentColor === preset.id ? '3px solid var(--text)' : '2px solid var(--border)',
-                      background: preset.color,
-                      cursor: 'pointer',
-                      padding: 0,
-                    }}
+                    role="radio"
+                    aria-checked={accentColor === ACCENT_CUSTOM}
+                    aria-label={`${t('settings.accentCustom')} ${accentCustomHex}`}
+                    title={`${t('settings.accentCustom')} ${accentCustomHex}`}
+                    className="accent-swatch accent-swatch--custom"
+                    style={{ background: accentCustomHex }}
+                    onClick={() => updateAccentColor(ACCENT_CUSTOM)}
                   />
-                ))}
+                </div>
+
+                <div className="accent-custom">
+                  <label className="accent-custom__label" htmlFor="settings-accent-hex">
+                    {t('settings.accentHex')}
+                  </label>
+                  <div className="accent-custom__row">
+                    <span className="accent-custom__chip" style={{ background: hexDraft }} aria-hidden="true" />
+                    <TextInput
+                      id="settings-accent-hex"
+                      value={hexDraft}
+                      onChange={setHexDraft}
+                      placeholder={DEFAULT_CUSTOM_HEX}
+                      maxLength={7}
+                      mono
+                      invalid={!hexValid}
+                    />
+                    <Button variant="ghost" size="sm" onClick={applyCustomHex} disabled={!hexValid}>
+                      {t('settings.accentApply')}
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={handleResetAccent}>
+                      {t('settings.accentReset')}
+                    </Button>
+                  </div>
+                  <p className="accent-custom__hint">{t('settings.accentHexHint')}</p>
+                  {!hexValid ? (
+                    <p className="accent-custom__warning" role="alert">
+                      {t('settings.accentHexInvalid')}
+                    </p>
+                  ) : lowContrast ? (
+                    <p className="accent-custom__warning" role="status">
+                      {theme === 'light'
+                        ? t('settings.accentLowContrastLight')
+                        : t('settings.accentLowContrastDark')}
+                    </p>
+                  ) : null}
+                </div>
               </div>
             </Field>
 

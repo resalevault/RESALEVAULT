@@ -68,10 +68,8 @@
   --text: #17171a;
   --text-dim: #5c5c66;
   --text-faint: #8b8b95;
-  --accent: #7bb800;
-  --accent-hover: #68a000;
-  --accent-soft: rgba(123, 184, 0, 0.12);
-  --accent-ink: #ffffff;
+  /* El color de acento NO se declara aqui: lo gobierna [data-accent] (ver
+     PALETA DE ACENTO al final). Asi el tema y la paleta son independientes. */
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.08);
   --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.12);
   --shadow-3: 0 24px 64px rgba(0, 0, 0, 0.18);
@@ -1697,6 +1695,283 @@ table.table {
     display: none !important;
   }
 }
+
+/* =========================================================================
+   PALETA DE ACENTO (independiente del tema)
+   -------------------------------------------------------------------------
+   El TEMA (claro/oscuro) y la PALETA DE ACENTO son dos ejes INDEPENDIENTES:
+
+     data-theme  -> fondos, texto, bordes, sombras.
+     data-accent -> color de accion (botones, foco, seleccion, series...).
+
+   Cambiar de tema NO toca la paleta y viceversa. Toda la interfaz consume
+   unicamente los tokens --accent*: aqui se reasignan por preset. Cada preset
+   declara su variante para modo oscuro y para modo claro porque el contraste
+   sobre fondo oscuro y sobre fondo claro es distinto.
+
+   El preset por defecto (`green`, el verde acido de RESALEVAULT) vive en :root
+   mas arriba: por eso `data-accent='green'` no necesita reglas propias.
+
+   Para el color PERSONALIZADO se usa `color-mix()` (Chromium 111+; Electron 44
+   usa una version muy superior): asi un unico HEX produce hover, fondo suave y
+   tinta de contraste sin mantener listas derivadas a mano.
+   ========================================================================= */
+
+/* --- Presets (modo oscuro, el de por defecto) ----------------------------- */
+
+[data-accent='purple'] {
+  --accent: #a855f7;
+  --accent-hover: #bb7bff;
+  --accent-soft: rgba(168, 85, 247, 0.16);
+  --accent-ink: #0b0b0c;
+}
+
+[data-accent='blue'] {
+  --accent: #4d9bff;
+  --accent-hover: #77b3ff;
+  --accent-soft: rgba(77, 155, 255, 0.16);
+  --accent-ink: #06121f;
+}
+
+[data-accent='teal'] {
+  --accent: #2dd4bf;
+  --accent-hover: #5ee0cf;
+  --accent-soft: rgba(45, 212, 191, 0.16);
+  --accent-ink: #04211d;
+}
+
+[data-accent='orange'] {
+  --accent: #ff9640;
+  --accent-hover: #ffae6b;
+  --accent-soft: rgba(255, 150, 64, 0.16);
+  --accent-ink: #1f1002;
+}
+
+[data-accent='red'] {
+  --accent: #ff6b6b;
+  --accent-hover: #ff8f8f;
+  --accent-soft: rgba(255, 107, 107, 0.16);
+  --accent-ink: #200808;
+}
+
+[data-accent='pink'] {
+  --accent: #f472b6;
+  --accent-hover: #f890c8;
+  --accent-soft: rgba(244, 114, 182, 0.16);
+  --accent-ink: #200a16;
+}
+
+[data-accent='gold'] {
+  --accent: #e2b53f;
+  --accent-hover: #edc869;
+  --accent-soft: rgba(226, 181, 63, 0.16);
+  --accent-ink: #1c1403;
+}
+
+[data-accent='gray'] {
+  --accent: #c9cdd6;
+  --accent-hover: #dde1e8;
+  --accent-soft: rgba(201, 205, 214, 0.16);
+  --accent-ink: #0b0b0c;
+}
+
+[data-accent='green'] {
+  --accent: #c8ff3d;
+  --accent-hover: #d6ff6b;
+  --accent-soft: rgba(200, 255, 61, 0.13);
+  --accent-ink: #0b0b0c;
+}
+
+/* --- Presets (modo claro): tonos mas saturados para contrastar con blanco - */
+
+/* El verde de marca es demasiado claro sobre blanco (1.07:1): en modo claro
+   se usa un verde oliva oscuro con contraste 4.47:1. */
+[data-theme='light'][data-accent='green'] {
+  --accent: #4f7d00;
+  --accent-hover: #416700;
+  --accent-soft: rgba(79, 125, 0, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='purple'] {
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-soft: rgba(124, 58, 237, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='blue'] {
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='teal'] {
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --accent-soft: rgba(13, 148, 136, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='orange'] {
+  --accent: #ea6a09;
+  --accent-hover: #c2540a;
+  --accent-soft: rgba(234, 106, 9, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='red'] {
+  --accent: #dc2626;
+  --accent-hover: #b91c1c;
+  --accent-soft: rgba(220, 38, 38, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='pink'] {
+  --accent: #db2777;
+  --accent-hover: #be185d;
+  --accent-soft: rgba(219, 39, 119, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='gold'] {
+  --accent: #a16207;
+  --accent-hover: #854d0e;
+  --accent-soft: rgba(161, 98, 7, 0.12);
+  --accent-ink: #ffffff;
+}
+[data-theme='light'][data-accent='gray'] {
+  --accent: #4b5563;
+  --accent-hover: #374151;
+  --accent-soft: rgba(75, 85, 99, 0.12);
+  --accent-ink: #ffffff;
+}
+
+/* --- Color PERSONALIZADO (HEX del usuario) --------------------------------
+   El proceso de la interfaz escribe el HEX elegido en --accent-custom (y su
+   tinta legible en --accent-custom-ink) sobre <html>. Aqui se derivan el hover
+   y el fondo suave, y se aplican SOLO cuando el preset activo es 'custom'.
+   ------------------------------------------------------------------------- */
+
+[data-accent='custom'] {
+  --accent: var(--accent-custom, #c8ff3d);
+  --accent-hover: color-mix(in oklab, var(--accent-custom, #c8ff3d) 82%, white);
+  --accent-soft: color-mix(in oklab, var(--accent-custom, #c8ff3d) 16%, transparent);
+  --accent-ink: var(--accent-custom-ink, #0b0b0c);
+}
+
+[data-theme='light'][data-accent='custom'] {
+  --accent-hover: color-mix(in oklab, var(--accent-custom, #c8ff3d) 82%, black);
+  --accent-soft: color-mix(in oklab, var(--accent-custom, #c8ff3d) 13%, transparent);
+}
+
+/* --- Refuerzos: elementos que aun tenian el verde fijo --------------------
+   Al pasar a tokens, el acento personalizado alcanza tambien seleccion,
+   barra de seleccion, avisos de acento, medallas y series, sin tocar cada
+   pantalla: todas consumen ya var(--accent) o var(--accent-soft).
+   ------------------------------------------------------------------------- */
+
+[data-accent] .navitem.is-active[data-tone='main'] {
+  background: var(--accent-soft);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+[data-accent] .navitem.is-active[data-tone='main'] svg {
+  color: var(--accent);
+}
+
+.selection-bar {
+  border-color: color-mix(in oklab, var(--accent) 34%, transparent);
+}
+
+.notice--accent {
+  border-color: color-mix(in oklab, var(--accent) 34%, transparent);
+}
+
+/* --- Selector de acento en Ajustes --------------------------------------- */
+
+.accent-picker {
+  display: grid;
+  gap: 10px;
+}
+
+.accent-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.accent-swatch {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.accent-swatch:hover {
+  transform: translateY(-1px);
+}
+
+.accent-swatch:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+.accent-swatch[aria-checked='true'] {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--text);
+}
+
+.accent-swatch--custom {
+  border: 1px dashed var(--border-strong);
+}
+
+.accent-custom {
+  display: grid;
+  gap: 4px;
+}
+
+.accent-custom__label {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.accent-custom__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.accent-custom__chip {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.accent-custom__row .input {
+  flex: 1 1 130px;
+  min-width: 110px;
+}
+
+.accent-custom__hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.accent-custom__warning {
+  margin: 0;
+  font-size: 12px;
+  color: var(--warn);
+}
+
+
+/* La barra de progreso y el spinner ya usan var(--accent). El anillo de foco
+   tambien. Se deja constancia aqui para que quede claro que es deliberado. */
+
 /* =========================================================================
    IMPRESION
    -------------------------------------------------------------------------
